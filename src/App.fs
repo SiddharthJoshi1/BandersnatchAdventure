@@ -47,8 +47,10 @@ module Keyboard =
 // All these are immutables values
 let w = myCanvas.width
 let h = myCanvas.height
-let steps = 20
-let squareSize = 20
+let steps = 30
+let squareSize = 30
+let squareSizeSquared = (squareSize*squareSize)
+let stepSizedSquared = (steps*steps)
 
 type movableBox = {
     current_x: int;
@@ -72,7 +74,7 @@ printfn "%i" steps
 let render (box: movableBox) =
 
     //clears the canvas
-    ctx.clearRect(0., 0., 400., 400.)
+    ctx.clearRect(0., 0., float(squareSizeSquared), float(squareSizeSquared))
     
     [0..steps] // this is a list
       |> Seq.iter( fun x -> // we iter through the list using an anonymous function
@@ -118,28 +120,28 @@ let rec updateBox (box:movableBox) () =
     if ((Keyboard.arrows()) = (0,1)) then 
         
         if ((box.current_y ) <> 0) then  
-            updatedBox <- {current_x = box.current_x; current_y = box.current_y - 20; direction = "up"}
+            updatedBox <- {current_x = box.current_x; current_y = box.current_y - squareSize; direction = "up"}
            
             render updatedBox
         
 
     elif ((Keyboard.arrows()) = (0,-1)) then
 
-        if ((box.current_y + 20) <> 400) then  
-            updatedBox <- {current_x = box.current_x; current_y = box.current_y + 20; direction = "down"}
+        if ((box.current_y + steps) <> stepSizedSquared) then  
+            updatedBox <- {current_x = box.current_x; current_y = box.current_y + squareSize; direction = "down"}
            
             render updatedBox
 
     elif ((Keyboard.arrows()) = (-1,0)) then
         if ((box.current_x ) <> 0) then 
-            updatedBox <- {current_x = box.current_x - 20; current_y = box.current_y; direction = "right"}
+            updatedBox <- {current_x = box.current_x - squareSize; current_y = box.current_y; direction = "right"}
            
             render updatedBox
 
     elif ((Keyboard.arrows()) = (1,0)) then
-         if ((box.current_x + 20) <> 400) then
-            updatedBox <- {current_x = box.current_x + 20; current_y = box.current_y; direction = "left"}
-            
+         if ((box.current_x + steps) <> stepSizedSquared) then
+            updatedBox <- {current_x = box.current_x + squareSize; current_y = box.current_y; direction = "left"}
+            printfn "%A" box.current_x
             render updatedBox
 
     else render updatedBox
