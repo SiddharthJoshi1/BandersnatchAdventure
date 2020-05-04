@@ -71,8 +71,9 @@ printfn "%i" steps
 
 let render (box: movableBox) =
 
+    //clears the canvas
     ctx.clearRect(0., 0., 400., 400.)
-    ctx.clearRect(0., 0., 400., 400.)
+    
     [0..steps] // this is a list
       |> Seq.iter( fun x -> // we iter through the list using an anonymous function
           let v = float ((x) * squareSize) 
@@ -144,10 +145,10 @@ let rec updateBox (box:movableBox) () =
     else render updatedBox
      //printfn  "%A"  (Keyboard.arrows())
     
-    window.setTimeout(updateBox updatedBox, 10000 / 60) |> ignore
+    window.setTimeout(updateBox updatedBox, 8000 / 60) |> ignore
     
 
-let Box = { current_x = 40; current_y = 60; direction="" }
+let Box = { current_x = 0; current_y = 0; direction="" }
 
 updateBox Box ()
 
