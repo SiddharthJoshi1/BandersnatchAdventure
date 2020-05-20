@@ -1,4 +1,4 @@
-module type
+module Type 
 
     type Inventory = {
             attack: bool; 
@@ -7,29 +7,30 @@ module type
             key: int;
      }
 
-    type health = private health of uint16
+    type health = { health:uint16}
+   
 
-    module health =
-     match num with
-     | var1 when var1 <= 1 -> None
-     | var2 when var2 >= 20 -> None
-     | _ -> num
+    let healthCheck num =
+         match num with
+             | var1 when var1 <= 1 -> false
+             | var2 when var2 >= 20 -> false
+             | _ -> true
  
-    type attackPower = private attackPower of uint16
+    type attackPower = {AttackPower:uint16}
 
-    module attackPower =
-     match num with
-     | var1 when var1 = 1 -> num 
-     | var2 when var2 = 3 -> num 
-     | _ -> None 
+    let attackPowerCheck num =
+         match num with
+             | var1 when var1 = 1 -> true 
+             | var2 when var2 = 3 -> true 
+             | _ -> false 
  
-    type range = private range of uint16
+    type range = {Range:uint16}
 
-    module range = 
+    let rangeCheck num = 
      match num with
-     | var1 when var1 = 1 -> num 
-     | var2 when var2 = 5 -> num 
-     | _ -> None 
+         | var1 when var1 = 1 -> true 
+         | var2 when var2 = 5 -> true 
+         | _ -> false 
  
     type player = {
          current_x: int;
@@ -48,7 +49,7 @@ module type
 
     type Door = {
         tile: tile;
-        open: bool;
+        isOpen: bool;
     }
 
  
@@ -60,24 +61,28 @@ module type
         tile:tile;
     }
 
+    type itemType = 
+            | AttackUp
+            | DefenseUp
+            | HealthUp
+
     type Item = {
-        type itemType = attackUp | defenseUp | healthUp;
+        item_type: itemType;
         tile:tile;
     }
 
     type tileType = 
-        | Empty
-        | Key
-        | Stairs
-        | Door
-        | Item 
+        | Empty of tile
+        | Key of Key
+        | Stairs of Stairs
+        | Door of Door
+        | Item of Item 
     
     type gridcell = {
         tile: tile
         tileType: tileType
     }
 
-    type screen = {
-        
-    }
-    
+    // type screen = {
+
+    // }

@@ -1,4 +1,10 @@
-module Keyboard =
+module Keyboard 
+    open Fable.Core
+    open Fable.Core.JsInterop
+    open Browser.Types
+    open Browser
+
+    let window = Browser.Dom.window
 
     let mutable keysPressed = Set.empty
 
