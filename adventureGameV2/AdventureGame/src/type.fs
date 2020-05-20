@@ -76,4 +76,8 @@ module type
         tile: tile
         tileType: tileType
     }
+
+    type screen = {
+        
+    }
     
