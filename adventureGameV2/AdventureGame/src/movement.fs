@@ -23,6 +23,7 @@ module movement
         /// Returns 1 if key with given code is pressed
         let code x =
             if keysPressed.Contains(x) then 1 else 0
+           
 
          /// Returns pair with -1 for left or down and +1
         /// for right or up (0 if no or both keys are pressed)
@@ -72,30 +73,39 @@ module movement
     myCanvas.width <- gridWidth
     myCanvas.height <- gridWidth
 
-    // print the grid size to our debugger console
-    printfn "%i" steps
 
     // prepare our canvas operations
 
 
-    let collide(box: movableBox, item: filledTile) = 
-        if  (box.current_x + squareSize > item.current_x && 
-             box.current_y < item.current_y + squareSize && 
-             box.current_y + squareSize > item.current_y && 
-             box.current_x < item.current_x + squareSize) then 
+    let collide (box: movableBox) (item: filledTile) = 
+        match item with
+            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> true
+            | _ -> false    
+        
 
+    
+
+
+
+    // let collisionCheck(box: movableBox, itemList) =
+    //         for j in itemList do
+    //             if(collide box j ) then
+    //                 printf "%A" "collided"
+                       
+    let newItemList (box: movableBox) itemList = 
+        List.filter (fun x -> collide box x) itemList  
+    
+    // let ifCollided box tile lst =
+    //     lst |> List.map(fun k -> (if collide(box, k) then   else lst)  )
+
+
+
+          
+                
+               
+                
+                
              
-
-             printfn "%s" "collision detected"
-
-
-
-
-
-
-    let collisionCheck(box: movableBox, itemList) = 
-         for j in itemList do
-             collide (box, j)
              
          
         
@@ -150,8 +160,8 @@ module movement
             | (1, 0) ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box
         
-        render (newBox, itemList)
-        collisionCheck(newBox, itemList)
+        render (newBox, newItemList box itemList)
+        
 
         window.setTimeout(updateBox (newBox, itemList), 8000 / 60) |> ignore
                
@@ -166,9 +176,10 @@ module movement
     let item3 = {current_x = 20; current_y = 40; status= false}
     let item4 = {current_x = 40; current_y = 80; status= false}
     let item5 = {current_x = 60; current_y = 40; status= false}
+    
 
     let item_List = [item1; item2; item3; item4; item5]
 
-    updateBox (Box, item_List) ()
+    updateBox (Box, newItemList Box item_List  ) ()
 
 
