@@ -1,9 +1,9 @@
 module Type 
 
     type Inventory = {
-            attack: bool; 
-            defence: bool; 
-            health: int; 
+            attack_potion: bool; 
+            defence_potion: bool; 
+            health_potion: int; 
             key: int;
      }
 

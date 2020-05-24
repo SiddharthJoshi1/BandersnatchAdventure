@@ -52,6 +52,7 @@ module movement
     let squareSize = 20
     let squareSizeSquared = (squareSize*squareSize)
     let stepSizedSquared = (steps*steps)
+    
 
     type movableBox = {
         current_x: int;
@@ -65,6 +66,7 @@ module movement
         status: bool;
     }
 
+    let inventorySet = Set : seq<filledTile> -> Set<filledTile>
     // gridWidth needs a float wo we cast tour int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize) 
 
@@ -79,12 +81,12 @@ module movement
 
     let collide (box: movableBox) (item: filledTile) = 
         match item with
-            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> true
-            | _ -> false    
+            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> false
+            | _ -> true    
         
 
     
-
+    
 
 
     // let collisionCheck(box: movableBox, itemList) =
@@ -93,24 +95,13 @@ module movement
     //                 printf "%A" "collided"
                        
     let newItemList (box: movableBox) itemList = 
-        List.filter (fun x -> collide box x) itemList  
+        List.filter (fun x -> collide box x ) itemList  
     
     // let ifCollided box tile lst =
     //     lst |> List.map(fun k -> (if collide(box, k) then   else lst)  )
 
 
-
-          
-                
-               
-                
-                
-             
-             
-         
-        
-
-    let render (box: movableBox, itemList ) =
+    let render (box: movableBox) itemList  =
 
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
@@ -126,7 +117,8 @@ module movement
               //adding the item on to the grid
               
             ) 
-        ctx.strokeStyle <- !^"#ddd" // color
+        ctx.strokeStyle <- !^"#ddd" 
+        // color
         for i in itemList do
             if not i.status then
                 ctx.fillStyle <- !^"#FF0000"
@@ -147,7 +139,7 @@ module movement
 
 
 
-    let rec updateBox (box:movableBox, itemList) () =
+    let rec updateBox (box:movableBox) itemList  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
@@ -160,10 +152,14 @@ module movement
             | (1, 0) ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box
         
-        render (newBox, newItemList box itemList)
+       
+
         
 
-        window.setTimeout(updateBox (newBox, itemList), 8000 / 60) |> ignore
+        render newBox itemList
+        
+
+        window.setTimeout(updateBox newBox (newItemList newBox itemList), 8000 / 60) |> ignore
                
 
         
@@ -180,6 +176,11 @@ module movement
 
     let item_List = [item1; item2; item3; item4; item5]
 
-    updateBox (Box, newItemList Box item_List  ) ()
+    printf "%A" (newItemList Box item_List)
+
+   
+
+
+    updateBox Box (newItemList Box item_List) ()
 
 
