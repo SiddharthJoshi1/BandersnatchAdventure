@@ -53,6 +53,18 @@ module movement
     let squareSizeSquared = (squareSize*squareSize)
     let stepSizedSquared = (steps*steps)
     
+    type Inventory = {
+        item1: bool;
+        item2: bool;
+        item3: bool;
+        keys: int;
+    }
+
+    type itemType = 
+        | AttackUp
+        | DefenseUp
+        | HealthUp
+        | Empty
 
     type movableBox = {
         current_x: int;
@@ -63,12 +75,13 @@ module movement
     type filledTile = {
         current_x: int;
         current_y: int
-        status: bool;
+        status: itemType;
     }
 
-    let inventorySet = Set : seq<filledTile> -> Set<filledTile>
+
     // gridWidth needs a float wo we cast tour int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize) 
+    let emptyTile = {current_x = 0; current_y = 0; status= Empty}
 
     // resize our canvas to the size of our grid
     // the arrow <- indicates we're mutating a value. It's a special operator in F#.
@@ -81,24 +94,18 @@ module movement
 
     let collide (box: movableBox) (item: filledTile) = 
         match item with
-            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> false
-            | _ -> true    
-        
-
-    
-    
-
-
-    // let collisionCheck(box: movableBox, itemList) =
-    //         for j in itemList do
-    //             if(collide box j ) then
-    //                 printf "%A" "collided"
+            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> item
+            | _ -> emptyTile    
                        
     let newItemList (box: movableBox) itemList = 
-        List.filter (fun x -> collide box x ) itemList  
+        List.filter (fun x ->  x <> (collide box x)) itemList  
     
-    // let ifCollided box tile lst =
-    //     lst |> List.map(fun k -> (if collide(box, k) then   else lst)  )
+    let collidedItemType (box: movableBox) itemList :itemType=
+            let item = List.find (fun x -> x = collide box x) itemList
+            let itemType = item.status
+            itemType
+        
+        
 
 
     let render (box: movableBox) itemList  =
@@ -120,10 +127,9 @@ module movement
         ctx.strokeStyle <- !^"#ddd" 
         // color
         for i in itemList do
-            if not i.status then
-                ctx.fillStyle <- !^"#FF0000"
-                ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
-                ctx.fillStyle <- !^"#11babd"
+            ctx.fillStyle <- !^"#FF0000"
+            ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
+            ctx.fillStyle <- !^"#11babd"
             
         // draw our grid
         
@@ -138,28 +144,23 @@ module movement
 
 
 
-
-    let rec updateBox (box:movableBox) itemList  () =
+    let rec Update (box:movableBox) itemList (inventory:Inventory) () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
 
         let newBox: movableBox =
             match (Keyboard.arrows()) with 
-            | (0,1) ->  {box with current_y = box.current_y - squareSize;} 
-            | (0, -1) -> {box with current_y = box.current_y + squareSize; }
-            | (-1, 0) ->  {box with current_x = box.current_x - squareSize;} 
-            | (1, 0) ->  {box with current_x = box.current_x + squareSize; }   
-            | _ -> box
-        
-       
-
-        
+            | (0,1) when box.current_y > 0 ->  {box with current_y = box.current_y - squareSize;} 
+            | (0, -1) when  box.current_y + squareSize < squareSizeSquared -> {box with current_y = box.current_y + squareSize; }
+            | (-1, 0) when  box.current_x > 0 -> {box with current_x = box.current_x - squareSize;} 
+            | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
+            | _ -> box        
 
         render newBox itemList
         
 
-        window.setTimeout(updateBox newBox (newItemList newBox itemList), 8000 / 60) |> ignore
+        window.setTimeout(Update newBox (newItemList newBox itemList) inventory, 8000 / 60) |> ignore
                
 
         
@@ -167,20 +168,20 @@ module movement
         
 
     let Box = { current_x = 0; current_y = 0; direction="" }
-    let item1 = {current_x = 80; current_y = 80; status= false}
-    let item2 = {current_x = 120; current_y = 20; status= false}
-    let item3 = {current_x = 20; current_y = 40; status= false}
-    let item4 = {current_x = 40; current_y = 80; status= false}
-    let item5 = {current_x = 60; current_y = 40; status= false}
-    
+    let inv = { item1 = false; item2 = false; item3 = false; keys = 0}
+    let item1 = {current_x = 80; current_y = 80; status= AttackUp}
+    let item2 = {current_x = 120; current_y = 20; status= AttackUp}
+    let item3 = {current_x = 20; current_y = 40; status= AttackUp}
+    let item4 = {current_x = 40; current_y = 80; status= AttackUp}
+    let item5 = {current_x = 60; current_y = 40; status= AttackUp}
 
-    let item_List = [item1; item2; item3; item4; item5]
+    let itemList = [item1; item2; item3; item4; item5]
 
-    printf "%A" (newItemList Box item_List)
+    printf "%A" (newItemList Box itemList)
 
    
 
 
-    updateBox Box (newItemList Box item_List) ()
+    Update Box (newItemList Box itemList) inv ()
 
 
