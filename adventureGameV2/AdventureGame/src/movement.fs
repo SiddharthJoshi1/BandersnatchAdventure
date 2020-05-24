@@ -54,10 +54,10 @@ module movement
     let stepSizedSquared = (steps*steps)
     
     type Inventory = {
-        item1: bool;
-        item2: bool;
-        item3: bool;
-        keys: int;
+        AttackUpItem: bool;
+        DefenseUpItem: bool;
+        HealthUpItem: bool;
+        Keys: int;
     }
 
     type itemType = 
@@ -146,7 +146,7 @@ module movement
         //make direction a type
         //use pattern matching and with record synta
 
-        let newBox: movableBox =
+        let newBox :movableBox =
             match (Keyboard.arrows()) with 
             | (0,1) when box.current_y > 0 ->  {box with current_y = box.current_y - squareSize;} 
             | (0, -1) when  box.current_y + squareSize < squareSizeSquared -> {box with current_y = box.current_y + squareSize; }
@@ -154,15 +154,19 @@ module movement
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box        
 
-        let newInventory: Inventory =
-            match (collidedItem box itemList).status with
-            |AttackUp -> {inventory with item1 = true;}
-            |_-> inventory;
-
         render newBox itemList
-        
 
-        window.setTimeout(Update newBox (newItemList newBox itemList) inventory, 8000 / 60) |> ignore
+        let j = collidedItem box itemList
+        let newInventory :Inventory =
+            match j.status with
+            | AttackUp -> {inventory with AttackUpItem = true;}
+            | DefenseUp -> {inventory with DefenseUpItem = true;}
+            | HealthUp -> {inventory with HealthUpItem = true;}
+            | _-> inventory;
+
+        printfn "newInventory: %A" (newInventory)
+
+        window.setTimeout(Update newBox (newItemList newBox itemList) newInventory, 8000 / 60) |> ignore
                
 
         
@@ -170,7 +174,7 @@ module movement
         
 
     let Box = { current_x = 0; current_y = 0; direction="" }
-    let inv = { item1 = false; item2 = false; item3 = false; keys = 0}
+    let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
     let item1 = {current_x = 80; current_y = 80; status= AttackUp}
     let item2 = {current_x = 120; current_y = 20; status= AttackUp}
     let item3 = {current_x = 20; current_y = 40; status= AttackUp}
@@ -179,7 +183,7 @@ module movement
 
     let itemList = [item1; item2; item3; item4; item5]
 
-    printf "%A" (newItemList Box itemList)
+    printf "newItemList: %A" (newItemList Box itemList)
 
    
 
