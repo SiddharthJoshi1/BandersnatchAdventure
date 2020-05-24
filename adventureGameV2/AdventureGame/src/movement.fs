@@ -100,12 +100,9 @@ module movement
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList  
     
-    let collidedItemType (box: movableBox) itemList :itemType=
-            let item = List.find (fun x -> x = collide box x) itemList
-            let itemType = item.status
-            itemType
-        
-        
+    let collidedItem (box: movableBox) itemList =
+        let newList = List.filter (fun x -> x = (collide box x)) itemList
+        newList.Head
 
 
     let render (box: movableBox) itemList  =
@@ -144,7 +141,7 @@ module movement
 
 
 
-    let rec Update (box:movableBox) itemList (inventory:Inventory) () =
+    let rec Update (box:movableBox) (itemList: filledTile list) (inventory:Inventory) () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
@@ -156,6 +153,11 @@ module movement
             | (-1, 0) when  box.current_x > 0 -> {box with current_x = box.current_x - squareSize;} 
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box        
+
+        let newInventory: Inventory =
+            match (collidedItem box itemList).status with
+            |AttackUp -> {inventory with item1 = true;}
+            |_-> inventory;
 
         render newBox itemList
         
