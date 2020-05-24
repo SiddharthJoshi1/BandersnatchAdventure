@@ -96,13 +96,25 @@ module movement
         match item with
             | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> item
             | _ -> emptyTile    
-                       
-    let newItemList (box: movableBox) itemList = 
-        List.filter (fun x ->  x <> (collide box x)) itemList  
-    
-    let collidedItem (box: movableBox) itemList =
+
+    let newInventory (box: movableBox) itemList inventory =
         let newList = List.filter (fun x -> x = (collide box x)) itemList
-        newList.Head
+        if newList.IsEmpty then inventory
+        else 
+                match newList.Head.status with
+                | AttackUp -> {inventory with AttackUpItem = true;}
+                | DefenseUp -> {inventory with DefenseUpItem = true;}
+                | HealthUp -> {inventory with HealthUpItem = true;}
+                | _-> inventory;
+        
+
+    let newItemList (box: movableBox) itemList = 
+        List.filter (fun x ->  x <> (collide box x)) itemList
+
+      
+    
+    
+        
 
 
     let render (box: movableBox) itemList  =
@@ -141,7 +153,7 @@ module movement
 
 
 
-    let rec Update (box:movableBox) (itemList: filledTile list) (inventory:Inventory) () =
+    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
@@ -153,20 +165,12 @@ module movement
             | (-1, 0) when  box.current_x > 0 -> {box with current_x = box.current_x - squareSize;} 
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box        
-
+    
         render newBox itemList
 
-        let j = collidedItem box itemList
-        let newInventory :Inventory =
-            match j.status with
-            | AttackUp -> {inventory with AttackUpItem = true;}
-            | DefenseUp -> {inventory with DefenseUpItem = true;}
-            | HealthUp -> {inventory with HealthUpItem = true;}
-            | _-> inventory;
+        printfn "%A" (inventory)
 
-        printfn "newInventory: %A" (newInventory)
-
-        window.setTimeout(Update newBox (newItemList newBox itemList) newInventory, 8000 / 60) |> ignore
+        window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList), 8000 / 60) |> ignore
                
 
         
@@ -183,11 +187,11 @@ module movement
 
     let itemList = [item1; item2; item3; item4; item5]
 
-    printf "newItemList: %A" (newItemList Box itemList)
+    //printf "newItemList: %A" (newItemList Box itemList)
 
    
 
 
-    Update Box (newItemList Box itemList) inv ()
+    Update Box inv itemList ()
 
 
