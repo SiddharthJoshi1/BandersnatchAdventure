@@ -125,7 +125,8 @@ module movement
 
 
     let image (src:string) =
-        let image = document.getElementsByTagName("img").[0] :?> HTMLImageElement
+        let image = document.getElementById("image") :?> HTMLImageElement
+        printfn "%A" (image.src)
         image
 
     let render (box: movableBox) itemList hazardList =
@@ -140,8 +141,7 @@ module movement
                 ctx.lineTo(v, gridWidth)
                 ctx.moveTo(0., v)
                 ctx.lineTo(gridWidth, v)
-                //ctx.fillRect(float(box.current_x), float(box.current_y),float(squareSize),float(squareSize)) 
-                "../img/dragon.png"
+                "#" //dud string for now 
                 |> image
                 |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
               
