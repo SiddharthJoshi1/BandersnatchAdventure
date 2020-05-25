@@ -49,10 +49,11 @@ module Movement
     // All these are immutables values
     let w = myCanvas.width
     let h = myCanvas.height
-    let steps = 20
     let squareSize = 20
+    let steps = 20
     let squareSizeSquared = (squareSize*squareSize)
     let stepSizedSquared = (steps*steps)
+   
     
     type Inventory = {
         AttackUpItem: bool;
@@ -213,7 +214,7 @@ module Movement
         printfn "%A" (inventory)
         printfn "%A" HP
 
-        let r = System.Random().Next(1, 5)
+        let r = System.Random().Next(1, 25)
         //printfn "%A" (newEnemy randNum enemyObj)
 
         window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList) hazardList (newHealth newBox hazardList HP enemyObj) (newEnemy r enemyObj), 8000 / 60) |> ignore
