@@ -15,6 +15,8 @@ module movement
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
 
+    //let mutable HP : Type.Health = {Health = 12us}
+    let mutable HP: int = 12
 
     module Keyboard =
 
@@ -24,7 +26,6 @@ module movement
         let code x =
             if keysPressed.Contains(x) then 1 else 0
            
-
          /// Returns pair with -1 for left or down and +1
         /// for right or up (0 if no or both keys are pressed)
         let arrows () =
@@ -36,14 +37,9 @@ module movement
             let op =  if pressed then Set.add else Set.remove
             keysPressed <- op keyCode keysPressed
 
-      
-
         let initKeyboard () =
             window.document.addEventListener("keydown", fun e -> update(e :?> _, true))
             window.document.addEventListener("keyup", fun e -> update(e :?> _, false))
-
-
-
 
     // All these are immutables values
     let w = myCanvas.width
@@ -78,7 +74,6 @@ module movement
         status: itemType;
     }
 
-
     // gridWidth needs a float wo we cast tour int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize) 
     let emptyTile = {current_x = 0; current_y = 0; status= Empty}
@@ -87,15 +82,32 @@ module movement
     // the arrow <- indicates we're mutating a value. It's a special operator in F#.
     myCanvas.width <- gridWidth
     myCanvas.height <- gridWidth
-
-
     // prepare our canvas operations
 
 
     let collide (box: movableBox) (item: filledTile) = 
         match item with
             | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> item
-            | _ -> emptyTile    
+            | _ -> emptyTile  
+
+    //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
+    let takeDamage (HP: int) = //takes in HP (int) and returns HP (int)
+          match HP with 
+          | 1 -> HP //if HP = 1, return HP
+          | _ -> (HP-1) //if HP = n return n-1
+
+    //check if collided with hazard
+    let hazardCollide (box: movableBox) (hazard: filledTile) = //takes a movable box (x,y,dir) and a filled tile (x,y,status) and returns a bool 
+        match hazard with //if movable box and filled tile collide return false
+            | hazard when box.current_x + squareSize > hazard.current_x && box.current_y < hazard.current_y + squareSize && box.current_y + squareSize > hazard.current_y && box.current_x < hazard.current_x + squareSize -> hazard
+            | _ -> emptyTile //if not collided return true
+
+    //iterate through list of hazards. if not collided return current hp. if collided take damage.
+    let newHealth (box:movableBox) (hazardList:filledTile list) (hp:int) : int = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
+        let newL = List.filter (fun j -> j = (hazardCollide box j)) hazardList
+        if newL.IsEmpty then hp
+        else
+            takeDamage(hp)        
 
     let newInventory (box: movableBox) itemList inventory =
         let newList = List.filter (fun x -> x = (collide box x)) itemList
@@ -106,18 +118,11 @@ module movement
                 | DefenseUp -> {inventory with DefenseUpItem = true;}
                 | HealthUp -> {inventory with HealthUpItem = true;}
                 | _-> inventory;
-        
 
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
 
-      
-    
-    
-        
-
-
-    let render (box: movableBox) itemList  =
+    let render (box: movableBox) itemList hazardList =
 
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
@@ -140,8 +145,13 @@ module movement
             ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
             ctx.fillStyle <- !^"#11babd"
             
+
+        for j in hazardList do
+                ctx.fillStyle <- !^"#0000FF"
+                ctx.fillRect(float(j.current_x), float(j.current_y),float(20),float(20))
+                ctx.fillStyle <- !^"#11babd"
+
         // draw our grid
-        
         ctx.stroke() 
         
        
@@ -151,9 +161,7 @@ module movement
        
     Keyboard.initKeyboard()
 
-
-
-    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list)  () =
+    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:int)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
@@ -166,11 +174,12 @@ module movement
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box        
     
-        render newBox itemList
+        render newBox itemList hazardList
 
         printfn "%A" (inventory)
+        printfn "%A" HP
 
-        window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList), 8000 / 60) |> ignore
+        window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList) hazardList (newHealth newBox hazardList HP), 8000 / 60) |> ignore
                
 
         
@@ -185,13 +194,14 @@ module movement
     let item4 = {current_x = 40; current_y = 80; status= AttackUp}
     let item5 = {current_x = 60; current_y = 40; status= AttackUp}
 
+
+    let hazard1 = {current_x = 60; current_y = 20; status = Empty}
+    let hazard2 = {current_x = 100; current_y = 40; status = Empty}
+
     let itemList = [item1; item2; item3; item4; item5]
+    let hazardList = [hazard1; hazard2]
 
     //printf "newItemList: %A" (newItemList Box itemList)
-
-   
-
-
-    Update Box inv itemList ()
+    Update Box inv itemList hazardList HP ()
 
 
