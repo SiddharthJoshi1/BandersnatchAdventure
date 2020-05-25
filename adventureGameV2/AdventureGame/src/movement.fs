@@ -142,17 +142,6 @@ module Movement
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
 
-<<<<<<< HEAD
-  
-
-
-
-
-
-
-
-    let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List)  =
-=======
 
     let position (x,y) (img : HTMLImageElement) =
         img?style?left <- x.ToString() + "px"
@@ -166,24 +155,12 @@ module Movement
         printfn "%A" (image.src)
         image
 
-    let render (box: movableBox) itemList hazardList =
->>>>>>> 9f2891a1f4f7bda11786caec4d0925fd029f5af8
+    let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) =
 
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         
         [0..steps] // this is a list
-<<<<<<< HEAD
-          |> Seq.iter( fun x -> // we iter through the list using an anonymous function
-              let v = float ((x) * squareSize) 
-              ctx.moveTo(v, 0.)
-              ctx.lineTo(v, gridWidth)
-              ctx.moveTo(0., v)
-              ctx.lineTo(gridWidth, v)
-              ctx.fillRect(float(box.current_x), float(box.current_y),float(squareSize),float(squareSize)) 
-              ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
-              //adding the item on to the grid
-=======
             |> Seq.iter( fun x -> // we iter through the list using an anonymous function
                 let v = float ((x) * squareSize) 
                 ctx.moveTo(v, 0.)
@@ -193,7 +170,7 @@ module Movement
                 "#" //dud string for now 
                 |> image
                 |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
->>>>>>> 9f2891a1f4f7bda11786caec4d0925fd029f5af8
+                ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
               
             ) 
         ctx.strokeStyle <- !^"#ddd" 
