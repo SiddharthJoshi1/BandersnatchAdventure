@@ -154,7 +154,7 @@ module Movement
 
     let image (src:string) =
         let image = document.getElementById("image") :?> HTMLImageElement
-        printfn "%A" (image.src)
+        image.src <- src
         image
 
     let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) =
@@ -169,7 +169,7 @@ module Movement
                 ctx.lineTo(v, gridWidth)
                 ctx.moveTo(0., v)
                 ctx.lineTo(gridWidth, v)
-                "#" //dud string for now 
+                "/img/dragon" + box.direction + ".png" 
                 |> image
                 |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
                 ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
@@ -204,10 +204,14 @@ module Movement
 
         let newBox :movableBox =
             match (Keyboard.arrows()) with 
-            | (0,1) when box.current_y > 0 ->  {box with current_y = box.current_y - squareSize;} 
-            | (0, -1) when  box.current_y + squareSize < squareSizeSquared -> {box with current_y = box.current_y + squareSize; }
-            | (-1, 0) when  box.current_x > 0 -> {box with current_x = box.current_x - squareSize;} 
-            | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
+            | (0,1) when box.current_y > 0 ->  
+                {box with current_y = box.current_y - squareSize;} 
+            | (0, -1) when  box.current_y + squareSize < squareSizeSquared -> 
+                {box with current_y = box.current_y + squareSize; }
+            | (-1, 0) when  box.current_x > 0 -> 
+                {box with current_x = box.current_x - squareSize; direction = "W"} 
+            | (1, 0) when  box.current_x + squareSize < squareSizeSquared -> 
+                {box with current_x = box.current_x + squareSize; direction = "E"}   
             | _ -> box        
     
         render newBox enemyObj itemList hazardList 
@@ -225,7 +229,7 @@ module Movement
         
         
 
-    let Box = { current_x = 0; current_y = 0; direction="" }
+    let Box = { current_x = 0; current_y = 0; direction="W" }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
     let item1 = {current_x = 80; current_y = 80; status= AttackUp}
     let item2 = {current_x = 120; current_y = 20; status= AttackUp}

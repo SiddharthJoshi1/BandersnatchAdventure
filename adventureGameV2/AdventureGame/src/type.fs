@@ -1,10 +1,10 @@
 module Type 
 
     type Inventory = {
-            attack_potion: bool; 
-            defence_potion: bool; 
-            health_potion: int; 
-            key: int;
+        attack_potion: bool; 
+        defence_potion: bool; 
+        health_potion: int; 
+        key: int;
      }
 
     type health = 
@@ -40,14 +40,20 @@ module Type
          | var2 when var2 = 5 -> true 
          | _ -> false 
  
-    type player = {
-         current_x: int;
-         current_y: int;
-         attackPower: int;
-         range: range;
-         attackState: bool;
-         attackUpActive: bool;
-         defenseUpActive: bool;
+    // type player = {
+    //      current_x: int;
+    //      current_y: int;
+    //      attackPower: int;
+    //      range: range;
+    //      attackState: bool;
+    //      attackUpActive: bool;
+    //      defenseUpActive: bool;
+    // }
+
+    type Player = {
+        X: int;
+        Y: int;
+        Dir: string
     }
 
     type tile = {
