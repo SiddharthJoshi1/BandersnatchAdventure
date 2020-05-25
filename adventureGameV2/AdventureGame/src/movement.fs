@@ -96,15 +96,9 @@ module movement
           | 1 -> HP //if HP = 1, return HP
           | _ -> (HP-1) //if HP = n return n-1
 
-    //check if collided with hazard
-    let hazardCollide (box: movableBox) (hazard: filledTile) = //takes a movable box (x,y,dir) and a filled tile (x,y,status) and returns a bool 
-        match hazard with //if movable box and filled tile collide return false
-            | hazard when box.current_x + squareSize > hazard.current_x && box.current_y < hazard.current_y + squareSize && box.current_y + squareSize > hazard.current_y && box.current_x < hazard.current_x + squareSize -> hazard
-            | _ -> emptyTile //if not collided return true
-
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (box:movableBox) (hazardList:filledTile list) (hp:int) : int = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
-        let newL = List.filter (fun j -> j = (hazardCollide box j)) hazardList
+        let newL = List.filter (fun j -> j = (collide box j)) hazardList
         if newL.IsEmpty then hp
         else
             takeDamage(hp)        
