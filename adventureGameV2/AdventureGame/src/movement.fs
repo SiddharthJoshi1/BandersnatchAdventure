@@ -116,20 +116,34 @@ module movement
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
 
+
+    let position (x,y) (img : HTMLImageElement) =
+        img?style?left <- x.ToString() + "px"
+        img?style?top <-  y.ToString() + "px"
+        img?style?width <- squareSize.ToString() + "px"
+        img?style?height <- squareSize.ToString() + "px"
+
+
+    let image (src:string) =
+        let image = document.getElementsByTagName("img").[0] :?> HTMLImageElement
+        image
+
     let render (box: movableBox) itemList hazardList =
 
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         
         [0..steps] // this is a list
-          |> Seq.iter( fun x -> // we iter through the list using an anonymous function
-              let v = float ((x) * squareSize) 
-              ctx.moveTo(v, 0.)
-              ctx.lineTo(v, gridWidth)
-              ctx.moveTo(0., v)
-              ctx.lineTo(gridWidth, v)
-              ctx.fillRect(float(box.current_x), float(box.current_y),float(squareSize),float(squareSize)) 
-              //adding the item on to the grid
+            |> Seq.iter( fun x -> // we iter through the list using an anonymous function
+                let v = float ((x) * squareSize) 
+                ctx.moveTo(v, 0.)
+                ctx.lineTo(v, gridWidth)
+                ctx.moveTo(0., v)
+                ctx.lineTo(gridWidth, v)
+                //ctx.fillRect(float(box.current_x), float(box.current_y),float(squareSize),float(squareSize)) 
+                "../img/dragon.png"
+                |> image
+                |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
               
             ) 
         ctx.strokeStyle <- !^"#ddd" 
