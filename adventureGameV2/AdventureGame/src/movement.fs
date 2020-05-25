@@ -1,11 +1,16 @@
-module movement 
+module Movement 
 
     open Fable.Core
     open Fable.Core.JsInterop
     open Browser.Types
     open Browser
 
+
+   
+
     let window = Browser.Dom.window
+
+    
 
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
@@ -85,6 +90,25 @@ module movement
     // prepare our canvas operations
 
 
+    // Enemy stuff starts
+
+    type enemy = {
+         current_x: int;
+         current_y: int;
+    }
+
+    let newEnemy randNum enemyObj:enemy =
+        match randNum with 
+        | 1  when enemyObj.current_y > 0 ->  {enemyObj with current_y = enemyObj.current_y - squareSize;} 
+        | 2  when  enemyObj.current_y + squareSize < squareSizeSquared -> {enemyObj with current_y = enemyObj.current_y + squareSize; }
+        | 3   when  enemyObj.current_x > 0 -> {enemyObj with current_x = enemyObj.current_x - squareSize;} 
+        | 4  when  enemyObj.current_x + squareSize < squareSizeSquared ->  {enemyObj with current_x = enemyObj.current_x + squareSize; }   
+        | _ -> enemyObj
+
+
+//Enemy stuff ends   
+
+
     let collide (box: movableBox) (item: filledTile) = 
         match item with
             | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> item
@@ -97,11 +121,13 @@ module movement
           | _ -> (HP-1) //if HP = n return n-1
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
-    let newHealth (box:movableBox) (hazardList:filledTile list) (hp:int) : int = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
+    let newHealth (box:movableBox) (hazardList:filledTile list) (hp:int) (enemyObj:enemy) : int = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
+        
         let newL = List.filter (fun j -> j = (collide box j)) hazardList
-        if newL.IsEmpty then hp
-        else
-            takeDamage(hp)        
+
+        if (enemyObj.current_x = box.current_x) && (enemyObj.current_y = box.current_y) then takeDamage(hp)
+        elif newL.IsEmpty then hp 
+        else takeDamage(hp)        
 
     let newInventory (box: movableBox) itemList inventory =
         let newList = List.filter (fun x -> x = (collide box x)) itemList
@@ -116,7 +142,15 @@ module movement
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
 
-    let render (box: movableBox) itemList hazardList =
+  
+
+
+
+
+
+
+
+    let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List)  =
 
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
@@ -129,6 +163,7 @@ module movement
               ctx.moveTo(0., v)
               ctx.lineTo(gridWidth, v)
               ctx.fillRect(float(box.current_x), float(box.current_y),float(squareSize),float(squareSize)) 
+              ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
               //adding the item on to the grid
               
             ) 
@@ -148,14 +183,13 @@ module movement
         // draw our grid
         ctx.stroke() 
         
-       
-             
+          
         
 
        
     Keyboard.initKeyboard()
 
-    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:int)  () =
+    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:int) (enemyObj:enemy)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
@@ -168,12 +202,15 @@ module movement
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared ->  {box with current_x = box.current_x + squareSize; }   
             | _ -> box        
     
-        render newBox itemList hazardList
+        render newBox enemyObj itemList hazardList 
 
         printfn "%A" (inventory)
         printfn "%A" HP
 
-        window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList) hazardList (newHealth newBox hazardList HP), 8000 / 60) |> ignore
+        let r = System.Random().Next(1, 5)
+        //printfn "%A" (newEnemy randNum enemyObj)
+
+        window.setTimeout(Update newBox (newInventory newBox itemList inventory) (newItemList newBox itemList) hazardList (newHealth newBox hazardList HP enemyObj) (newEnemy r enemyObj), 8000 / 60) |> ignore
                
 
         
@@ -196,6 +233,9 @@ module movement
     let hazardList = [hazard1; hazard2]
 
     //printf "newItemList: %A" (newItemList Box itemList)
-    Update Box inv itemList hazardList HP ()
+    let enemy1 = {current_x = 300; current_y = 300;}
+
+
+    Update Box inv itemList hazardList HP enemy1 ()
 
 
