@@ -21,7 +21,8 @@ module Movement
     let ctx = myCanvas.getContext_2d()
 
     //let mutable HP : Type.Health = {Health = 12us}
-    let mutable HP: int = 12
+    //let mutable HP: int = 12
+    let mutable HP = Type.health.Create(12us)
 
     module Keyboard =
 
@@ -116,13 +117,13 @@ module Movement
             | _ -> emptyTile  
 
     //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
-    let takeDamage (HP: int) = //takes in HP (int) and returns HP (int)
-          match HP with 
-          | 1 -> HP //if HP = 1, return HP
-          | _ -> (HP-1) //if HP = n return n-1
+    let takeDamage (HP: Type.health) = //takes in HP (int) and returns HP (int)
+          match HP.ToUInt16() with 
+          | 1us -> HP //if HP = 1, return HP
+          | _ -> Type.health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
-    let newHealth (box:movableBox) (hazardList:filledTile list) (hp:int) (enemyObj:enemy) : int = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
+    let newHealth (box:movableBox) (hazardList:filledTile list) (hp:Type.health) (enemyObj:enemy) : Type.health = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
         
         let newL = List.filter (fun j -> j = (collide box j)) hazardList
 
@@ -196,7 +197,7 @@ module Movement
        
     Keyboard.initKeyboard()
 
-    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:int) (enemyObj:enemy)  () =
+    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:Type.health) (enemyObj:enemy)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record synta
