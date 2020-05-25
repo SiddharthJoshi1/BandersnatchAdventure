@@ -7,7 +7,15 @@ module Type
             key: int;
      }
 
-    type health = { health:uint16}
+    type health = 
+        | HP of uint16
+        member h.ToUInt16() =  
+            let (HP n) = h in n
+        static member Create(h) =
+            let hp = h
+            HP(h)
+        static member (+) (HP a, HP b) = health.Create (a+b)
+        static member (-) (HP a, HP b) = health.Create (a-b)
    
 
     let healthCheck num =
