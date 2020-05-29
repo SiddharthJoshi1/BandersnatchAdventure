@@ -199,7 +199,7 @@ module Movement
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
-        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"]
+        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
 
         ctx.fillStyle <- !^"#eddfb9" //beige
