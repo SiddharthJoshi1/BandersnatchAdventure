@@ -103,6 +103,7 @@ module Movement
          current_x: int;
          current_y: int;
          isAlive: bool;
+         Dir: string;
     }
 
     let newEnemy randNum wallList enemyObj:enemy =
@@ -110,12 +111,13 @@ module Movement
         let upCheck  = List.exists (fun (x:filledTile) -> x.current_y = (enemyObj.current_y - squareSize) && x.current_x = enemyObj.current_x  ) wallList
         let rightCheck  = List.exists (fun (x:filledTile) -> x.current_x = (enemyObj.current_x + squareSize) && x.current_y = enemyObj.current_y  ) wallList
         let leftCheck  = List.exists (fun (x:filledTile) -> x.current_x = (enemyObj.current_x - squareSize) && x.current_y = enemyObj.current_y ) wallList
+
         match randNum with 
-        | 1  when enemyObj.current_y > 0 && not upCheck ->  {enemyObj with current_y = enemyObj.current_y - squareSize;} 
-        | 2  when  enemyObj.current_y + squareSize < squareSizeSquared  && not downCheck -> {enemyObj with current_y = enemyObj.current_y + squareSize; }
-        | 3   when  enemyObj.current_x > 0  && not leftCheck-> {enemyObj with current_x = enemyObj.current_x - squareSize;} 
-        | 4  when  enemyObj.current_x + squareSize < squareSizeSquared && not rightCheck ->  {enemyObj with current_x = enemyObj.current_x + squareSize; }   
-        | _ -> enemyObj
+            | 1  when enemyObj.current_y > 0 && not upCheck ->  {enemyObj with current_y = enemyObj.current_y - squareSize; Dir = "N"} 
+            | 2  when  enemyObj.current_y + squareSize < squareSizeSquared  && not downCheck -> {enemyObj with current_y = enemyObj.current_y + squareSize; Dir = "S" }
+            | 3   when  enemyObj.current_x > 0  && not leftCheck-> {enemyObj with current_x = enemyObj.current_x - squareSize; Dir = "W"} 
+            | 4  when  enemyObj.current_x + squareSize < squareSizeSquared && not rightCheck ->  {enemyObj with current_x = enemyObj.current_x + squareSize; Dir = "E" }   
+            | _ -> enemyObj
 
 
 //Enemy stuff ends   
@@ -188,16 +190,22 @@ module Movement
     let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-        
-        [0..steps] // this is a list
-            |> Seq.iter( fun x -> // we iter through the list using an anonymous function
-                let v = float ((x) * squareSize) 
-                ctx.moveTo(v, 0.)
-                ctx.lineTo(v, gridWidth)
-                ctx.moveTo(0., v)
-                ctx.lineTo(gridWidth, v)              
-            ) 
-        ctx.strokeStyle <- !^"#ddd" //light grey
+        //also clears the html images 
+        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"]
+        for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
+
+        ctx.fillStyle <- !^"#eddfb9" //beige
+        ctx.fillRect(0.0,0.0,gridWidth,gridWidth)
+
+        // [0..steps] // this is a list
+        //     |> Seq.iter( fun x -> // we iter through the list using an anonymous function
+        //         let v = float ((x) * squareSize) 
+        //         ctx.moveTo(v, 0.)
+        //         ctx.lineTo(v, gridWidth)
+        //         ctx.moveTo(0., v)
+        //         ctx.lineTo(gridWidth, v)              
+        //     ) 
+        // ctx.strokeStyle <- !^"#ddd" //light grey
 
         (("/img/dragon" + box.direction + ".png"),"player")
         |> image 
@@ -205,12 +213,18 @@ module Movement
         
         ctx.fillStyle <- !^"#11babd" //teal
         if enemyObj.isAlive then
-            ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
+             (("/img/knight" + enemyObj.Dir + ".png"),"enemy")
+                |> image 
+                |> position (float(squareSize/2 - 1 + enemyObj.current_x), float(squareSize/2 - 1 + enemyObj.current_y))
         
         for i in itemList do
-            ctx.fillStyle <- !^"#FF0000" //red
-            ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
-           
+            let imgSrc = 
+                match i.status with
+                |DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
+                |AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
+                |HealthUp -> ("/img/HealthPotion.png", "hpPotion")
+                |_ -> ("/img/whiteTile.png", "atkPotion")
+            imgSrc |> image |> position (float(squareSize/2 - 1 + i.current_x), float(squareSize/2 - 1 + i.current_y))
 
         for j in hazardList do
             ctx.fillStyle <- !^"#0000FF" //blue
@@ -284,11 +298,10 @@ module Movement
 
     let Box = { current_x = 0; current_y = 0; direction="W"; attacked=0; recovering= false }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
-    let item1 = {current_x = 80; current_y = 80; status= AttackUp; isWall = false}
-    let item2 = {current_x = 120; current_y = 20; status= DefenseUp; isWall = false}
-    let item3 = {current_x = 20; current_y = 40; status= AttackUp; isWall = false}
-    let item4 = {current_x = 40; current_y = 80; status= AttackUp; isWall = false}
-    let item5 = {current_x = 60; current_y = 40; status= AttackUp; isWall = false}
+    let atkPotion = {current_x = 80; current_y = 80; status= AttackUp; isWall = false}
+    let dfPotion = {current_x = 120; current_y = 20; status= DefenseUp; isWall = false}
+    let hpPotion = {current_x = 20; current_y = 40; status= HealthUp; isWall = false}
+ 
 
 
     let wall1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
@@ -299,12 +312,12 @@ module Movement
     let hazard1 = {current_x = 60; current_y = 20; status = Empty; isWall = false}
     let hazard2 = {current_x = 100; current_y = 40; status = Empty; isWall = false}
 
-    let itemList = [item1; item2; item3; item4; item5]
+    let itemList = [atkPotion; dfPotion; hpPotion;]
     let hazardList = [hazard1; hazard2]
     let wallList = [wall1; wall2; wall3 ]
 
     //printf "newItemList: %A" (newItemList Box itemList)
-    let enemy1 = {current_x = 300; current_y = 300; isAlive = true}
+    let enemy1 = {current_x = 300; current_y = 300; isAlive = true; Dir=""}
 
 
     Update Box inv itemList hazardList HP enemy1 wallList ()
