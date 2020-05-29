@@ -34,12 +34,15 @@ module Movement
         /// for right or up (0 if no or both keys are pressed)
         let arrows () =
             (code 39 - code 37, code 38 - code 40)
-
+        
+        let spaceBar () = code 32
         /// Update the state of the set for given key event
         let update (e : KeyboardEvent, pressed) =
             let keyCode = int e.keyCode
             let op =  if pressed then Set.add else Set.remove
             keysPressed <- op keyCode keysPressed
+
+         
 
         let initKeyboard () =
             window.document.addEventListener("keydown", fun e -> update(e :?> _, true))
@@ -99,14 +102,19 @@ module Movement
     type enemy = {
          current_x: int;
          current_y: int;
+         isAlive: bool;
     }
 
-    let newEnemy randNum enemyObj:enemy =
+    let newEnemy randNum wallList enemyObj:enemy =
+        let downCheck  = List.exists (fun (x:filledTile) -> x.current_y = (enemyObj.current_y + squareSize)  && x.current_x = enemyObj.current_x  ) wallList
+        let upCheck  = List.exists (fun (x:filledTile) -> x.current_y = (enemyObj.current_y - squareSize) && x.current_x = enemyObj.current_x  ) wallList
+        let rightCheck  = List.exists (fun (x:filledTile) -> x.current_x = (enemyObj.current_x + squareSize) && x.current_y = enemyObj.current_y  ) wallList
+        let leftCheck  = List.exists (fun (x:filledTile) -> x.current_x = (enemyObj.current_x - squareSize) && x.current_y = enemyObj.current_y ) wallList
         match randNum with 
-        | 1  when enemyObj.current_y > 0 ->  {enemyObj with current_y = enemyObj.current_y - squareSize;} 
-        | 2  when  enemyObj.current_y + squareSize < squareSizeSquared -> {enemyObj with current_y = enemyObj.current_y + squareSize; }
-        | 3   when  enemyObj.current_x > 0 -> {enemyObj with current_x = enemyObj.current_x - squareSize;} 
-        | 4  when  enemyObj.current_x + squareSize < squareSizeSquared ->  {enemyObj with current_x = enemyObj.current_x + squareSize; }   
+        | 1  when enemyObj.current_y > 0 && not upCheck ->  {enemyObj with current_y = enemyObj.current_y - squareSize;} 
+        | 2  when  enemyObj.current_y + squareSize < squareSizeSquared  && not downCheck -> {enemyObj with current_y = enemyObj.current_y + squareSize; }
+        | 3   when  enemyObj.current_x > 0  && not leftCheck-> {enemyObj with current_x = enemyObj.current_x - squareSize;} 
+        | 4  when  enemyObj.current_x + squareSize < squareSizeSquared && not rightCheck ->  {enemyObj with current_x = enemyObj.current_x + squareSize; }   
         | _ -> enemyObj
 
 
@@ -196,7 +204,8 @@ module Movement
         |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
         
         ctx.fillStyle <- !^"#11babd" //teal
-        ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
+        if enemyObj.isAlive then
+            ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
         
         for i in itemList do
             ctx.fillStyle <- !^"#FF0000" //red
@@ -225,13 +234,18 @@ module Movement
         //use pattern matching and with record syntax
         
         //let notWall = not (wallCollide box wallList)
-         
+
+        //wall checks
         let downCheck  = List.exists (fun (x:filledTile) -> x.current_y = (box.current_y + squareSize)  && x.current_x = box.current_x  ) wallList
         let upCheck  = List.exists (fun (x:filledTile) -> x.current_y = (box.current_y - squareSize) && x.current_x = box.current_x  ) wallList
         let rightCheck  = List.exists (fun (x:filledTile) -> x.current_x = (box.current_x + squareSize) && x.current_y = box.current_y  ) wallList
         let leftCheck  = List.exists (fun (x:filledTile) -> x.current_x = (box.current_x - squareSize) && x.current_y = box.current_y ) wallList
 
-
+        //enemy checks
+        let EdownCheck  =  enemyObj.current_y = (box.current_y + squareSize)  && enemyObj.current_x = box.current_x
+        let EupCheck  =  enemyObj.current_y = (box.current_y - squareSize) && enemyObj.current_x = box.current_x 
+        let ErightCheck  =  enemyObj.current_x = (box.current_x + squareSize) && enemyObj.current_y = box.current_y  
+        let EleftCheck  = enemyObj.current_x = (box.current_x - squareSize) && enemyObj.current_y = box.current_y 
 
         let newBox :movableBox =
             match (Keyboard.arrows()) with 
@@ -243,9 +257,14 @@ module Movement
                 {box with current_x = box.current_x - squareSize; direction = "W"} 
             | (1, 0) when  box.current_x + squareSize < squareSizeSquared && not rightCheck -> 
                 {box with current_x = box.current_x + squareSize; direction = "E"}   
-            | _ -> box        
+            | _ -> box 
 
-       // printfn "%A" (notWall)
+        let new_Enemy :enemy = 
+            match (Keyboard.spaceBar()) with
+            | 1 when (EdownCheck || EupCheck || ErightCheck || EleftCheck) ->  {enemyObj with isAlive = false}
+            | _ -> enemyObj
+
+        
     
         render newBox enemyObj itemList hazardList wallList
         
@@ -256,7 +275,7 @@ module Movement
         let r = System.Random().Next(1, 25)
         //printfn "%A" (newEnemy randNum enemyObj)
 
-        window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r enemyObj) wallList, 9000 / 60) |> ignore
+        window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r wallList new_Enemy) wallList, 9000 / 60) |> ignore
                
 
         
@@ -285,7 +304,7 @@ module Movement
     let wallList = [wall1; wall2; wall3 ]
 
     //printf "newItemList: %A" (newItemList Box itemList)
-    let enemy1 = {current_x = 300; current_y = 300;}
+    let enemy1 = {current_x = 300; current_y = 300; isAlive = true}
 
 
     Update Box inv itemList hazardList HP enemy1 wallList ()
