@@ -337,28 +337,48 @@ module Movement
     let Box = { current_x = 0; current_y = 0; direction="W"; attacked=0; recovering= false }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
     
-    let atkPotion = {current_x = 80; current_y = 80; status= AttackUp; isWall = false}
-    let dfPotion = {current_x = 120; current_y = 20; status= DefenseUp; isWall = false}
-    let hpPotion = {current_x = 20; current_y = 40; status= HealthUp; isWall = false}
+    let atkPotion = {current_x = 80; current_y = 260; status= AttackUp; isWall = false}
+    let dfPotion = {current_x = 120; current_y = 240; status= DefenseUp; isWall = false}
+    let hpPotion = {current_x = 20; current_y = 300; status= HealthUp; isWall = false}
     let keyItem = {current_x = 60; current_y = 40; status= Key; isWall = false}
 
 
-    let wall1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
-    let wall2 = {current_x = 240; current_y = 200; status = Empty; isWall = true}
-    let wall3 = {current_x = 260; current_y = 200; status = Empty; isWall = true}
-
+    //let wall1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
+    //let wall2 = {current_x = 240; current_y = 200; status = Empty; isWall = true}
+    //let wall3 = {current_x = 260; current_y = 200; status = Empty; isWall = true}
+    let wall4 = {current_x = 280; current_y = 200; status = Empty; isWall = true}
+    let wall5 = {current_x = 300; current_y = 200; status = Empty; isWall = true}
+    let wall6 = {current_x = 320; current_y = 200; status = Empty; isWall = true}
+    let wall7 = {current_x = 340; current_y = 200; status = Empty; isWall = true}
+    let wall8 = {current_x = 360; current_y = 200; status = Empty; isWall = true}
+    let wall9 = {current_x = 380; current_y = 200; status = Empty; isWall = true}
+    let wall10 = {current_x = 200; current_y = 200; status = Empty; isWall = true}
+    //let wall11 = {current_x = 180; current_y = 200; status = Empty; isWall = true}
+    //let wall12 = {current_x = 160; current_y = 200; status = Empty; isWall = true}
+    //let wall13 = {current_x = 140; current_y = 200; status = Empty; isWall = true}
+    let wall14 = {current_x = 120; current_y = 200; status = Empty; isWall = true}
+    let wall15 = {current_x = 100; current_y = 200; status = Empty; isWall = true}
+    let wall16 = {current_x = 80; current_y = 200; status = Empty; isWall = true}
+    let wall17 = {current_x = 60; current_y = 200; status = Empty; isWall = true}
+    let wall18 = {current_x = 40; current_y = 200; status = Empty; isWall = true}
+    let wall19 = {current_x = 20; current_y = 200; status = Empty; isWall = true}
+    let wall20 = {current_x = 0; current_y = 200; status = Empty; isWall = true}
 
     let hazard1 = {current_x = 60; current_y = 20; status = Empty; isWall = false}
     let hazard2 = {current_x = 100; current_y = 40; status = Empty; isWall = false}
 
-    let door1 = {current_x = 20; current_y = 60; status = Empty; isWall = true}
-    let door2 = {current_x = 80; current_y = 20; status = Empty; isWall = true}
+    let door1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
+    let door2 = {current_x = 240; current_y = 200; status = Empty; isWall = true}
+    let door3 = {current_x = 260; current_y = 200; status = Empty; isWall = true}
+    let door4 = {current_x = 180; current_y = 200; status = Empty; isWall = true}
+    let door5 = {current_x = 160; current_y = 200; status = Empty; isWall = true}
+    let door6 = {current_x = 140; current_y = 200; status = Empty; isWall = true}
 
     let itemList = [atkPotion; dfPotion; hpPotion;keyItem]
     
     let hazardList = [hazard1; hazard2]
-    let wallList = [wall1; wall2; wall3 ]
-    let doorList = [door1; door2]
+    let wallList = [wall4;wall5;wall6;wall7;wall8;wall9;wall10;wall14;wall15;wall16;wall17;wall18;wall19;wall20]
+    let doorList = [door1;door2;door3;door4;door5;door6]
 
     //printf "newItemList: %A" (newItemList Box itemList)
     let enemy1 = {current_x = 300; current_y = 300; isAlive = true; Dir=""}
