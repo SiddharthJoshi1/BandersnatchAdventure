@@ -185,7 +185,7 @@ module Movement
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
-        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
+        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
 
         ctx.fillStyle <- !^"#eddfb9" //beige
@@ -275,9 +275,9 @@ module Movement
         let newBox :movableBox =
             match (Keyboard.arrows()) with 
             | (0,1) when ((box.current_y > 0) && not upCheck) && ((box.current_y > 0) && not upDoor)  ->  
-                {box with current_y = box.current_y - squareSize;} 
+                {box with current_y = box.current_y - squareSize; direction = "N"} 
             | (0, -1) when  (box.current_y + squareSize < squareSizeSquared && not downCheck) && ((box.current_y + squareSize < squareSizeSquared) && not downDoor) -> 
-                {box with current_y = box.current_y + squareSize; }
+                {box with current_y = box.current_y + squareSize; direction = "S"}
             | (-1, 0) when  (box.current_x > 0 && not leftCheck) && ((box.current_x > 0) && not leftDoor) -> 
                 {box with current_x = box.current_x - squareSize; direction = "W"} 
             | (1, 0) when  (box.current_x + squareSize < squareSizeSquared && not rightCheck) && ((box.current_x + squareSize < squareSizeSquared) && not rightDoor) -> 
