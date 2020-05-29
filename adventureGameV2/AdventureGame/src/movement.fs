@@ -223,6 +223,7 @@ module Movement
                 |DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
                 |AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
                 |HealthUp -> ("/img/HealthPotion.png", "hpPotion")
+                |Key -> ("/img/key.png", "key")
                 |_ -> ("/img/whiteTile.png", "atkPotion")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.current_x), float(squareSize/2 - 1 + i.current_y))
 
