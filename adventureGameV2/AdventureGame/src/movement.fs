@@ -200,32 +200,30 @@ module Movement
                 ctx.moveTo(v, 0.)
                 ctx.lineTo(v, gridWidth)
                 ctx.moveTo(0., v)
-                ctx.lineTo(gridWidth, v)
-                (("/img/dragon" + box.direction + ".png"),"player")
-                |> image 
-                |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
-                ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
-              
+                ctx.lineTo(gridWidth, v)              
             ) 
-        ctx.strokeStyle <- !^"#ddd" 
-        // color
+        ctx.strokeStyle <- !^"#ddd" //light grey
+
+        (("/img/dragon" + box.direction + ".png"),"player")
+        |> image 
+        |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
+        
+        ctx.fillStyle <- !^"#11babd" //teal
+        ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
+        
         for i in itemList do
-            ctx.fillStyle <- !^"#FF0000"
+            ctx.fillStyle <- !^"#FF0000" //red
             ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
-            
-            
+           
 
         for j in hazardList do
-                ctx.fillStyle <- !^"#0000FF"
-                ctx.fillRect(float(j.current_x), float(j.current_y),float(20),float(20))
+            ctx.fillStyle <- !^"#0000FF" //blue
+            ctx.fillRect(float(j.current_x), float(j.current_y),float(20),float(20))
                 
 
         for k in wallList do
-                ctx.fillStyle <- !^"#080808"
-                ctx.fillRect(float(k.current_x), float(k.current_y),float(20),float(20))
-                
-        // draw our grid
-        ctx.fillStyle <- !^"#11babd"
+            ctx.fillStyle <- !^"#080808" //fucked up black
+            ctx.fillRect(float(k.current_x), float(k.current_y),float(20),float(20))
         ctx.stroke() 
         
           
