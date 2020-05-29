@@ -86,11 +86,12 @@ module Movement
         current_x: int;
         current_y: int
         status: itemType;
+        isWall: bool;
     }
 
     // gridWidth needs a float wo we cast tour int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize) 
-    let emptyTile = {current_x = 0; current_y = 0; status= Empty}
+    let emptyTile = {current_x = 0; current_y = 0; status= Empty; isWall = false}
 
     // resize our canvas to the size of our grid
     // the arrow <- indicates we're mutating a value. It's a special operator in F#.
@@ -120,21 +121,34 @@ module Movement
 
     let collide (box: movableBox) (item: filledTile) = 
         match item with
-            | item when box.current_x + squareSize > item.current_x && box.current_y < item.current_y + squareSize && box.current_y + squareSize > item.current_y && box.current_x < item.current_x + squareSize -> item
-            | _ -> emptyTile  
-
-    let wallCollide (box: movableBox) (item: filledTile) = 
-        match item with
-            | item when box.current_x + squareSize + squareSize > item.current_x && box.current_y - squareSize  < item.current_y + squareSize && box.current_y + squareSize + squareSize > item.current_y && box.current_x - squareSize < item.current_x + squareSize -> item
+            | item when box.current_x + squareSize > item.current_x 
+                && box.current_y < item.current_y + squareSize 
+                && box.current_y + squareSize > item.current_y 
+                && box.current_x < item.current_x + squareSize 
+                -> item
             | _ -> emptyTile 
 
-    let wallDirection (box: movableBox) (item: filledTile) =
-        match item with
-            | item when box.current_x + squareSize  = item.current_x -> "Left"
-            | item when box.current_y - squareSize  = item.current_y  -> "Down"
-            | item when  box.current_y + squareSize = item.current_y -> "Up"
-            | item when  box.current_x - squareSize = item.current_x  -> "Right"
-            | _ -> "None"  
+    let wallCollide (box: movableBox) (itemList: filledTile List) = 
+        let newList = List.filter (fun x -> x = (collide box x)) itemList
+        if newList.IsEmpty then false
+        else (collide box newList.Head).isWall //check if wall item
+
+    // let wallCollide (box: movableBox) (item: filledTile) = 
+    //     match item with
+    //         | item when box.current_x + squareSize + squareSize > item.current_x 
+    //             && box.current_y - squareSize  < item.current_y + squareSize 
+    //             && box.current_y + squareSize + squareSize > item.current_y 
+    //             && box.current_x - squareSize < item.current_x + squareSize
+    //             -> item
+    //         | _ -> emptyTile 
+
+    // let wallDirection (box: movableBox) (item: filledTile) =
+    //     match item with
+    //         | item when box.current_x + squareSize  = item.current_x -> "Left"
+    //         | item when box.current_y - squareSize  = item.current_y  -> "Down"
+    //         | item when  box.current_y + squareSize = item.current_y -> "Up"
+    //         | item when  box.current_x - squareSize = item.current_x  -> "Right"
+    //         | _ -> "None"  
 
     //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
 
@@ -148,26 +162,23 @@ module Movement
     
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (box:movableBox) (hazardList:filledTile list) (hp:Type.health) (enemyObj:enemy) : Type.health = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
-            let newL = List.filter (fun j -> j = (collide box j)) hazardList
-            if (enemyObj.current_x = box.current_x) && (enemyObj.current_y = box.current_y) then takeDamage(hp) elif newL.IsEmpty then hp else takeDamage(hp)// Sleep for 500ms
+        let newL = List.filter (fun j -> j = (collide box j)) hazardList
+        if (enemyObj.current_x = box.current_x) && (enemyObj.current_y = box.current_y) 
+            then takeDamage(hp) 
+        elif newL.IsEmpty 
+            then hp 
+        else takeDamage(hp)// Sleep for 500ms
           
-
 
     let newInventory (box: movableBox) itemList inventory =
         let newList = List.filter (fun x -> x = (collide box x)) itemList
         if newList.IsEmpty then inventory
         else 
-                match newList.Head.status with
-                | AttackUp -> {inventory with AttackUpItem = true;}
-                | DefenseUp -> {inventory with DefenseUpItem = true;}
-                | HealthUp -> {inventory with HealthUpItem = true;}
-                | _-> inventory;
- 
-    let wallCheck (box: movableBox) wallList  =
-       let newL = List.filter (fun j -> j = (wallCollide box j)) wallList
-       if newL.IsEmpty then "None"
-       else wallDirection box newL.Head
-                
+            match newList.Head.status with
+            | AttackUp -> {inventory with AttackUpItem = true;}
+            | DefenseUp -> {inventory with DefenseUpItem = true;}
+            | HealthUp -> {inventory with HealthUpItem = true;}
+            | _-> inventory;              
 
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
@@ -186,7 +197,6 @@ module Movement
         image
 
     let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) =
-
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         
@@ -232,36 +242,30 @@ module Movement
     let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:Type.health) (enemyObj:enemy) (wallList: filledTile list)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
-        //use pattern matching and with record synta
-
+        //use pattern matching and with record syntax
         
+        let notWall = not (wallCollide box wallList)
 
 
         let newBox :movableBox =
             match (Keyboard.arrows()) with 
-            | (0,1) when (box.current_y > 0) && not ((wallCheck box wallList).Equals("Up")) ->  
+            | (0,1) when (box.current_y > 0) && notWall ->  
                 {box with current_y = box.current_y - squareSize;} 
-            | (0, -1) when  box.current_y + squareSize < squareSizeSquared && not ((wallCheck box wallList).Equals("Down")) -> 
+            | (0, -1) when  box.current_y + squareSize < squareSizeSquared && notWall -> 
                 {box with current_y = box.current_y + squareSize; }
-            | (-1, 0) when  box.current_x > 0 && not ((wallCheck box wallList).Equals("Left")) -> 
+            | (-1, 0) when  box.current_x > 0 && notWall -> 
                 {box with current_x = box.current_x - squareSize; direction = "W"} 
-            | (1, 0) when  box.current_x + squareSize < squareSizeSquared && not ((wallCheck box wallList).Equals("Right")) -> 
+            | (1, 0) when  box.current_x + squareSize < squareSizeSquared && notWall -> 
                 {box with current_x = box.current_x + squareSize; direction = "E"}   
             | _ -> box        
+
+        printfn "%A" (notWall)
     
         render newBox enemyObj itemList hazardList wallList
+        
 
-        
-        
-       
-    
         let newBox1 = if ((newHealth newBox hazardList HP enemyObj) = (HP - Type.health.Create(1us) )  ) then {newBox with attacked = newBox.attacked + 1; recovering = true} else newBox 
-                  
-        
-        
-        
-                 
-
+              
         
         let r = System.Random().Next(1, 25)
         //printfn "%A" (newEnemy randNum enemyObj)
@@ -275,18 +279,18 @@ module Movement
 
     let Box = { current_x = 0; current_y = 0; direction="W"; attacked=0; recovering= false }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
-    let item1 = {current_x = 80; current_y = 80; status= AttackUp}
-    let item2 = {current_x = 120; current_y = 20; status= DefenseUp}
-    let item3 = {current_x = 20; current_y = 40; status= AttackUp}
-    let item4 = {current_x = 40; current_y = 80; status= AttackUp}
-    let item5 = {current_x = 60; current_y = 40; status= AttackUp}
+    let item1 = {current_x = 80; current_y = 80; status= AttackUp; isWall = false}
+    let item2 = {current_x = 120; current_y = 20; status= DefenseUp; isWall = false}
+    let item3 = {current_x = 20; current_y = 40; status= AttackUp; isWall = false}
+    let item4 = {current_x = 40; current_y = 80; status= AttackUp; isWall = false}
+    let item5 = {current_x = 60; current_y = 40; status= AttackUp; isWall = false}
 
 
-    let wall1 = {current_x = 220; current_y = 200; status = Empty}
-    let wall2 = {current_x = 200; current_y = 200; status = Empty}
+    let wall1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
+    let wall2 = {current_x = 200; current_y = 200; status = Empty; isWall = true}
 
-    let hazard1 = {current_x = 60; current_y = 20; status = Empty}
-    let hazard2 = {current_x = 100; current_y = 40; status = Empty}
+    let hazard1 = {current_x = 60; current_y = 20; status = Empty; isWall = false}
+    let hazard2 = {current_x = 100; current_y = 40; status = Empty; isWall = false}
 
     let itemList = [item1; item2; item3; item4; item5]
     let hazardList = [hazard1; hazard2]
