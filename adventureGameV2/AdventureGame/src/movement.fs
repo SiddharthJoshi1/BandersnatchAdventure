@@ -170,22 +170,25 @@ module Movement
         else
             List.filter (fun x ->  x <> (collide box x)) doorList
 
+
+
+
     let position (x,y) (img : HTMLImageElement) =
         img?style?left <- x.ToString() + "px"
         img?style?top <-  y.ToString() + "px"
         img?style?width <- squareSize.ToString() + "px"
-        img?style?height <- squareSize.ToString() + "px"
+        //img?style?height <- squareSize.ToString() + "px"
 
     let image ((src : string), (id : string)) =
         let image = document.getElementById(id) :?> HTMLImageElement
-        if image.src <> src then image.src <- src
+        if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
     let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) (doorList: filledTile List) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
-        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
+        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
 
         ctx.fillStyle <- !^"#eddfb9" //beige
@@ -200,6 +203,7 @@ module Movement
         //         ctx.lineTo(gridWidth, v)              
         //     ) 
         // ctx.strokeStyle <- !^"#ddd" //light grey
+
         (("/img/" + box.direction + ".gif"),"player")
         |> image 
         |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
@@ -301,10 +305,10 @@ module Movement
         //printfn "%A" HP
 
         if (HP <> Type.health.Create(1us)) then 
-            window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory doorList) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r wallList new_Enemy) wallList (newDoorList newBox1 doorList inventory), 9000 / 60) |> ignore
+            window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory doorList) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r wallList new_Enemy) wallList (newDoorList newBox1 doorList inventory), 8000 / 60) |> ignore
         else 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"]
+             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
 
