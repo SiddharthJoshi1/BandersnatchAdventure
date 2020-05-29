@@ -192,7 +192,7 @@ module Movement
 
     let image ((src : string), (id : string)) =
         let image = document.getElementById(id) :?> HTMLImageElement
-        image.src <- src
+        if image.src <> src then image.src <- src
         image
 
     let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) (doorList: filledTile List) =
@@ -214,8 +214,7 @@ module Movement
         //         ctx.lineTo(gridWidth, v)              
         //     ) 
         // ctx.strokeStyle <- !^"#ddd" //light grey
-
-        (("/img/dragon" + box.direction + ".png"),"player")
+        (("/img/" + box.direction + ".gif"),"player")
         |> image 
         |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
         
