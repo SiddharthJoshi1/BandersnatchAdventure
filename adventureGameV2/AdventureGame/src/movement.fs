@@ -5,16 +5,10 @@ module Movement
     open Browser.Types
     open Browser
     open System
-    
-   
-    
-    
-
-   
+  
 
     let window = Browser.Dom.window
 
-    
 
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
@@ -191,8 +185,8 @@ module Movement
         img?style?height <- squareSize.ToString() + "px"
 
 
-    let image (src:string) =
-        let image = document.getElementById("image") :?> HTMLImageElement
+    let image ((src : string), (id : string)) =
+        let image = document.getElementById(id) :?> HTMLImageElement
         image.src <- src
         image
 
@@ -207,8 +201,8 @@ module Movement
                 ctx.lineTo(v, gridWidth)
                 ctx.moveTo(0., v)
                 ctx.lineTo(gridWidth, v)
-                "/img/dragon" + box.direction + ".png" 
-                |> image
+                (("/img/dragon" + box.direction + ".png"),"player")
+                |> image 
                 |> position ( float(squareSize/2 - 1 + box.current_x), float(squareSize/2 - 1 + box.current_y))
                 ctx.fillRect(float(enemyObj.current_x), float(enemyObj.current_y), float(squareSize), float(squareSize))
               
