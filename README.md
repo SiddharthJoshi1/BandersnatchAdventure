@@ -1,4 +1,5 @@
 # BandersnatchAdventure
-Adventure Game course work
+Untitled Dragon Game
+-Discrete Mathematics and Declarative Programming: Adventure Game Project-
 
-Adam Cordner, Natasja Hopkin, Siddharth Joshi
+Developed by Natasja Hopkin, Siddharth Joshi, and Adam Cordner
