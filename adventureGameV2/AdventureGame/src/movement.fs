@@ -231,6 +231,7 @@ module Movement
                 |DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
                 |AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
                 |HealthUp -> ("/img/HealthPotion.png", "hpPotion")
+                |Key -> ("/img/key.png", "key")
                 |_ -> ("/img/whiteTile.png", "atkPotion")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.current_x), float(squareSize/2 - 1 + i.current_y))
 
@@ -322,9 +323,16 @@ module Movement
               
         
         let r = System.Random().Next(1, 25)
-        //printfn "%A" (newEnemy randNum enemyObj)
+        printfn "%A" HP
 
-        window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r wallList new_Enemy) wallList (newDoorList newBox1 doorList inventory), 9000 / 60) |> ignore
+
+        if (HP <> Type.health.Create(1us)) then 
+            window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r wallList new_Enemy) wallList (newDoorList newBox1 doorList inventory), 9000 / 60) |> ignore
+        else 
+             ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
+             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"]
+             for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
+             ctx.fillText("GAME OVER", float(200), float(200));
 
     let Box = { current_x = 0; current_y = 0; direction="W"; attacked=0; recovering= false }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
