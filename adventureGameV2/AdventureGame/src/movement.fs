@@ -142,13 +142,13 @@ module Movement
     //             -> item
     //         | _ -> emptyTile 
 
-    // let wallDirection (box: movableBox) (item: filledTile) =
-    //     match item with
-    //         | item when box.current_x + squareSize  = item.current_x -> "Left"
-    //         | item when box.current_y - squareSize  = item.current_y  -> "Down"
-    //         | item when  box.current_y + squareSize = item.current_y -> "Up"
-    //         | item when  box.current_x - squareSize = item.current_x  -> "Right"
-    //         | _ -> "None"  
+    let wallDirection (box: movableBox) (item: filledTile) =
+        match item with
+            | item when box.current_x + squareSize  = item.current_x -> "Left"
+            | item when box.current_y - squareSize  = item.current_y  -> "Down"
+            | item when  box.current_y + squareSize = item.current_y -> "Up"
+            | item when  box.current_x - squareSize = item.current_x  -> "Right"
+            | _ -> "None"  
 
     //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
 
@@ -218,19 +218,20 @@ module Movement
         for i in itemList do
             ctx.fillStyle <- !^"#FF0000"
             ctx.fillRect(float(i.current_x), float(i.current_y),float(20),float(20))
-            ctx.fillStyle <- !^"#11babd"
+            
             
 
         for j in hazardList do
                 ctx.fillStyle <- !^"#0000FF"
                 ctx.fillRect(float(j.current_x), float(j.current_y),float(20),float(20))
-                ctx.fillStyle <- !^"#11babd"
+                
 
         for k in wallList do
                 ctx.fillStyle <- !^"#080808"
                 ctx.fillRect(float(k.current_x), float(k.current_y),float(20),float(20))
-                ctx.fillStyle <- !^"#062829"
+                
         // draw our grid
+        ctx.fillStyle <- !^"#11babd"
         ctx.stroke() 
         
           
