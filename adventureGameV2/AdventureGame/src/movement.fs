@@ -157,12 +157,20 @@ module Movement
         else 
             match newList.Head.status with
             | AttackUp -> {inventory with AttackUpItem = true;}
-            | DefenseUp -> {inventory with DefenseUpItem = true;}
+            | DefenseUp -> {inventory with DefenseUpItem = true;}            
+            | Key -> {inventory with Keys = inventory.Keys+1;}//added keys
             | HealthUp -> {inventory with HealthUpItem = true;}
             | _-> inventory;              
 
     let newItemList (box: movableBox) itemList = 
         List.filter (fun x ->  x <> (collide box x)) itemList
+
+    let newDoorList (box: movableBox) (doorList: filledTile list) (inventory: Inventory) =
+        let newD = List.filter (fun j -> j = (collide box j)) doorList
+        if (inventory.Keys=0) then
+            doorList
+        else
+            List.filter (fun x ->  x <> (collide box x)) doorList
 
 
     let position (x,y) (img : HTMLImageElement) =
@@ -177,7 +185,7 @@ module Movement
         image.src <- src
         image
 
-    let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) =
+    let render (box: movableBox) (enemyObj:enemy) (itemList:filledTile List) (hazardList: filledTile List) (wallList: filledTile List) (doorList: filledTile List) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         
@@ -212,6 +220,12 @@ module Movement
             ctx.fillStyle <- !^"#080808" //fucked up black
             ctx.fillRect(float(k.current_x), float(k.current_y),float(20),float(20))
         ctx.stroke() 
+
+        for l in doorList do
+                ctx.fillStyle <- !^"#ffff00"
+                ctx.fillRect(float(l.current_x), float(l.current_y),float(20),float(20))
+        ctx.fillStyle <- !^"#062829"
+
         
           
         
@@ -219,7 +233,7 @@ module Movement
        
     Keyboard.initKeyboard()
 
-    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:Type.health) (enemyObj:enemy) (wallList: filledTile list)  () =
+    let rec Update (box:movableBox) (inventory:Inventory) (itemList: filledTile list) (hazardList: filledTile list) (HP:Type.health) (enemyObj:enemy) (wallList: filledTile list) (doorList: filledTile list)  () =
         //let box = box |> moveBox (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
@@ -231,32 +245,51 @@ module Movement
         let rightCheck  = List.exists (fun (x:filledTile) -> x.current_x = (box.current_x + squareSize) && x.current_y = box.current_y  ) wallList
         let leftCheck  = List.exists (fun (x:filledTile) -> x.current_x = (box.current_x - squareSize) && x.current_y = box.current_y ) wallList
 
-
+        let downDoor  = 
+            if inventory.Keys > 0 then
+                false
+            else List.exists (fun (x:filledTile) -> x.current_y = (box.current_y + squareSize)  && x.current_x = box.current_x  ) doorList
+        let upDoor  = 
+            if inventory.Keys > 0 then
+                false
+            else List.exists (fun (x:filledTile) -> x.current_y = (box.current_y - squareSize) && x.current_x = box.current_x  ) doorList
+        let rightDoor  = 
+            if inventory.Keys > 0 then 
+                false
+            else List.exists (fun (x:filledTile) -> x.current_x = (box.current_x + squareSize) && x.current_y = box.current_y  ) doorList
+        let leftDoor  = 
+            if inventory.Keys > 0 then
+                false
+            else List.exists (fun (x:filledTile) -> x.current_x = (box.current_x - squareSize) && x.current_y = box.current_y ) doorList
 
         let newBox :movableBox =
             match (Keyboard.arrows()) with 
-            | (0,1) when (box.current_y > 0) && not upCheck  ->  
+            | (0,1) when ((box.current_y > 0) && not upCheck) && ((box.current_y > 0) && not upDoor)  ->  
                 {box with current_y = box.current_y - squareSize;} 
-            | (0, -1) when  box.current_y + squareSize < squareSizeSquared && not downCheck -> 
+            | (0, -1) when  (box.current_y + squareSize < squareSizeSquared && not downCheck) && ((box.current_y + squareSize < squareSizeSquared) && not downDoor) -> 
                 {box with current_y = box.current_y + squareSize; }
-            | (-1, 0) when  box.current_x > 0 && not leftCheck -> 
+            | (-1, 0) when  (box.current_x > 0 && not leftCheck) && ((box.current_x > 0) && not leftDoor) -> 
                 {box with current_x = box.current_x - squareSize; direction = "W"} 
-            | (1, 0) when  box.current_x + squareSize < squareSizeSquared && not rightCheck -> 
+            | (1, 0) when  (box.current_x + squareSize < squareSizeSquared && not rightCheck) && ((box.current_x + squareSize < squareSizeSquared) && not rightDoor) -> 
                 {box with current_x = box.current_x + squareSize; direction = "E"}   
             | _ -> box        
 
        // printfn "%A" (notWall)
     
-        render newBox enemyObj itemList hazardList wallList
+        render newBox enemyObj itemList hazardList wallList doorList
         
 
-        let newBox1 = if ((newHealth newBox hazardList HP enemyObj) = (HP - Type.health.Create(1us) )  ) then {newBox with attacked = newBox.attacked + 1; recovering = true} else newBox 
+        let newBox1 = 
+            if ((newHealth newBox hazardList HP enemyObj) = (HP - Type.health.Create(1us) )  ) then 
+                {newBox with attacked = newBox.attacked + 1; recovering = true} 
+            else
+                newBox 
               
         
         let r = System.Random().Next(1, 25)
         //printfn "%A" (newEnemy randNum enemyObj)
 
-        window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r enemyObj) wallList, 9000 / 60) |> ignore
+        window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemy r enemyObj) wallList (newDoorList newBox1 doorList inventory), 9000 / 60) |> ignore
                
 
         
@@ -269,7 +302,7 @@ module Movement
     let item2 = {current_x = 120; current_y = 20; status= DefenseUp; isWall = false}
     let item3 = {current_x = 20; current_y = 40; status= AttackUp; isWall = false}
     let item4 = {current_x = 40; current_y = 80; status= AttackUp; isWall = false}
-    let item5 = {current_x = 60; current_y = 40; status= AttackUp; isWall = false}
+    let item5 = {current_x = 60; current_y = 40; status= Key; isWall = false}
 
 
     let wall1 = {current_x = 220; current_y = 200; status = Empty; isWall = true}
@@ -280,14 +313,20 @@ module Movement
     let hazard1 = {current_x = 60; current_y = 20; status = Empty; isWall = false}
     let hazard2 = {current_x = 100; current_y = 40; status = Empty; isWall = false}
 
+
+    let door1 = {current_x = 20; current_y = 60; status = Empty; isWall = true}
+    let door2 = {current_x = 80; current_y = 20; status = Empty; isWall = true}
+
+
     let itemList = [item1; item2; item3; item4; item5]
     let hazardList = [hazard1; hazard2]
     let wallList = [wall1; wall2; wall3 ]
+    let doorList = [door1; door2]
 
     //printf "newItemList: %A" (newItemList Box itemList)
     let enemy1 = {current_x = 300; current_y = 300;}
 
 
-    Update Box inv itemList hazardList HP enemy1 wallList ()
+    Update Box inv itemList hazardList HP enemy1 wallList doorList ()
 
 
