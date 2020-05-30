@@ -287,7 +287,7 @@ module Main
 
     //end update function
    
-    let Level: Type.Level = {Level = 1}
+    let Level: Type.Level = {Level = 0}
     let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
    
@@ -300,6 +300,7 @@ module Main
         LevelOne.enemyList.[Level.Level] 
         LevelOne.wallList.[Level.Level]  
         LevelOne.doorList.[Level.Level] 
+        LevelOne.stairList.[Level.Level]
         ()
 
 
