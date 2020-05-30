@@ -45,6 +45,7 @@ module LevelOne
  
 
         let enemy1 :Type.Enemy = {X = 300; Y = 300; IsAlive = true; Dir=""; HP = 3}
+<<<<<<< HEAD
 
         //LEVEL 2
 
@@ -64,3 +65,6 @@ module LevelOne
         let hazardList = [hazards1; hazards2]
         let doorList = [doors1; doors2]
         let enemyList = [enemy1; enemy2]
+=======
+        let stairs1 : Type.FilledTile = {X = 0; Y = 360; Status = Type.ItemType.Empty; IsWall = true}
+>>>>>>> 559e8bf829084630fc46d923b165ab2f0d453222

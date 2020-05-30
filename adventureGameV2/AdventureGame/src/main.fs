@@ -130,7 +130,7 @@ module Main
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) HP (inventory:Type.Inventory) =
+    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) HP (inventory:Type.Inventory) (stairs: Type.FilledTile) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
        
@@ -182,7 +182,12 @@ module Main
         for l in doorList do
                 ctx.fillStyle <- !^"#ffff00"
                 ctx.fillRect(float(l.X), float(l.Y),float(20),float(20))
+        
+
+        ctx.fillStyle <- !^"#03fc03"
+        ctx.fillRect(float(stairs.X), float(stairs.Y),float(20),float(20))
         ctx.fillStyle <- !^"#062829"
+
         ctx.fillStyle <- !^"#000000" //black
         let hpString :string =  string HP 
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up: 1" else "Attack Up:"
@@ -197,7 +202,7 @@ module Main
 
     Keyboard.initKeyboard()
 
-    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list)  () =
+    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list) (stairs: Type.FilledTile)  () =
         //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
@@ -251,11 +256,13 @@ module Main
                 | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
                 | _ -> enemyObj
 
-        render newDragon enemyObj itemList hazardList wallList doorList HP inventory
+        render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairs
         
         let r = System.Random().Next(1, 25)
         
         //TODO: LEVEL CHECK
+        if(collide newDragon stairs <> emptyTile) then 
+            printf "%A" "stairs found"
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
@@ -273,7 +280,9 @@ module Main
                     (newHealth newDragon hazardList HP enemyObj)  
                     (newEnemyL r wallList doorList newEnemy) 
                     wallList 
-                    (newDoorList newDragon doorList inventory), 8000 / 60
+                    (newDoorList newDragon doorList inventory)
+                    stairs
+                    , 8000 / 60
                 ) |> ignore
 
     //end update function
