@@ -134,7 +134,7 @@ module Movement
           //takes in HP (int) and returns HP (int)
           match HP.ToUInt16() with 
           | 1us -> HP //if HP = 1, return HP
-          | _ -> Type.Health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
+          | _ -> Type.Health.Create(HP.ToUInt16()-2us) //if HP = n return n-1
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (dragon:MovableDragon) (hazardList:FilledTile list) (hp:Type.Health) (enemyObj:Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
