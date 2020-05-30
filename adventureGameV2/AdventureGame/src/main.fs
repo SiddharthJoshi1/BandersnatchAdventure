@@ -285,12 +285,14 @@ module Main
                     wallList 
                     (newDoorList newDragon doorList inventory), 8000 / 60
                 ) |> ignore
-         
+   
+    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
+    let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
 
 
     Update 
-        LevelOne.Dragon 
-        LevelOne.inv 
+        Dragon 
+        inv 
         LevelOne.itemList 
         LevelOne.hazardList 
         HP 

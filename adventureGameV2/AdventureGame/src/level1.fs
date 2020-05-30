@@ -1,6 +1,4 @@
 module LevelOne
-    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
-    let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     
     let atkPotion :Type.FilledTile = {X = 80; Y = 260; Status= Type.ItemType.AttackUp; IsWall = false}
     let dfPotion :Type.FilledTile = {X = 120; Y = 240; Status= Type.ItemType.DefenseUp; IsWall = false}
