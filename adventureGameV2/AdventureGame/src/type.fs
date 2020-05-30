@@ -1,5 +1,5 @@
 module Type 
-    //used
+
     type Inventory = {
         AttackUpItem: bool;
         DefenseUpItem: bool;
@@ -7,7 +7,41 @@ module Type
         Keys: int;
     }
 
-    
+    type ItemType = 
+        | AttackUp
+        | DefenseUp
+        | HealthUp
+        | Key
+        | Empty
+
+    type MovableDragon = {
+        X: int
+        Y: int
+        Direction: string
+        Attacked: int
+        Recovering: bool
+    }
+
+    type FilledTile = {
+        X: int
+        Y: int
+        Status: ItemType
+        IsWall: bool
+    }
+
+    // type Wall = {
+    //     X: int
+    //     Y: int
+    //     IsWall: bool
+    // }
+
+    type Enemy = {
+         X: int;
+         Y: int;
+         HP: int;
+         IsAlive: bool;
+         Dir: string;
+    }
 
     type Health = 
         | HP of uint16
@@ -41,64 +75,3 @@ module Type
          | var1 when var1 = 1 -> true 
          | var2 when var2 = 5 -> true 
          | _ -> false 
- 
-    // type player = {
-    //      current_x: int;
-    //      current_y: int;
-    //      attackPower: int;
-    //      range: range;
-    //      attackState: bool;
-    //      attackUpActive: bool;
-    //      defenseUpActive: bool;
-    // }
-
-    type Player = {
-        X: int;
-        Y: int;
-        Dir: string
-    }
-
-    type Tile = {
-        X: int;
-        Y: int;
-    }
-
-    type Door = {
-        Tile: Tile;
-        IsOpen: bool;
-    }
-
- 
-    type Stairs = {
-        Tile:Tile;
-    }
- 
-    type Key = {
-        Tile:Tile;
-    }
-
-    type ItemType = 
-            | AttackUp
-            | DefenseUp
-            | HealthUp
-
-    type Item = {
-        ItemType: ItemType;
-        Tile:Tile;
-    }
-
-    type TileType = 
-        | Empty of Tile
-        | Key of Key
-        | Stairs of Stairs
-        | Door of Door
-        | Item of Item 
-    
-    type GridCell = {
-        Tile: Tile
-        TileType: TileType
-    }
-
-    // type screen = {
-
-    // }

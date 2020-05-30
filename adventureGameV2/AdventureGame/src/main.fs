@@ -30,31 +30,11 @@ module Main
     let squareSizeSquared = (squareSize*squareSize)
     let stepSizedSquared = (steps*steps)
 
-    type ItemType = 
-        | AttackUp
-        | DefenseUp
-        | HealthUp
-        | Key
-        | Empty
-
-    type MovableDragon = {
-        X: int;
-        Y: int;
-        Direction: string
-        Attacked: int;
-        Recovering: bool;
-    }
-
-    type FilledTile = {
-        X: int;
-        Y: int
-        Status: ItemType;
-        IsWall: bool;
-    }
+    
 
     // gridWidth needs a float wo we cast tour int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize) 
-    let emptyTile = {X = 0; Y = 0; Status= Empty; IsWall = false}
+    let emptyTile :Type.FilledTile = {X = 0; Y = 0; Status= Type.ItemType.Empty;IsWall = false}
     // resize our canvas to the size of our grid
     // the arrow <- indicates we're mutating a value. It's a special operator in F#.
     myCanvas.width <- gridWidth
@@ -62,24 +42,18 @@ module Main
     // prepare our canvas operations
 
     // Enemy stuff starts
-    type Enemy = {
-         X: int;
-         Y: int;
-         HP: int;
-         IsAlive: bool;
-         Dir: string;
-    }
+    
 
-    let newEnemyL randNum wallList doorList enemyObj:Enemy =
-        let downCheck  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) wallList
-        let upCheck  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) wallList
-        let rightCheck  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) wallList
-        let leftCheck  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) wallList
+    let newEnemyL randNum wallList doorList (enemyObj:Type.Enemy) =
+        let downCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) wallList
+        let upCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) wallList
+        let rightCheck  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) wallList
+        let leftCheck  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) wallList
 
-        let downDoor  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) doorList
-        let upDoor  =  List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) doorList
-        let rightDoor  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) doorList
-        let leftDoor  =  List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
+        let downDoor  = List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) doorList
+        let upDoor  =  List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) doorList
+        let rightDoor  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) doorList
+        let leftDoor  =  List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
 
 
         if enemyObj.IsAlive then 
@@ -93,7 +67,7 @@ module Main
          
     //Enemy stuff ends   
 
-    let collide (dragon: MovableDragon) (item: FilledTile) = 
+    let collide (dragon: Type.MovableDragon) (item: Type.FilledTile) = 
         match item with
             | item when dragon.X + squareSize > item.X 
                 && dragon.Y < item.Y + squareSize 
@@ -102,7 +76,7 @@ module Main
                 -> item
             | _ -> emptyTile 
 
-    // let wallDirection (dragon: movableDragon) (item: filledTile) =
+    // let wallDirection (dragon: movableDragon) (item: Type.FilledTile) =
     //     match item with
     //         | item when dragon.current_x + squareSize  = item.current_x -> "Left"
     //         | item when dragon.current_y - squareSize  = item.current_y  -> "Down"
@@ -118,7 +92,7 @@ module Main
           | _ -> Type.Health.Create(HP.ToUInt16()-2us) //if HP = n return n-1
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
-    let newHealth (dragon:MovableDragon) (hazardList:FilledTile list) (hp:Type.Health) (enemyObj:Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
+    let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
         let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
         if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) 
             then takeDamage(hp) 
@@ -126,25 +100,25 @@ module Main
             then hp 
         else takeDamage(hp)// Sleep for 500ms
           
-    let newInventory (dragon: MovableDragon) itemList inventory doorList =
+    let newInventory (dragon: Type.MovableDragon) itemList inventory doorList =
         let newList = List.filter (fun y -> y = (collide dragon y)) doorList
         if newList.IsEmpty then
             let newList = List.filter (fun x -> x = (collide dragon x)) itemList
             if newList.IsEmpty then inventory
             else 
                 match newList.Head.Status with
-                | AttackUp -> {inventory with Type.AttackUpItem = true;}
-                | DefenseUp -> {inventory with Type.DefenseUpItem = true;}            
-                | Key -> {inventory with Keys = inventory.Keys+1;}//added keys
-                | HealthUp -> {inventory with Type.HealthUpItem = true;}
+                | Type.ItemType.AttackUp -> {inventory with Type.AttackUpItem = true;}
+                | Type.ItemType.DefenseUp -> {inventory with Type.DefenseUpItem = true;}            
+                | Type.ItemType.Key -> {inventory with Keys = inventory.Keys+1;}//added keys
+                | Type.ItemType.HealthUp -> {inventory with Type.HealthUpItem = true;}
                 | _-> inventory;            
         else
             {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
 
-    let newItemList (dragon: MovableDragon) itemList = 
+    let newItemList (dragon: Type.MovableDragon) itemList = 
         List.filter (fun x ->  x <> (collide dragon x)) itemList
 
-    let newDoorList (dragon: MovableDragon) (doorList: FilledTile list) (inventory: Type.Inventory) =
+    let newDoorList (dragon: Type.MovableDragon) (doorList: Type.FilledTile list) (inventory: Type.Inventory) =
         let newD = List.filter (fun j -> j = (collide dragon j)) doorList
         if (inventory.Keys=0) then
             doorList
@@ -165,7 +139,7 @@ module Main
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (dragon: MovableDragon) (enemyObj:Enemy) (itemList:FilledTile List) (hazardList:FilledTile List) (wallList: FilledTile List) (doorList: FilledTile List) =
+    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
@@ -197,10 +171,10 @@ module Main
         for i in itemList do
             let imgSrc = 
                 match i.Status with
-                |DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
-                |AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
-                |HealthUp -> ("/img/HealthPotion.png", "hpPotion")
-                |Key -> ("/img/key.png", "key")
+                |Type.ItemType.DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
+                |Type.ItemType.AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
+                |Type.ItemType.HealthUp -> ("/img/HealthPotion.png", "hpPotion")
+                |Type.ItemType.Key -> ("/img/key.png", "key")
                 |_ -> ("/img/whiteTile.png", "atkPotion")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
 
@@ -220,7 +194,7 @@ module Main
 
     Keyboard.initKeyboard()
 
-    let rec Update (dragon:MovableDragon) (inventory:Type.Inventory) (itemList:FilledTile list) (hazardList:FilledTile list) (HP:Type.Health) (enemyObj:Enemy) (wallList:FilledTile list) (doorList:FilledTile list)  () =
+    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list)  () =
         //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
@@ -228,27 +202,27 @@ module Main
         //let notWall = not (wallCollide dragon wallList)
 
         //wall checks
-        let downCheck  = List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) wallList
-        let upCheck  = List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) wallList
-        let rightCheck  = List.exists (fun (x:FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) wallList
-        let leftCheck  = List.exists (fun (x:FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) wallList
+        let downCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) wallList
+        let upCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) wallList
+        let rightCheck  = List.exists (fun (x:Type.FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) wallList
+        let leftCheck  = List.exists (fun (x:Type.FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) wallList
 
         let downDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) doorList
+            else List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) doorList
         let upDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) doorList
+            else List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) doorList
         let rightDoor  = 
             if inventory.Keys > 0 then 
                 false
-            else List.exists (fun (x:FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) doorList
+            else List.exists (fun (x:Type.FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) doorList
         let leftDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) doorList
+            else List.exists (fun (x:Type.FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) doorList
             
         //enemy checks
         let eDownCheck  =  enemyObj.Y = (dragon.Y + squareSize)  && enemyObj.X = dragon.X 
@@ -256,7 +230,7 @@ module Main
         let eRightCheck  =  enemyObj.X = (dragon.X + squareSize) && enemyObj.Y = dragon.Y  
         let eLeftCheck  = enemyObj.X = (dragon.X - squareSize) && enemyObj.Y = dragon.Y 
 
-        let newDragon :MovableDragon =
+        let newDragon :Type.MovableDragon =
             match (Keyboard.arrows()) with 
             | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
                 {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
@@ -268,7 +242,7 @@ module Main
                 {dragon with X = dragon.X + squareSize; Direction = "E"}   
             | _ -> dragon 
 
-        let newEnemy :Enemy = 
+        let newEnemy :Type.Enemy = 
             match enemyObj.HP with
             | 0 -> {enemyObj with Dir = "Dead"; IsAlive = false}
             | _ ->
@@ -300,38 +274,38 @@ module Main
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
 
-    let Dragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
+    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     
-    let atkPotion = {X = 80; Y = 260; Status= AttackUp; IsWall = false}
-    let dfPotion = {X = 120; Y = 240; Status= DefenseUp; IsWall = false}
-    let hpPotion = {X = 20; Y = 300; Status= HealthUp; IsWall = false}
-    let keyItem = {X = 60; Y = 40; Status= Key; IsWall = false}
+    let atkPotion :Type.FilledTile = {X = 80; Y = 260; Status= Type.ItemType.AttackUp; IsWall = false}
+    let dfPotion :Type.FilledTile = {X = 120; Y = 240; Status= Type.ItemType.DefenseUp; IsWall = false}
+    let hpPotion :Type.FilledTile = {X = 20; Y = 300; Status= Type.ItemType.HealthUp; IsWall = false}
+    let keyItem :Type.FilledTile = {X = 60; Y = 40; Status= Type.ItemType.Key; IsWall = false}
 
-    let wall4 = {X = 280; Y = 200; Status = Empty; IsWall = true}
-    let wall5 = {X = 300; Y = 200; Status = Empty; IsWall = true}
-    let wall6 = {X = 320; Y = 200; Status = Empty; IsWall = true}
-    let wall7 = {X = 340; Y = 200; Status = Empty; IsWall = true}
-    let wall8 = {X = 360; Y = 200; Status = Empty; IsWall = true}
-    let wall9 = {X = 380; Y = 200; Status = Empty; IsWall = true}
-    let wall10 = {X = 200; Y = 200; Status = Empty; IsWall = true}
-    let wall14 = {X = 120; Y = 200; Status = Empty; IsWall = true}
-    let wall15 = {X = 100; Y = 200; Status = Empty; IsWall = true}
-    let wall16 = {X = 80; Y = 200; Status = Empty; IsWall = true}
-    let wall17 = {X = 60; Y = 200; Status = Empty; IsWall = true}
-    let wall18 = {X = 40; Y = 200; Status = Empty; IsWall = true}
-    let wall19 = {X = 20; Y = 200; Status = Empty; IsWall = true}
-    let wall20 = {X = 0; Y = 200; Status = Empty; IsWall = true}
+    let wall4:Type.FilledTile = {X = 280; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall5:Type.FilledTile = {X = 300; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall6:Type.FilledTile = {X = 320; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall7:Type.FilledTile = {X = 340; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall8:Type.FilledTile = {X = 360; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall9:Type.FilledTile = {X = 380; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall10:Type.FilledTile = {X = 200; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall14:Type.FilledTile = {X = 120; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall15:Type.FilledTile = {X = 100; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall16:Type.FilledTile = {X = 80; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall17:Type.FilledTile = {X = 60; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall18:Type.FilledTile = {X = 40; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall19:Type.FilledTile = {X = 20; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let wall20:Type.FilledTile = {X = 0; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
 
-    let hazard1 = {X = 60; Y = 20; Status = Empty; IsWall = false}
-    let hazard2 = {X = 100; Y = 40; Status = Empty; IsWall = false}
+    let hazard1 :Type.FilledTile= {X = 60; Y = 20; Status = Type.ItemType.Empty;IsWall = false }
+    let hazard2 :Type.FilledTile= {X = 100; Y = 40; Status = Type.ItemType.Empty;IsWall = false}
 
-    let door1 = {X = 220; Y = 200; Status = Empty; IsWall = true}
-    let door2 = {X = 240; Y = 200; Status = Empty; IsWall = true}
-    let door3 = {X = 260; Y = 200; Status = Empty; IsWall = true}
-    let door4 = {X = 180; Y = 200; Status = Empty; IsWall = true}
-    let door5 = {X = 160; Y = 200; Status = Empty; IsWall = true}
-    let door6 = {X = 140; Y = 200; Status = Empty; IsWall = true}
+    let door1 :Type.FilledTile= {X = 220; Y = 200; Status = Type.ItemType.Empty;IsWall = true}
+    let door2 :Type.FilledTile= {X = 240; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let door3 :Type.FilledTile= {X = 260; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let door4 :Type.FilledTile= {X = 180; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let door5 :Type.FilledTile= {X = 160; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
+    let door6 :Type.FilledTile= {X = 140; Y = 200; Status = Type.ItemType.Empty; IsWall = true}
 
     let itemList = [atkPotion; dfPotion; hpPotion;keyItem]
     
@@ -339,7 +313,7 @@ module Main
     let wallList = [wall4;wall5;wall6;wall7;wall8;wall9;wall10;wall14;wall15;wall16;wall17;wall18;wall19;wall20]
     let doorList = [door1;door2;door3;door4;door5;door6]
 
-    let enemy1 = {X = 300; Y = 300; IsAlive = true; Dir=""; HP = 3}
+    let enemy1 :Type.Enemy = {X = 300; Y = 300; IsAlive = true; Dir=""; HP = 3}
 
     Update Dragon inv itemList hazardList HP enemy1 wallList doorList ()
 
