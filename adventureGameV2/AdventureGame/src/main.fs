@@ -17,8 +17,7 @@ module Main
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
 
-
-    let HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
+    let HP = Type.Health.Create(60us) //increased HP to compensate for no delay / invincibility frames
 
    
     // All these are immutables values
