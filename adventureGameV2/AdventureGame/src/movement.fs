@@ -10,7 +10,7 @@ module Movement
 
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
-    // the unbox keyword allows to make an unsafe cast. Here we assume that getElementById will return an HTMLCanvasElement 
+    // the undragon keyword allows to make an unsafe cast. Here we assume that getElementById will return an HTMLCanvasElement 
     let mutable myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
 
     // Get the contexts
@@ -66,7 +66,7 @@ module Movement
         | Key
         | Empty
 
-    type MovableBox = {
+    type MovableDragon = {
         X: int;
         Y: int;
         Direction: string
@@ -112,21 +112,21 @@ module Movement
             | _ -> enemyObj
     //Enemy stuff ends   
 
-    let collide (box: MovableBox) (item: FilledTile) = 
+    let collide (dragon: MovableDragon) (item: FilledTile) = 
         match item with
-            | item when box.X + squareSize > item.X 
-                && box.Y < item.Y + squareSize 
-                && box.Y + squareSize > item.Y 
-                && box.X < item.X + squareSize 
+            | item when dragon.X + squareSize > item.X 
+                && dragon.Y < item.Y + squareSize 
+                && dragon.Y + squareSize > item.Y 
+                && dragon.X < item.X + squareSize 
                 -> item
             | _ -> emptyTile 
 
-    // let wallDirection (box: movableBox) (item: filledTile) =
+    // let wallDirection (dragon: movableDragon) (item: filledTile) =
     //     match item with
-    //         | item when box.current_x + squareSize  = item.current_x -> "Left"
-    //         | item when box.current_y - squareSize  = item.current_y  -> "Down"
-    //         | item when  box.current_y + squareSize = item.current_y -> "Up"
-    //         | item when  box.current_x - squareSize = item.current_x  -> "Right"
+    //         | item when dragon.current_x + squareSize  = item.current_x -> "Left"
+    //         | item when dragon.current_y - squareSize  = item.current_y  -> "Down"
+    //         | item when  dragon.current_y + squareSize = item.current_y -> "Up"
+    //         | item when  dragon.current_x - squareSize = item.current_x  -> "Right"
     //         | _ -> "None"
     //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
 
@@ -137,18 +137,18 @@ module Movement
           | _ -> Type.Health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
-    let newHealth (box:MovableBox) (hazardList:FilledTile list) (hp:Type.Health) (enemyObj:Enemy) : Type.Health = //takes movablebox (x,y,dir), hazardList (filled tiles) and returns HP (int)
-        let newL = List.filter (fun j -> j = (collide box j)) hazardList
-        if (enemyObj.X = box.X) && (enemyObj.Y = box.Y) 
+    let newHealth (dragon:MovableDragon) (hazardList:FilledTile list) (hp:Type.Health) (enemyObj:Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
+        let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
+        if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) 
             then takeDamage(hp) 
         elif newL.IsEmpty 
             then hp 
         else takeDamage(hp)// Sleep for 500ms
           
-    let newInventory (box: MovableBox) itemList inventory doorList =
-        let newList = List.filter (fun y -> y = (collide box y)) doorList
+    let newInventory (dragon: MovableDragon) itemList inventory doorList =
+        let newList = List.filter (fun y -> y = (collide dragon y)) doorList
         if newList.IsEmpty then
-            let newList = List.filter (fun x -> x = (collide box x)) itemList
+            let newList = List.filter (fun x -> x = (collide dragon x)) itemList
             if newList.IsEmpty then inventory
             else 
                 match newList.Head.Status with
@@ -160,15 +160,15 @@ module Movement
         else
             {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
 
-    let newItemList (box: MovableBox) itemList = 
-        List.filter (fun x ->  x <> (collide box x)) itemList
+    let newItemList (dragon: MovableDragon) itemList = 
+        List.filter (fun x ->  x <> (collide dragon x)) itemList
 
-    let newDoorList (box: MovableBox) (doorList: FilledTile list) (inventory: Inventory) =
-        let newD = List.filter (fun j -> j = (collide box j)) doorList
+    let newDoorList (dragon: MovableDragon) (doorList: FilledTile list) (inventory: Inventory) =
+        let newD = List.filter (fun j -> j = (collide dragon j)) doorList
         if (inventory.Keys=0) then
             doorList
         else
-            List.filter (fun x ->  x <> (collide box x)) doorList
+            List.filter (fun x ->  x <> (collide dragon x)) doorList
 
 
 
@@ -184,7 +184,7 @@ module Movement
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (box: MovableBox) (enemyObj:Enemy) (itemList:FilledTile List) (hazardList:FilledTile List) (wallList: FilledTile List) (doorList: FilledTile List) =
+    let render (dragon: MovableDragon) (enemyObj:Enemy) (itemList:FilledTile List) (hazardList:FilledTile List) (wallList: FilledTile List) (doorList: FilledTile List) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
@@ -204,9 +204,9 @@ module Movement
         //     ) 
         // ctx.strokeStyle <- !^"#ddd" //light grey
 
-        (("/img/" + box.Direction + ".gif"),"player")
+        (("/img/" + dragon.Direction + ".gif"),"player")
         |> image 
-        |> position ( float(squareSize/2 - 1 + box.X), float(squareSize/2 - 1 + box.Y))
+        |> position ( float(squareSize/2 - 1 + dragon.X), float(squareSize/2 - 1 + dragon.Y))
         
         ctx.fillStyle <- !^"#11babd" //teal
         if enemyObj.IsAlive then
@@ -240,79 +240,79 @@ module Movement
 
     Keyboard.initKeyboard()
 
-    let rec Update (box:MovableBox) (inventory:Inventory) (itemList:FilledTile list) (hazardList:FilledTile list) (HP:Type.Health) (enemyObj:Enemy) (wallList:FilledTile list) (doorList:FilledTile list)  () =
-        //let box = box |> moveBox (Keyboard.arrows())
+    let rec Update (dragon:MovableDragon) (inventory:Inventory) (itemList:FilledTile list) (hazardList:FilledTile list) (HP:Type.Health) (enemyObj:Enemy) (wallList:FilledTile list) (doorList:FilledTile list)  () =
+        //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
         
-        //let notWall = not (wallCollide box wallList)
+        //let notWall = not (wallCollide dragon wallList)
 
         //wall checks
-        let downCheck  = List.exists (fun (x:FilledTile) -> x.Y = (box.Y + squareSize)  && x.X = box.X  ) wallList
-        let upCheck  = List.exists (fun (x:FilledTile) -> x.Y = (box.Y - squareSize) && x.X = box.X  ) wallList
-        let rightCheck  = List.exists (fun (x:FilledTile) -> x.X = (box.X + squareSize) && x.Y = box.Y  ) wallList
-        let leftCheck  = List.exists (fun (x:FilledTile) -> x.X = (box.X - squareSize) && x.Y = box.Y ) wallList
+        let downCheck  = List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) wallList
+        let upCheck  = List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) wallList
+        let rightCheck  = List.exists (fun (x:FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) wallList
+        let leftCheck  = List.exists (fun (x:FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) wallList
 
         let downDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.Y = (box.Y + squareSize)  && x.X = box.X  ) doorList
+            else List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) doorList
         let upDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.Y = (box.Y - squareSize) && x.X = box.X  ) doorList
+            else List.exists (fun (x:FilledTile) -> x.Y = (dragon.Y - squareSize) && x.X = dragon.X  ) doorList
         let rightDoor  = 
             if inventory.Keys > 0 then 
                 false
-            else List.exists (fun (x:FilledTile) -> x.X = (box.X + squareSize) && x.Y = box.Y  ) doorList
+            else List.exists (fun (x:FilledTile) -> x.X = (dragon.X + squareSize) && x.Y = dragon.Y  ) doorList
         let leftDoor  = 
             if inventory.Keys > 0 then
                 false
-            else List.exists (fun (x:FilledTile) -> x.X = (box.X - squareSize) && x.Y = box.Y ) doorList
+            else List.exists (fun (x:FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) doorList
             
         //enemy checks
-        let eDownCheck  =  enemyObj.Y = (box.Y + squareSize)  && enemyObj.X = box.X
-        let eUpCheck  =  enemyObj.Y = (box.Y - squareSize) && enemyObj.X = box.X 
-        let eRightCheck  =  enemyObj.X = (box.X + squareSize) && enemyObj.Y = box.Y  
-        let eLeftCheck  = enemyObj.X = (box.X - squareSize) && enemyObj.Y = box.Y 
+        let eDownCheck  =  enemyObj.Y = (dragon.Y + squareSize)  && enemyObj.X = dragon.X
+        let eUpCheck  =  enemyObj.Y = (dragon.Y - squareSize) && enemyObj.X = dragon.X 
+        let eRightCheck  =  enemyObj.X = (dragon.X + squareSize) && enemyObj.Y = dragon.Y  
+        let eLeftCheck  = enemyObj.X = (dragon.X - squareSize) && enemyObj.Y = dragon.Y 
 
-        let newBox :MovableBox =
+        let newDragon :MovableDragon =
             match (Keyboard.arrows()) with 
-            | (0,1) when ((box.Y > 0) && not upCheck) && ((box.Y > 0) && not upDoor)  ->  
-                {box with Y = box.Y - squareSize; Direction = "N"} 
-            | (0, -1) when  (box.Y + squareSize < squareSizeSquared && not downCheck) && ((box.Y + squareSize < squareSizeSquared) && not downDoor) -> 
-                {box with Y = box.Y + squareSize; Direction = "S"}
-            | (-1, 0) when  (box.X > 0 && not leftCheck) && ((box.X > 0) && not leftDoor) -> 
-                {box with X = box.X - squareSize; Direction = "W"} 
-            | (1, 0) when  (box.X + squareSize < squareSizeSquared && not rightCheck) && ((box.X + squareSize < squareSizeSquared) && not rightDoor) -> 
-                {box with X = box.X + squareSize; Direction = "E"}   
-            | _ -> box 
+            | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
+                {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
+            | (0, -1) when  (dragon.Y + squareSize < squareSizeSquared && not downCheck) && ((dragon.Y + squareSize < squareSizeSquared) && not downDoor) -> 
+                {dragon with Y = dragon.Y + squareSize; Direction = "S"}
+            | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
+                {dragon with X = dragon.X - squareSize; Direction = "W"} 
+            | (1, 0) when  (dragon.X + squareSize < squareSizeSquared && not rightCheck) && ((dragon.X + squareSize < squareSizeSquared) && not rightDoor) -> 
+                {dragon with X = dragon.X + squareSize; Direction = "E"}   
+            | _ -> dragon 
 
         let newEnemy :Enemy = 
             match (Keyboard.spaceBar()) with
             | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with IsAlive = false}
             | _ -> enemyObj
 
-        render newBox enemyObj itemList hazardList wallList doorList
+        render newDragon enemyObj itemList hazardList wallList doorList
         
-        let newBox1 = 
-            if ((newHealth newBox hazardList HP enemyObj) = (HP - Type.Health.Create(1us) )  ) then 
-                {newBox with Attacked = newBox.Attacked + 1; Recovering = true} 
+        let newDragon1 = 
+            if ((newHealth newDragon hazardList HP enemyObj) = (HP - Type.Health.Create(1us) )  ) then 
+                {newDragon with Attacked = newDragon.Attacked + 1; Recovering = true} 
             else
-                newBox 
+                newDragon 
               
         let r = System.Random().Next(1, 25)
         //printfn "%A" HP
 
         if (HP <> Type.Health.Create(1us)) then 
-            window.setTimeout(Update newBox1 (newInventory newBox1 itemList inventory doorList) (newItemList newBox1 itemList) hazardList (newHealth newBox1 hazardList HP enemyObj)  (newEnemyL r wallList newEnemy) wallList (newDoorList newBox1 doorList inventory), 8000 / 60) |> ignore
+            window.setTimeout(Update newDragon1 (newInventory newDragon1 itemList inventory doorList) (newItemList newDragon1 itemList) hazardList (newHealth newDragon1 hazardList HP enemyObj)  (newEnemyL r wallList newEnemy) wallList (newDoorList newDragon1 doorList inventory), 8000 / 60) |> ignore
         else 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
              let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
 
-    let Box = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
+    let Dragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
     
     let atkPotion = {X = 80; Y = 260; Status= AttackUp; IsWall = false}
@@ -353,6 +353,6 @@ module Movement
 
     let enemy1 = {X = 300; Y = 300; IsAlive = true; Dir=""}
 
-    Update Box inv itemList hazardList HP enemy1 wallList doorList ()
+    Update Dragon inv itemList hazardList HP enemy1 wallList doorList ()
 
 
