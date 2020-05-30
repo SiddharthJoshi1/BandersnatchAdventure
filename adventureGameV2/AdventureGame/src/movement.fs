@@ -176,8 +176,8 @@ module Movement
     let position (x,y) (img : HTMLImageElement) =
         img?style?left <- x.ToString() + "px"
         img?style?top <-  y.ToString() + "px"
-        img?style?width <- squareSize.ToString() + "px"
-        //img?style?height <- squareSize.ToString() + "px"
+        //img?style?width <- squareSize.ToString() + "px"
+        img?style?height <- squareSize.ToString() + "px"
 
     let image ((src : string), (id : string)) =
         let image = document.getElementById(id) :?> HTMLImageElement
