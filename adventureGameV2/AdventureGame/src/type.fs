@@ -1,21 +1,21 @@
 module Type 
 
     type Inventory = {
-        attack_potion: bool; 
-        defence_potion: bool; 
-        health_potion: int; 
-        key: int;
+        AttackPotion: bool; 
+        DefencePotion: bool; 
+        HealthPotion: int; 
+        Key: int;
      }
 
-    type health = 
+    type Health = 
         | HP of uint16
         member h.ToUInt16() =  
             let (HP n) = h in n
         static member Create(h) =
             let hp = h
             HP(h)
-        static member (+) (HP a, HP b) = health.Create (a+b)
-        static member (-) (HP a, HP b) = health.Create (a-b)
+        static member (+) (HP a, HP b) = Health.Create (a+b)
+        static member (-) (HP a, HP b) = Health.Create (a-b)
    
 
     let healthCheck num =
@@ -24,7 +24,7 @@ module Type
              | var2 when var2 >= 20 -> false
              | _ -> true
  
-    type attackPower = {AttackPower:uint16}
+    type AttackPower = {AttackPower:uint16}
 
     let attackPowerCheck num =
          match num with
@@ -32,7 +32,7 @@ module Type
              | var2 when var2 = 3 -> true 
              | _ -> false 
  
-    type range = {Range:uint16}
+    type Range = {Range:uint16}
 
     let rangeCheck num = 
      match num with
@@ -56,45 +56,45 @@ module Type
         Dir: string
     }
 
-    type tile = {
-        x: int;
-        y: int;
+    type Tile = {
+        X: int;
+        Y: int;
     }
 
     type Door = {
-        tile: tile;
-        isOpen: bool;
+        Tile: Tile;
+        IsOpen: bool;
     }
 
  
     type Stairs = {
-        tile:tile;
+        Tile:Tile;
     }
  
     type Key = {
-        tile:tile;
+        Tile:Tile;
     }
 
-    type itemType = 
+    type ItemType = 
             | AttackUp
             | DefenseUp
             | HealthUp
 
     type Item = {
-        item_type: itemType;
-        tile:tile;
+        ItemType: ItemType;
+        Tile:Tile;
     }
 
-    type tileType = 
-        | Empty of tile
+    type TileType = 
+        | Empty of Tile
         | Key of Key
         | Stairs of Stairs
         | Door of Door
         | Item of Item 
     
-    type gridcell = {
-        tile: tile
-        tileType: tileType
+    type GridCell = {
+        Tile: Tile
+        TileType: TileType
     }
 
     // type screen = {
