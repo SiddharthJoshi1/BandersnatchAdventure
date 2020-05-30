@@ -139,7 +139,7 @@ module Main
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) HP=
+    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) HP (inventory:Type.Inventory) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
        
@@ -193,8 +193,16 @@ module Main
                 ctx.fillRect(float(l.X), float(l.Y),float(20),float(20))
         ctx.fillStyle <- !^"#062829"
         ctx.fillStyle <- !^"#000000" //black
-        let hp_string :string =  string HP 
-        ctx.fillText( hp_string , float(360), float(10)); 
+        let hpString :string =  string HP 
+        let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up: 1" else "Attack Up:"
+        let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Up: 1" else "Health Up:"
+        let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Up: 1" else "Defense Up:"
+        let inventoryKeys :string = "Keys: " + string (inventory.Keys)
+        ctx.fillText( hpString , float(330), float(10)); 
+        ctx.fillText(inventoryAttack, float(330), float(20))
+        ctx.fillText(inventoryDefense, float(330), float(30))
+        ctx.fillText(inventoryHealth, float(330), float(40))
+        ctx.fillText(inventoryKeys, float(330), float(50))
 
     Keyboard.initKeyboard()
 
@@ -254,7 +262,7 @@ module Main
                 | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
                 | _ -> enemyObj
 
-        render newDragon enemyObj itemList hazardList wallList doorList HP
+        render newDragon enemyObj itemList hazardList wallList doorList HP inventory
         
         
         let r = System.Random().Next(1, 25)
