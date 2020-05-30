@@ -39,3 +39,4 @@ module LevelOne
         let doorList = [door1;door2;door3;door4;door5;door6]
 
         let enemy1 :Type.Enemy = {X = 300; Y = 300; IsAlive = true; Dir=""; HP = 3}
+        let stairs1 : Type.FilledTile = {X = 0; Y = 360; Status = Type.ItemType.Empty; IsWall = true}
