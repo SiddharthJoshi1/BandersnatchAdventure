@@ -98,17 +98,24 @@ module Movement
          Dir: string;
     }
 
-    let newEnemyL randNum wallList enemyObj:Enemy =
+    let newEnemyL randNum wallList doorList enemyObj:Enemy =
         let downCheck  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) wallList
         let upCheck  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) wallList
         let rightCheck  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) wallList
         let leftCheck  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) wallList
 
+        let downDoor  = List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) doorList
+        let upDoor  =  List.exists (fun (x:FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) doorList
+        let rightDoor  = List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) doorList
+        let leftDoor  =  List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
+
+
+
         match randNum with 
-            | 1  when enemyObj.Y > 0 && not upCheck ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
-            | 2  when  enemyObj.Y + squareSize < squareSizeSquared  && not downCheck -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
-            | 3   when  enemyObj.X > 0  && not leftCheck-> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
-            | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
+            | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+            | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+            | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+            | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
             | _ -> enemyObj
     //Enemy stuff ends   
 
@@ -271,7 +278,7 @@ module Movement
             else List.exists (fun (x:FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) doorList
             
         //enemy checks
-        let eDownCheck  =  enemyObj.Y = (dragon.Y + squareSize)  && enemyObj.X = dragon.X
+        let eDownCheck  =  enemyObj.Y = (dragon.Y + squareSize)  && enemyObj.X = dragon.X 
         let eUpCheck  =  enemyObj.Y = (dragon.Y - squareSize) && enemyObj.X = dragon.X 
         let eRightCheck  =  enemyObj.X = (dragon.X + squareSize) && enemyObj.Y = dragon.Y  
         let eLeftCheck  = enemyObj.X = (dragon.X - squareSize) && enemyObj.Y = dragon.Y 
@@ -296,7 +303,7 @@ module Movement
         render newDragon enemyObj itemList hazardList wallList doorList
         
         
-        let r = System.Random().Next(1, 25)
+        let r = System.Random().Next(1, 5)
         //printfn "%A" HP
 
         if (HP <> Type.Health.Create(1us)) then 
@@ -307,7 +314,7 @@ module Movement
                     (newItemList newDragon itemList) 
                     hazardList 
                     (newHealth newDragon hazardList HP enemyObj)  
-                    (newEnemyL r wallList newEnemy) 
+                    (newEnemyL r wallList doorList newEnemy) 
                     wallList 
                     (newDoorList newDragon doorList inventory), 8000 / 60
                 ) |> ignore
