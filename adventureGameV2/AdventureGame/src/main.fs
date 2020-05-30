@@ -92,13 +92,13 @@ module Main
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
         let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
-        if enemyObj.IsAlive then
-            if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) 
-                then takeDamage(hp) 
-            elif newL.IsEmpty 
-                then hp 
-            else takeDamage(hp)// Sleep for 500ms
-        else hp
+        
+        if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) && enemyObj.IsAlive 
+            then takeDamage(hp) 
+        elif newL.IsEmpty 
+            then hp 
+        else takeDamage(hp)// Sleep for 500ms
+        
           
     let newInventory (dragon: Type.MovableDragon) itemList inventory doorList =
         let newList = List.filter (fun y -> y = (collide dragon y)) doorList
