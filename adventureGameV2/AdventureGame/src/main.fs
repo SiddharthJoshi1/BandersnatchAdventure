@@ -12,7 +12,7 @@ module Main
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
     // the undragon keyword allows to make an unsafe cast. Here we assume that getElementById will return an HTMLCanvasElement 
-    let myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
+    let mutable myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
 
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
