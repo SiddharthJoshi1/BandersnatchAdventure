@@ -12,14 +12,14 @@ module Main
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
     // the undragon keyword allows to make an unsafe cast. Here we assume that getElementById will return an HTMLCanvasElement 
-    let mutable myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
+    let myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
 
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
 
     //let mutable HP : Type.Health = {Health = 12us}
     //let mutable HP: int = 12
-    let mutable HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
+    let HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
 
    
     // All these are immutables values
@@ -262,7 +262,7 @@ module Main
 
         if (HP <= Type.Health.Create(1us)) then 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
+             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"] //this needs to be called from elsewhere
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
         else 
