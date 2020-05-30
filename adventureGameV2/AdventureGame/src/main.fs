@@ -165,9 +165,10 @@ module Main
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (dragon: MovableDragon) (enemyObj:Enemy) (itemList:FilledTile List) (hazardList:FilledTile List) (wallList: FilledTile List) (doorList: FilledTile List) =
+    let render (dragon: MovableDragon) (enemyObj:Enemy) (itemList:FilledTile List) (hazardList:FilledTile List) (wallList: FilledTile List) (doorList: FilledTile List) HP =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
+       
         //also clears the html images 
         let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
@@ -217,6 +218,9 @@ module Main
                 ctx.fillStyle <- !^"#ffff00"
                 ctx.fillRect(float(l.X), float(l.Y),float(20),float(20))
         ctx.fillStyle <- !^"#062829"
+        ctx.fillStyle <- !^"#000000" //black
+        let hp_string :string =  string HP 
+        ctx.fillText( hp_string , float(360), float(10)); 
 
     Keyboard.initKeyboard()
 
@@ -276,14 +280,19 @@ module Main
                 | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
                 | _ -> enemyObj
 
-        render newDragon enemyObj itemList hazardList wallList doorList
+        render newDragon enemyObj itemList hazardList wallList doorList HP
         
         
-        let r = System.Random().Next(1, 5)
-        //printfn "%A" HP
+        let r = System.Random().Next(1, 25)
+        
 
-        if (HP <> Type.Health.Create(1us)) then 
-            window.setTimeout(
+        if (HP <= Type.Health.Create(1us)) then 
+             ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
+             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
+             for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
+             ctx.fillText("GAME OVER", float(200), float(200));
+        else 
+             window.setTimeout(
                 Update 
                     newDragon 
                     (newInventory newDragon itemList inventory doorList) 
@@ -294,11 +303,7 @@ module Main
                     wallList 
                     (newDoorList newDragon doorList inventory), 8000 / 60
                 ) |> ignore
-        else 
-             ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
-             for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
-             ctx.fillText("GAME OVER", float(200), float(200));
+         
 
     let Dragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
