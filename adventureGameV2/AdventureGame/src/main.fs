@@ -89,7 +89,7 @@ module Main
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) (inventory: Type.Inventory) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
-        if ((hp.ToUInt16() < 60us) && (inventory.HealthUpItem = true) && (Keyboard.oButton() = 1)) then
+        if ((hp.ToUInt16() < 60us) && (inventory.HealthUpItem = true) && (Keyboard.healthButton() = 1)) then
             restoreHealth(hp)
         else 
             let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
@@ -102,7 +102,7 @@ module Main
         
           
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
-        if ((hp.ToUInt16() < 60us) && (Keyboard.oButton() = 1)) then
+        if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then
             {inventory with Type.HealthUpItem = false}
         else    
             let newList = List.filter (fun y -> y = (collide dragon y)) doorList

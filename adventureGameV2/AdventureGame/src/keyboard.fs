@@ -15,7 +15,7 @@ module Keyboard
         let arrows () =
             (code 39 - code 37, code 38 - code 40)
 
-        let oButton () = code 79
+        let healthButton () = code 67
         
         let spaceBar () = code 32
         /// Update the state of the set for given key event
