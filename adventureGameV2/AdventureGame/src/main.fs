@@ -80,31 +80,43 @@ module Main
           | 1us -> HP //if HP = 1, return HP
           | _ -> Type.Health.Create(HP.ToUInt16()-2us) //if HP = n return n-1
 
+    let restoreHealth (HP: Type.Health ) =
+          if ((HP.ToUInt16() + 20us) > 60us) then
+            Type.Health.Create(60us)
+          else 
+            Type.Health.Create(HP.ToUInt16()+20us)
+
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
-    let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
-        let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
-        
-        if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) && enemyObj.IsAlive 
-            then takeDamage(hp) 
-        elif newL.IsEmpty 
-            then hp 
-        else takeDamage(hp)// Sleep for 500ms
+    let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) (inventory: Type.Inventory) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
+        if ((hp.ToUInt16() < 60us) && (inventory.HealthUpItem = true) && (Keyboard.oButton() = 1)) then
+            restoreHealth(hp)
+        else 
+            let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
+            
+            if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) && enemyObj.IsAlive 
+                then takeDamage(hp) 
+            elif newL.IsEmpty 
+                then hp 
+            else takeDamage(hp)// Sleep for 500ms
         
           
-    let newInventory (dragon: Type.MovableDragon) itemList inventory doorList =
-        let newList = List.filter (fun y -> y = (collide dragon y)) doorList
-        if newList.IsEmpty then
-            let newList = List.filter (fun x -> x = (collide dragon x)) itemList
-            if newList.IsEmpty then inventory
-            else 
-                match newList.Head.Status with
-                | Type.ItemType.AttackUp -> {inventory with Type.AttackUpItem = true;}
-                | Type.ItemType.DefenseUp -> {inventory with Type.DefenseUpItem = true;}            
-                | Type.ItemType.Key -> {inventory with Keys = inventory.Keys+1;}//added keys
-                | Type.ItemType.HealthUp -> {inventory with Type.HealthUpItem = true;}
-                | _-> inventory;            
-        else
-            {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
+    let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
+        if ((hp.ToUInt16() < 60us) && (Keyboard.oButton() = 1)) then
+            {inventory with Type.HealthUpItem = false}
+        else    
+            let newList = List.filter (fun y -> y = (collide dragon y)) doorList
+            if newList.IsEmpty then
+                let newList = List.filter (fun x -> x = (collide dragon x)) itemList
+                if newList.IsEmpty then inventory
+                else 
+                    match newList.Head.Status with
+                    | Type.ItemType.AttackUp -> {inventory with Type.AttackUpItem = true;}
+                    | Type.ItemType.DefenseUp -> {inventory with Type.DefenseUpItem = true;}            
+                    | Type.ItemType.Key -> {inventory with Keys = inventory.Keys+1;}//added keys
+                    | Type.ItemType.HealthUp -> {inventory with Type.HealthUpItem = true;}
+                    | _-> inventory;            
+            else
+                {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
 
     let newItemList (dragon: Type.MovableDragon) itemList = 
         List.filter (fun x ->  x <> (collide dragon x)) itemList
@@ -267,10 +279,10 @@ module Main
              window.setTimeout(
                 Update 
                     newDragon 
-                    (newInventory newDragon itemList inventory doorList) 
+                    (newInventory newDragon HP itemList inventory doorList) 
                     (newItemList newDragon itemList) 
                     hazardList 
-                    (newHealth newDragon hazardList HP enemyObj)  
+                    (newHealth newDragon hazardList HP enemyObj inventory)  
                     (newEnemyL r wallList doorList newEnemy) 
                     wallList 
                     (newDoorList newDragon doorList inventory), 8000 / 60
