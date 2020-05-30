@@ -286,11 +286,11 @@ module Main
         Dragon 
         inv 
         LevelOne.itemList.[Level.Level] 
-        LevelOne.hazardList 
+        LevelOne.hazardList.[Level.Level] 
         HP 
-        LevelOne.enemy1 
-        LevelOne.wallList 
-        LevelOne.doorList 
+        LevelOne.enemyList.[Level.Level] 
+        LevelOne.wallList.[Level.Level]  
+        LevelOne.doorList.[Level.Level] 
         ()
 
 
