@@ -17,8 +17,7 @@ module Main
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
 
-    //let mutable HP : Type.Health = {Health = 12us}
-    //let mutable HP: int = 12
+
     let HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
 
    
@@ -267,10 +266,10 @@ module Main
         
         let r = System.Random().Next(1, 25)
         
-
+        //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-             let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"] //this needs to be called from elsewhere
+             let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"]
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
         else 
