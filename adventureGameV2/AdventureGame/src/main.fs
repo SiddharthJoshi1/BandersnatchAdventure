@@ -17,7 +17,8 @@ module Main
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
 
-    let HP = Type.Health.Create(60us) //increased HP to compensate for no delay / invincibility frames
+    let HP = Type.Health.Create(60us)
+    let Level: Type.Level = {Level = 0} //increased HP to compensate for no delay / invincibility frames
 
    
     // All these are immutables values
@@ -202,7 +203,7 @@ module Main
 
     Keyboard.initKeyboard()
 
-    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list) (stairs: Type.FilledTile)  () =
+    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list) (stairs: Type.FilledTile) level () =
         //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
@@ -261,8 +262,10 @@ module Main
         let r = System.Random().Next(1, 25)
         
         //TODO: LEVEL CHECK
-        if(collide newDragon stairs <> emptyTile) then 
-            printf "%A" "stairs found"
+        let newLevel =
+            if(collide newDragon stairs <> emptyTile) then 
+                {Level with Level = Level.Level + 1}
+            else Level
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
@@ -282,12 +285,13 @@ module Main
                     wallList 
                     (newDoorList newDragon doorList inventory)
                     stairs
+                    newLevel
                     , 8000 / 60
                 ) |> ignore
 
     //end update function
    
-    let Level: Type.Level = {Level = 0}
+    
     let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
    
@@ -301,6 +305,7 @@ module Main
         LevelOne.wallList.[Level.Level]  
         LevelOne.doorList.[Level.Level] 
         LevelOne.stairList.[Level.Level]
+        Level
         ()
 
 

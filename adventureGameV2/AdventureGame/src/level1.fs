@@ -67,4 +67,4 @@ module LevelOne
 
 
         let stair1:Type.FilledTile = {X = 0; Y = 360; Status = Type.ItemType.Empty; IsWall = false}
-        let stairList = [stair1;]
+        let stairList = [stair1;stair1]
