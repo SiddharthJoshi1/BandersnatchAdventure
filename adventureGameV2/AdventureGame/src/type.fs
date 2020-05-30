@@ -76,4 +76,4 @@ module Type
          | var2 when var2 = 5 -> true 
          | _ -> false 
 
-    type Level = {Level :int}
+    type Level = {LevelNum :int}

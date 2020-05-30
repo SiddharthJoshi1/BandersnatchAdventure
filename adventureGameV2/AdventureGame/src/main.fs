@@ -18,7 +18,7 @@ module Main
     let ctx = myCanvas.getContext_2d()
 
     let HP = Type.Health.Create(60us)
-    let Level: Type.Level = {Level = 0} //increased HP to compensate for no delay / invincibility frames
+    //increased HP to compensate for no delay / invincibility frames
 
    
     // All these are immutables values
@@ -274,10 +274,22 @@ module Main
         let r = System.Random().Next(1, 25)
         
         //TODO: LEVEL CHECK
-        let newLevel =
-            if(collide newDragon stairs <> emptyTile) then 
-                {Level with Level = Level.Level + 1}
-            else Level
+        if(collide newDragon stairs <> emptyTile) then 
+            let newLevel :Type.Level = {level with LevelNum = level.LevelNum + 1}
+            Update 
+                newDragon 
+                (newInventory newDragon HP itemList inventory doorList)  
+                LevelOne.itemList.[newLevel.LevelNum] 
+                LevelOne.hazardList.[newLevel.LevelNum] 
+                HP 
+                LevelOne.enemyList.[newLevel.LevelNum] 
+                LevelOne.wallList.[newLevel.LevelNum]  
+                LevelOne.doorList.[newLevel.LevelNum] 
+                LevelOne.stairList.[newLevel.LevelNum]
+                newLevel
+                ()
+
+        printfn "%A" level
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
@@ -297,7 +309,7 @@ module Main
                     wallList 
                     (newDoorList newDragon doorList inventory)
                     stairs
-                    newLevel
+                    level
                     , 8000 / 60
                 ) |> ignore
 
@@ -306,17 +318,18 @@ module Main
     
     let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
-   
+    let Level: Type.Level = {LevelNum = 0} 
+
     Update 
         Dragon 
         inv 
-        LevelOne.itemList.[Level.Level] 
-        LevelOne.hazardList.[Level.Level] 
+        LevelOne.itemList.[Level.LevelNum] 
+        LevelOne.hazardList.[Level.LevelNum] 
         HP 
-        LevelOne.enemyList.[Level.Level] 
-        LevelOne.wallList.[Level.Level]  
-        LevelOne.doorList.[Level.Level] 
-        LevelOne.stairList.[Level.Level]
+        LevelOne.enemyList.[Level.LevelNum] 
+        LevelOne.wallList.[Level.LevelNum]  
+        LevelOne.doorList.[Level.LevelNum] 
+        LevelOne.stairList.[Level.LevelNum]
         Level
         ()
 
