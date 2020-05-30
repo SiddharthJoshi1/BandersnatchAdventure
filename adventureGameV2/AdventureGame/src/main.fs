@@ -74,15 +74,6 @@ module Main
                 -> item
             | _ -> emptyTile 
 
-    // let wallDirection (dragon: movableDragon) (item: Type.FilledTile) =
-    //     match item with
-    //         | item when dragon.current_x + squareSize  = item.current_x -> "Left"
-    //         | item when dragon.current_y - squareSize  = item.current_y  -> "Down"
-    //         | item when  dragon.current_y + squareSize = item.current_y -> "Up"
-    //         | item when  dragon.current_x - squareSize = item.current_x  -> "Right"
-    //         | _ -> "None"
-    //if hp is 1 return hp. if hp > 1 return hp-1. (placeholder)
-
     let takeDamage (HP: Type.Health) = 
           //takes in HP (int) and returns HP (int)
           match HP.ToUInt16() with 
@@ -210,8 +201,6 @@ module Main
         //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
-        
-        //let notWall = not (wallCollide dragon wallList)
 
         //wall checks
         let downCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) wallList
@@ -264,9 +253,10 @@ module Main
 
         render newDragon enemyObj itemList hazardList wallList doorList HP inventory
         
-        
         let r = System.Random().Next(1, 25)
         
+        //TODO: LEVEL CHECK
+
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
@@ -285,15 +275,17 @@ module Main
                     wallList 
                     (newDoorList newDragon doorList inventory), 8000 / 60
                 ) |> ignore
+
+    //end update function
    
+    let Level: Type.Level = {Level = 1}
     let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
-
-
+   
     Update 
         Dragon 
         inv 
-        LevelOne.itemList 
+        LevelOne.itemList.[Level.Level] 
         LevelOne.hazardList 
         HP 
         LevelOne.enemy1 

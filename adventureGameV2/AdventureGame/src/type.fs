@@ -75,3 +75,5 @@ module Type
          | var1 when var1 = 1 -> true 
          | var2 when var2 = 5 -> true 
          | _ -> false 
+
+    type Level = {Level :int}
