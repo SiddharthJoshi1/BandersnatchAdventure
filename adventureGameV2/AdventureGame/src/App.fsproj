@@ -5,7 +5,7 @@
   <ItemGroup>
     <Compile Include="type.fs" />
     <Compile Include="keyboard.fs" />
-    <Compile Include="movement.fs" />
+    <Compile Include="main.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Browser.Dom" Version="1.1.0" />

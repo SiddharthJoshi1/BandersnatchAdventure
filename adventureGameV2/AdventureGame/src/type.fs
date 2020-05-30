@@ -1,11 +1,13 @@
 module Type 
-
+    //used
     type Inventory = {
-        AttackPotion: bool; 
-        DefencePotion: bool; 
-        HealthPotion: int; 
-        Key: int;
-     }
+        AttackUpItem: bool;
+        DefenseUpItem: bool;
+        HealthUpItem: bool;
+        Keys: int;
+    }
+
+    
 
     type Health = 
         | HP of uint16

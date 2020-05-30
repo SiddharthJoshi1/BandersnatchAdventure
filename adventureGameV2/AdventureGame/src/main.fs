@@ -1,10 +1,11 @@
-module Movement 
+module Main 
 
     open Fable.Core
     open Fable.Core.JsInterop
     open Browser.Types
     open Browser
     open System
+    open Keyboard
   
     let window = Browser.Dom.window
 
@@ -20,30 +21,7 @@ module Movement
     //let mutable HP: int = 12
     let mutable HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
 
-    module Keyboard =
-
-        let mutable keysPressed = Set.empty
-
-        /// Returns 1 if key with given code is pressed
-        let code x =
-            if keysPressed.Contains(x) then 1 else 0
-           
-         /// Returns pair with -1 for left or down and +1
-        /// for right or up (0 if no or both keys are pressed)
-        let arrows () =
-            (code 39 - code 37, code 38 - code 40)
-        
-        let spaceBar () = code 32
-        /// Update the state of the set for given key event
-        let update (e : KeyboardEvent, pressed) =
-            let keyCode = int e.keyCode
-            let op =  if pressed then Set.add else Set.remove
-            keysPressed <- op keyCode keysPressed
-
-        let initKeyboard () =
-            window.document.addEventListener("keydown", fun e -> update(e :?> _, true))
-            window.document.addEventListener("keyup", fun e -> update(e :?> _, false))
-
+   
     // All these are immutables values
     let w = myCanvas.width
     let h = myCanvas.height
@@ -51,13 +29,6 @@ module Movement
     let steps = 20
     let squareSizeSquared = (squareSize*squareSize)
     let stepSizedSquared = (steps*steps)
-   
-    type Inventory = {
-        AttackUpItem: bool;
-        DefenseUpItem: bool;
-        HealthUpItem: bool;
-        Keys: int;
-    }
 
     type ItemType = 
         | AttackUp
@@ -94,6 +65,7 @@ module Movement
     type Enemy = {
          X: int;
          Y: int;
+         HP: int;
          IsAlive: bool;
          Dir: string;
     }
@@ -110,13 +82,15 @@ module Movement
         let leftDoor  =  List.exists (fun (x:FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
 
 
-
-        match randNum with 
-            | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
-            | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
-            | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
-            | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
-            | _ -> enemyObj
+        if enemyObj.IsAlive then 
+            match randNum with 
+                | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+                | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+                | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
+                | _ -> enemyObj
+        else enemyObj
+         
     //Enemy stuff ends   
 
     let collide (dragon: MovableDragon) (item: FilledTile) = 
@@ -159,10 +133,10 @@ module Movement
             if newList.IsEmpty then inventory
             else 
                 match newList.Head.Status with
-                | AttackUp -> {inventory with AttackUpItem = true;}
-                | DefenseUp -> {inventory with DefenseUpItem = true;}            
+                | AttackUp -> {inventory with Type.AttackUpItem = true;}
+                | DefenseUp -> {inventory with Type.DefenseUpItem = true;}            
                 | Key -> {inventory with Keys = inventory.Keys+1;}//added keys
-                | HealthUp -> {inventory with HealthUpItem = true;}
+                | HealthUp -> {inventory with Type.HealthUpItem = true;}
                 | _-> inventory;            
         else
             {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
@@ -170,7 +144,7 @@ module Movement
     let newItemList (dragon: MovableDragon) itemList = 
         List.filter (fun x ->  x <> (collide dragon x)) itemList
 
-    let newDoorList (dragon: MovableDragon) (doorList: FilledTile list) (inventory: Inventory) =
+    let newDoorList (dragon: MovableDragon) (doorList: FilledTile list) (inventory: Type.Inventory) =
         let newD = List.filter (fun j -> j = (collide dragon j)) doorList
         if (inventory.Keys=0) then
             doorList
@@ -215,11 +189,10 @@ module Movement
         |> image 
         |> position ( float(squareSize/2 - 1 + dragon.X), float(squareSize/2 - 1 + dragon.Y))
         
-        ctx.fillStyle <- !^"#11babd" //teal
-        if enemyObj.IsAlive then
-             (("/img/knight" + enemyObj.Dir + ".gif"),"enemy")
-                |> image 
-                |> position (float(squareSize/2 - 1 + enemyObj.X), float(squareSize/2 - 1 + enemyObj.Y))
+       
+        (("/img/knight" + enemyObj.Dir + ".gif"),"enemy")
+        |> image 
+        |> position (float(squareSize/2 - 1 + enemyObj.X), float(squareSize/2 - 1 + enemyObj.Y))
         
         for i in itemList do
             let imgSrc = 
@@ -247,7 +220,7 @@ module Movement
 
     Keyboard.initKeyboard()
 
-    let rec Update (dragon:MovableDragon) (inventory:Inventory) (itemList:FilledTile list) (hazardList:FilledTile list) (HP:Type.Health) (enemyObj:Enemy) (wallList:FilledTile list) (doorList:FilledTile list)  () =
+    let rec Update (dragon:MovableDragon) (inventory:Type.Inventory) (itemList:FilledTile list) (hazardList:FilledTile list) (HP:Type.Health) (enemyObj:Enemy) (wallList:FilledTile list) (doorList:FilledTile list)  () =
         //let dragon = dragon |> moveDragon (Keyboard.arrows())
         //make direction a type
         //use pattern matching and with record syntax
@@ -296,9 +269,12 @@ module Movement
             | _ -> dragon 
 
         let newEnemy :Enemy = 
-            match (Keyboard.spaceBar()) with
-            | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with IsAlive = false}
-            | _ -> enemyObj
+            match enemyObj.HP with
+            | 0 -> {enemyObj with Dir = "Dead"; IsAlive = false}
+            | _ ->
+                match (Keyboard.spaceBar()) with
+                | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
+                | _ -> enemyObj
 
         render newDragon enemyObj itemList hazardList wallList doorList
         
@@ -325,7 +301,7 @@ module Movement
              ctx.fillText("GAME OVER", float(200), float(200));
 
     let Dragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
-    let inv = { AttackUpItem = false; DefenseUpItem = false; HealthUpItem = false; Keys = 0}
+    let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     
     let atkPotion = {X = 80; Y = 260; Status= AttackUp; IsWall = false}
     let dfPotion = {X = 120; Y = 240; Status= DefenseUp; IsWall = false}
@@ -363,7 +339,7 @@ module Movement
     let wallList = [wall4;wall5;wall6;wall7;wall8;wall9;wall10;wall14;wall15;wall16;wall17;wall18;wall19;wall20]
     let doorList = [door1;door2;door3;door4;door5;door6]
 
-    let enemy1 = {X = 300; Y = 300; IsAlive = true; Dir=""}
+    let enemy1 = {X = 300; Y = 300; IsAlive = true; Dir=""; HP = 3}
 
     Update Dragon inv itemList hazardList HP enemy1 wallList doorList ()
 
