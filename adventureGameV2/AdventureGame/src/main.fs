@@ -19,7 +19,7 @@ module Main
 
     //let mutable HP : Type.Health = {Health = 12us}
     //let mutable HP: int = 12
-    let HP = Type.Health.Create(120us) //increased HP to compensate for no delay / invincibility frames
+    let HP = Type.Health.Create(60us) //increased HP to compensate for no delay / invincibility frames
 
    
     // All these are immutables values
