@@ -188,7 +188,7 @@ module Movement
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         //also clears the html images 
-        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "door"]
+        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
 
         ctx.fillStyle <- !^"#eddfb9" //beige
@@ -210,7 +210,7 @@ module Movement
         
         ctx.fillStyle <- !^"#11babd" //teal
         if enemyObj.IsAlive then
-             (("/img/knight" + enemyObj.Dir + ".png"),"enemy")
+             (("/img/knight" + enemyObj.Dir + ".gif"),"enemy")
                 |> image 
                 |> position (float(squareSize/2 - 1 + enemyObj.X), float(squareSize/2 - 1 + enemyObj.Y))
         
@@ -295,17 +295,22 @@ module Movement
 
         render newDragon enemyObj itemList hazardList wallList doorList
         
-        let newDragon1 = 
-            if ((newHealth newDragon hazardList HP enemyObj) = (HP - Type.Health.Create(1us) )  ) then 
-                {newDragon with Attacked = newDragon.Attacked + 1; Recovering = true} 
-            else
-                newDragon 
-              
+        
         let r = System.Random().Next(1, 25)
         //printfn "%A" HP
 
         if (HP <> Type.Health.Create(1us)) then 
-            window.setTimeout(Update newDragon1 (newInventory newDragon1 itemList inventory doorList) (newItemList newDragon1 itemList) hazardList (newHealth newDragon1 hazardList HP enemyObj)  (newEnemyL r wallList newEnemy) wallList (newDoorList newDragon1 doorList inventory), 8000 / 60) |> ignore
+            window.setTimeout(
+                Update 
+                    newDragon 
+                    (newInventory newDragon itemList inventory doorList) 
+                    (newItemList newDragon itemList) 
+                    hazardList 
+                    (newHealth newDragon hazardList HP enemyObj)  
+                    (newEnemyL r wallList newEnemy) 
+                    wallList 
+                    (newDoorList newDragon doorList inventory), 8000 / 60
+                ) |> ignore
         else 
              ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
              let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "enemy"] //this needs to be called from elsewhere
