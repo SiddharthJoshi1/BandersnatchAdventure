@@ -98,8 +98,7 @@ module Main
                 then takeDamage(hp) 
             elif newL.IsEmpty 
                 then hp 
-            else takeDamage(hp)// Sleep for 500ms
-        
+            else takeDamage(hp)// Sleep for 500ms      
           
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
         if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then
@@ -128,9 +127,10 @@ module Main
             doorList
         else
             List.filter (fun x ->  x <> (collide dragon x)) doorList
-
-
-
+    
+    let transition (dragon: Type.MovableDragon) stairList :bool = 
+        let lst = List.filter (fun x ->  x <> (collide dragon x)) stairList
+        lst.IsEmpty
 
     let position (x,y) (img : HTMLImageElement) =
         img?style?left <- x.ToString() + "px"
@@ -143,7 +143,16 @@ module Main
         if image.src.IndexOf(src) = -1 then image.src <- src
         image
 
-    let render (dragon: Type.MovableDragon) (enemyObj:Type.Enemy) (itemList:Type.FilledTile List) (hazardList:Type.FilledTile List) (wallList: Type.FilledTile List) (doorList: Type.FilledTile List) HP (inventory:Type.Inventory) (stairs: Type.FilledTile) =
+    let render  (dragon: Type.MovableDragon) 
+                (enemyObj:Type.Enemy) 
+                (itemList:Type.FilledTile List) 
+                (hazardList:Type.FilledTile List) 
+                (wallList: Type.FilledTile List) 
+                (doorList: Type.FilledTile List) 
+                HP 
+                (inventory:Type.Inventory) 
+                (stairList: Type.FilledTile list)
+                (level:int) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
        
@@ -196,29 +205,39 @@ module Main
                 ctx.fillStyle <- !^"#ffff00"
                 ctx.fillRect(float(l.X), float(l.Y),float(20),float(20))
         
+        for m in stairList do
+            ctx.fillStyle <- !^"#03fc03"
+            ctx.fillRect(float(m.X), float(m.Y),float(20),float(20))
+            ctx.fillStyle <- !^"#062829"
 
-        ctx.fillStyle <- !^"#03fc03"
-        ctx.fillRect(float(stairs.X), float(stairs.Y),float(20),float(20))
-        ctx.fillStyle <- !^"#062829"
-
-        ctx.fillStyle <- !^"#000000" //black
+        ctx.fillStyle <- !^"#fff" //black
         let hpString :string =  string HP 
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up: 1" else "Attack Up:"
         let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Up: 1" else "Health Up:"
         let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Up: 1" else "Defense Up:"
         let inventoryKeys :string = "Keys: " + string (inventory.Keys)
+        let invLevel :string = "Level: " + string level
         ctx.fillText( hpString , float(330), float(10)); 
         ctx.fillText(inventoryAttack, float(330), float(20))
         ctx.fillText(inventoryDefense, float(330), float(30))
         ctx.fillText(inventoryHealth, float(330), float(40))
         ctx.fillText(inventoryKeys, float(330), float(50))
+        ctx.fillText(invLevel, float(330), float(60))
 
     Keyboard.initKeyboard()
 
-    let rec Update (dragon:Type.MovableDragon) (inventory:Type.Inventory) (itemList:Type.FilledTile list) (hazardList:Type.FilledTile list) (HP:Type.Health) (enemyObj:Type.Enemy) (wallList:Type.FilledTile list) (doorList:Type.FilledTile list) (stairs: Type.FilledTile) level () =
-        //let dragon = dragon |> moveDragon (Keyboard.arrows())
-        //make direction a type
-        //use pattern matching and with record syntax
+    let rec Update 
+            (dragon:Type.MovableDragon) 
+            (inventory:Type.Inventory) 
+            (itemList:Type.FilledTile list) 
+            (hazardList:Type.FilledTile list) 
+            (HP:Type.Health) 
+            (enemyObj:Type.Enemy) 
+            (wallList:Type.FilledTile list) 
+            (doorList:Type.FilledTile list) 
+            (stairList: Type.FilledTile list) 
+            (level: Type.Level)
+            () =
 
         //wall checks
         let downCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (dragon.Y + squareSize)  && x.X = dragon.X  ) wallList
@@ -269,27 +288,26 @@ module Main
                 | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
                 | _ -> enemyObj
 
-        render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairs
+        let invlevel = level.LevelNum
         
         let r = System.Random().Next(1, 25)
         
-        //TODO: LEVEL CHECK
-        if(collide newDragon stairs <> emptyTile) then 
-            let newLevel :Type.Level = {level with LevelNum = level.LevelNum + 1}
+        let newLevel = if transition newDragon stairList then {level with LevelNum = level.LevelNum + 1} else level
+       
+        //LEVEL CHECK
+        if transition newDragon stairList then
             Update 
-                newDragon 
+                Rooms.dragonList.[newLevel.LevelNum]
                 (newInventory newDragon HP itemList inventory doorList)  
-                LevelOne.itemList.[newLevel.LevelNum] 
-                LevelOne.hazardList.[newLevel.LevelNum] 
+                Rooms.itemList.[newLevel.LevelNum] 
+                Rooms.hazardList.[newLevel.LevelNum] 
                 HP 
-                LevelOne.enemyList.[newLevel.LevelNum] 
-                LevelOne.wallList.[newLevel.LevelNum]  
-                LevelOne.doorList.[newLevel.LevelNum] 
-                LevelOne.stairList.[newLevel.LevelNum]
+                Rooms.enemyList.[newLevel.LevelNum] 
+                Rooms.wallList.[newLevel.LevelNum]  
+                Rooms.doorList.[newLevel.LevelNum] 
+                Rooms.stairList.[newLevel.LevelNum]
                 newLevel
                 ()
-
-        printfn "%A" level
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
@@ -308,28 +326,29 @@ module Main
                     (newEnemyL r wallList doorList newEnemy) 
                     wallList 
                     (newDoorList newDragon doorList inventory)
-                    stairs
-                    level
+                    stairList
+                    newLevel
                     , 8000 / 60
                 ) |> ignore
+
+        render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairList invlevel
 
     //end update function
    
     
-    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     let Level: Type.Level = {LevelNum = 0} 
 
     Update 
-        Dragon 
+        Rooms.dragonList.[0]
         inv 
-        LevelOne.itemList.[Level.LevelNum] 
-        LevelOne.hazardList.[Level.LevelNum] 
+        Rooms.itemList.[0] 
+        Rooms.hazardList.[0] 
         HP 
-        LevelOne.enemyList.[Level.LevelNum] 
-        LevelOne.wallList.[Level.LevelNum]  
-        LevelOne.doorList.[Level.LevelNum] 
-        LevelOne.stairList.[Level.LevelNum]
+        Rooms.enemyList.[0] 
+        Rooms.wallList.[0]  
+        Rooms.doorList.[0] 
+        Rooms.stairList.[0]
         Level
         ()
 

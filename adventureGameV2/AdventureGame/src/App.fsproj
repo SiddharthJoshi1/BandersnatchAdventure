@@ -5,6 +5,8 @@
   <ItemGroup>
     <Compile Include="type.fs" />
     <Compile Include="keyboard.fs" />
+    <Compile Include="room1.fs" />
+    <Compile Include="room2.fs" />
     <Compile Include="level1.fs" />
     <Compile Include="main.fs" />
   </ItemGroup>
