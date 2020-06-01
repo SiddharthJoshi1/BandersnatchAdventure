@@ -16,6 +16,7 @@ module Main
 
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
+    ctx.scale(2.,2.)
 
     let HP = Type.Health.Create(60us)
     //increased HP to compensate for no delay / invincibility frames
@@ -137,6 +138,12 @@ module Main
         img?style?top <-  y.ToString() + "px"
         //img?style?width <- squareSize.ToString() + "px"
         img?style?height <- squareSize.ToString() + "px"
+    
+    let bgStyle (img : HTMLImageElement) =
+        img?style?left <- "10px"
+        img?style?top <-  "10px"
+        img?style?width <- squareSizeSquared.ToString() + "px"
+        img?style?height <- squareSizeSquared.ToString() + "px"
 
     let image ((src : string), (id : string)) =
         let image = document.getElementById(id) :?> HTMLImageElement
@@ -160,8 +167,13 @@ module Main
         let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
 
-        ctx.fillStyle <- !^"#eddfb9" //beige
-        ctx.fillRect(0.0,0.0,gridWidth,gridWidth)
+        (("/img/room" + level.ToString() + "bg.png"), "bg")
+        |> image
+        |> bgStyle
+
+
+        // ctx.fillStyle <- !^"#eddfb9" //beige
+        // ctx.fillRect(0.0,0.0,gridWidth,gridWidth)
 
         // [0..steps] // this is a list
         //     |> Seq.iter( fun x -> // we iter through the list using an anonymous function
@@ -192,14 +204,14 @@ module Main
                 |_ -> ("/img/whiteTile.png", "atkPotion")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
 
-        for j in hazardList do
-            ctx.fillStyle <- !^"#0000FF" //blue
-            ctx.fillRect(float(j.X), float(j.Y),float(20),float(20))
+        // for j in hazardList do
+        //     ctx.fillStyle <- !^"#0000FF" //blue
+        //     ctx.fillRect(float(j.X), float(j.Y),float(20),float(20))
 
-        for k in wallList do
-            ctx.fillStyle <- !^"#080808" //fucked up black
-            ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
-        ctx.stroke() 
+        // for k in wallList do
+        //     ctx.fillStyle <- !^"#080808" //fucked up black
+        //     ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
+        // ctx.stroke() 
 
         for l in doorList do
                 ctx.fillStyle <- !^"#ffff00"
@@ -210,7 +222,7 @@ module Main
             ctx.fillRect(float(m.X), float(m.Y),float(20),float(20))
             ctx.fillStyle <- !^"#062829"
 
-        ctx.fillStyle <- !^"#fff" //black
+        ctx.fillStyle <- !^"#fff" //white text inv (temp)
         let hpString :string =  string HP 
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up: 1" else "Attack Up:"
         let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Up: 1" else "Health Up:"

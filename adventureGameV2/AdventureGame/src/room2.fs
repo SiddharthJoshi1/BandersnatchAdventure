@@ -105,16 +105,97 @@ module Room2
     ]
 
     let hazards = [
-        // Type.wallWriter 4 4;
-        // Type.wallWriter 4 5;
-        // Type.wallWriter 4 6;
-        // Type.wallWriter 4 7;
-        // Type.wallWriter 4 8;
-        // Type.wallWriter 5 4;
-        // Type.wallWriter 5 5;
-        // Type.wallWriter 5 6;
-        // Type.wallWriter 5 7;
-        // Type.wallWriter 5 8;
+        //left middle 
+        Type.wallWriter 4 4;
+        Type.wallWriter 4 5;
+        Type.wallWriter 4 6;
+        Type.wallWriter 4 7;
+        Type.wallWriter 4 8;
+        Type.wallWriter 4 9;
+        Type.wallWriter 4 10;
+        Type.wallWriter 4 11;
+        Type.wallWriter 4 12;
+        Type.wallWriter 4 13;
+        Type.wallWriter 4 14;
+        Type.wallWriter 4 15;
+        Type.wallWriter 5 4;
+        Type.wallWriter 5 5;
+        Type.wallWriter 5 6;
+        Type.wallWriter 5 7;
+        Type.wallWriter 5 8;
+        Type.wallWriter 5 9;
+        Type.wallWriter 5 10;
+        Type.wallWriter 5 11;
+        Type.wallWriter 5 12;
+        Type.wallWriter 5 13;
+        Type.wallWriter 5 14;
+        Type.wallWriter 5 15;
+        //left top branches
+        Type.wallWriter 6 4;
+        Type.wallWriter 6 5;
+        Type.wallWriter 7 4;
+        Type.wallWriter 7 5;
+        Type.wallWriter 8 4;
+        Type.wallWriter 8 5;
+        //left bottom branches
+        Type.wallWriter 6 14;
+        Type.wallWriter 6 15;
+        Type.wallWriter 7 14;
+        Type.wallWriter 7 15;
+        Type.wallWriter 8 14;
+        Type.wallWriter 8 15;
+
+        //right middle 
+        Type.wallWriter 14 4;
+        Type.wallWriter 14 5;
+        Type.wallWriter 14 6;
+        Type.wallWriter 14 7;
+        Type.wallWriter 14 8;
+        Type.wallWriter 14 9;
+        Type.wallWriter 14 10;
+        Type.wallWriter 14 11;
+        Type.wallWriter 14 12;
+        Type.wallWriter 14 13;
+        Type.wallWriter 14 14;
+        Type.wallWriter 14 15;
+        Type.wallWriter 15 4;
+        Type.wallWriter 15 5;
+        Type.wallWriter 15 6;
+        Type.wallWriter 15 7;
+        Type.wallWriter 15 8;
+        Type.wallWriter 15 9;
+        Type.wallWriter 15 10;
+        Type.wallWriter 15 11;
+        Type.wallWriter 15 12;
+        Type.wallWriter 15 13;
+        Type.wallWriter 15 14;
+        Type.wallWriter 15 15;
+        
+        //right top branches
+        Type.wallWriter 11 4;
+        Type.wallWriter 11 5;
+        Type.wallWriter 12 4;
+        Type.wallWriter 12 5;
+        Type.wallWriter 13 4;
+        Type.wallWriter 13 5;
+        //right bottom branches
+        Type.wallWriter 11 14;
+        Type.wallWriter 11 15;
+        Type.wallWriter 12 14;
+        Type.wallWriter 12 15;
+        Type.wallWriter 13 14;
+        Type.wallWriter 13 15;
+        
+        //middle section
+        Type.wallWriter 8 9;
+        Type.wallWriter 9 9;
+        Type.wallWriter 10 9;
+        Type.wallWriter 11 9;
+        Type.wallWriter 8 10;
+        Type.wallWriter 9 10;
+        Type.wallWriter 10 10;
+        Type.wallWriter 11 10;
+
         ] 
 
     let stairs = [

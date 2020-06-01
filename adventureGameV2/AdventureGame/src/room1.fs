@@ -157,7 +157,7 @@ module Room1
     ]
 
     //no hazards in room 1
-    let hazards = [] 
+    let hazards:Type.FilledTile list = [] 
 
     let stairs = [
         Type.wallWriter 10 0;
