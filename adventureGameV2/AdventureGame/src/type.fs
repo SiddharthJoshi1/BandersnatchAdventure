@@ -78,3 +78,18 @@ module Type
          | _ -> false 
 
     type Level = {LevelNum :int}
+
+    let tile x = 
+            x * 20 
+   
+    let itemWriter (x:int) (y:int) (status:ItemType) :FilledTile =
+        {X = (tile x); Y = (tile y); Status= status; IsWall = false}
+
+    let wallWriter (x:int) (y:int) :FilledTile =
+        {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = true}
+
+    let hazardWriter (x:int) (y:int) :FilledTile =
+        {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = false}
+   
+    let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
+        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false}
