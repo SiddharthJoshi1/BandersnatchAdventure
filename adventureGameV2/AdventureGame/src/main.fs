@@ -104,6 +104,8 @@ module Main
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
         if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then
             {inventory with Type.HealthUpItem = false}
+        elif ((dragon.AttackUp=0) && (Keyboard.attackButton() = 1)) then
+            {inventory with Type.AttackUpItem = false}
         else    
             let newList = List.filter (fun y -> y = (collide dragon y)) doorList
             if newList.IsEmpty then
@@ -262,12 +264,18 @@ module Main
             | _ -> dragon 
 
         let newEnemy :Type.Enemy = 
-            match enemyObj.HP with
-            | 0 -> {enemyObj with Dir = "Dead"; IsAlive = false}
-            | _ ->
-                match (Keyboard.spaceBar()) with
-                | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
-                | _ -> enemyObj
+            match enemyObj.HP with //if enemy hp is =
+            | 0 -> {enemyObj with Dir = "Dead"; IsAlive = false} //0 then enemy is dead
+            | _ -> //>0 then
+                match (dragon.AttackUp) with //if dragon attack up is = 
+                | 0 -> //0 then, if player presses attack button do 1 damage to enemy
+                    match (Keyboard.spaceBar()) with
+                    | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
+                    | _ -> enemyObj
+                | _ -> //>0 then, if player presses attack button do 2 damage to enemy
+                    match (Keyboard.spaceBar()) with
+                    | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 2; }
+                    | _ -> enemyObj
 
         render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairs
         
@@ -316,7 +324,7 @@ module Main
     //end update function
    
     
-    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false }
+    let Dragon :Type.MovableDragon = { X = 0; Y = 0; Direction="W"; Attacked=0; Recovering= false; AttackUp= 0}
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     let Level: Type.Level = {LevelNum = 0} 
 

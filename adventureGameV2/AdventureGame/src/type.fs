@@ -20,6 +20,7 @@ module Type
         Direction: string
         Attacked: int
         Recovering: bool
+        AttackUp: int
     }
 
     type FilledTile = {

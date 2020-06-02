@@ -56,7 +56,7 @@ module LevelOne
         let hazards2 = [hazard3]
 
         let doors2 :Type.FilledTile list = []
-        let enemy2 :Type.Enemy = {X = 20; Y = 20; IsAlive = true; Dir=""; HP = 3}
+        let enemy2 :Type.Enemy = {X = 20; Y = 20; IsAlive = true; Dir=""; HP = 4}
 
         //LIST OF LEVELS
         let itemList = [items1; items1]
