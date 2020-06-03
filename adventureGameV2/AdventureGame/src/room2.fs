@@ -199,9 +199,9 @@ module Room2
         ] 
 
     let stairs = [
-        Type.wallWriter 10 19;
-        Type.wallWriter 9 0;
-        Type.wallWriter 0 9;
+        Type.stairWriter 10 19 0;
+        Type.stairWriter 9 0 3;
+        Type.stairWriter 0 9 2;
     ]
 
     let enemy :Type.Enemy = {X = 140; Y = 140; IsAlive = true; Dir="W"; HP = 3}

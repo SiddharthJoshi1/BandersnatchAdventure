@@ -30,6 +30,14 @@ module Type
         IsWall: bool
     }
 
+    type Level = {LevelNum :int}
+
+    type Stairs = {
+        X: int
+        Y: int
+        GoesTo: Level
+    }
+
     // type Wall = {
     //     X: int
     //     Y: int
@@ -77,19 +85,35 @@ module Type
          | var2 when var2 = 5 -> true 
          | _ -> false 
 
-    type Level = {LevelNum :int}
-
     let tile x = 
             x * 20 
    
-    let itemWriter (x:int) (y:int) (status:ItemType) :FilledTile =
-        {X = (tile x); Y = (tile y); Status= status; IsWall = false}
+    let itemWriter (x:int) (y:int) (status:ItemType) :FilledTile = {
+        X = (tile x)
+        Y = (tile y)
+        Status= status
+        IsWall = false
+    }
 
-    let wallWriter (x:int) (y:int) :FilledTile =
-        {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = true}
+    let wallWriter (x:int) (y:int) :FilledTile = {
+        X = (tile x)
+        Y = (tile y)
+        Status = ItemType.Empty
+        IsWall = true
+    }
 
-    let hazardWriter (x:int) (y:int) :FilledTile =
-        {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = false}
+    let hazardWriter (x:int) (y:int) :FilledTile = {
+        X = (tile x)
+        Y = (tile y)
+        Status = ItemType.Empty
+        IsWall = false
+    }
+
+    let stairWriter (x:int) (y:int) (goesTo):Stairs = {
+        X = (tile x)
+        Y = (tile y)
+        GoesTo = {LevelNum = goesTo}
+    }
    
     let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
         {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=0}

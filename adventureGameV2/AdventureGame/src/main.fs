@@ -143,9 +143,19 @@ module Main
         else
             List.filter (fun x ->  x <> (collide dragon x)) doorList
     
-    let transition (dragon: Type.MovableDragon) stairList :bool = 
-        let lst = List.filter (fun x ->  x <> (collide dragon x)) stairList
-        lst.IsEmpty
+    let transition (dragon: Type.MovableDragon) (stairList: Type.Stairs list) (level:Type.Level) :Type.Level=
+        let lst = List.filter (fun (stair:Type.Stairs) -> 
+            match stair with
+            | stair when dragon.X + squareSize > stair.X 
+                && dragon.Y < stair.Y + squareSize 
+                && dragon.Y + squareSize > stair.Y 
+                && dragon.X < stair.X + squareSize 
+                -> true
+            | _ -> false ) stairList
+            
+        if lst.IsEmpty then level
+        else (lst.Head).GoesTo
+
 
     let position (x,y) (img : HTMLImageElement) =
         img?style?left <- x.ToString() + "px"
@@ -172,7 +182,7 @@ module Main
                 (doorList: Type.FilledTile List) 
                 HP 
                 (inventory:Type.Inventory) 
-                (stairList: Type.FilledTile list)
+                (stairList: Type.Stairs list)
                 (level:int) =
         //clears the canvas
         ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
@@ -262,7 +272,7 @@ module Main
             (enemyObj:Type.Enemy) 
             (wallList:Type.FilledTile list) 
             (doorList:Type.FilledTile list) 
-            (stairList: Type.FilledTile list) 
+            (stairList: Type.Stairs list) 
             (level: Type.Level)
             () =
 
@@ -335,32 +345,10 @@ module Main
                     match (Keyboard.spaceBar()) with
                     | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 2; }
                     | _ -> enemyObj *)
-                
-
-        let invlevel = level.LevelNum
         
         let r = System.Random().Next(1, 500)
         
-        let newLevel = if transition newDragon stairList then {level with LevelNum = level.LevelNum + 1} else level
-
-
-        //printf "%A" newDragon
-        //printf "%A" newEnemy
-       
-        //LEVEL CHECK
-        if transition newDragon stairList then
-            Update 
-                Rooms.dragonList.[newLevel.LevelNum]
-                (newInventory newDragon HP itemList inventory doorList)  
-                Rooms.itemList.[newLevel.LevelNum] 
-                Rooms.hazardList.[newLevel.LevelNum] 
-                HP 
-                Rooms.enemyList.[newLevel.LevelNum] 
-                Rooms.wallList.[newLevel.LevelNum]  
-                Rooms.doorList.[newLevel.LevelNum] 
-                Rooms.stairList.[newLevel.LevelNum]
-                newLevel
-                ()
+        let newLevel:Type.Level = transition newDragon stairList level
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
@@ -368,23 +356,43 @@ module Main
              let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"]
              for i in lst do ("/img/whiteTile.png", i) |> image |> position (0,0)
              ctx.fillText("GAME OVER", float(200), float(200));
-        else 
-             window.setTimeout(
+        
+        //ROOM CHECK 
+        elif newLevel <> level then
+            printfn "%A" newLevel
+            window.setTimeout(
                 Update 
-                    newDragon 
-                    (newInventory newDragon HP itemList inventory doorList) 
+                    Rooms.dragonList.[newLevel.LevelNum]
+                    (newInventory newDragon HP itemList inventory doorList)  
+                    Rooms.itemList.[newLevel.LevelNum] 
+                    Rooms.hazardList.[newLevel.LevelNum] 
+                    HP 
+                    Rooms.enemyList.[newLevel.LevelNum] 
+                    Rooms.wallList.[newLevel.LevelNum]  
+                    Rooms.doorList.[newLevel.LevelNum] 
+                    Rooms.stairList.[newLevel.LevelNum]
+                    newLevel
+                    , 8000 / 60
+                ) |> ignore
+        
+        //VIBE CHECK   
+        else
+            window.setTimeout(
+                Update 
+                    newDragon
+                    (newInventory newDragon HP itemList inventory doorList)  
                     (newItemList newDragon itemList) 
                     hazardList 
-                    (newHealth newDragon hazardList HP enemyObj inventory)  
-                    (newEnemyL r wallList  doorList  newDragon newEnemy)
-                    wallList 
-                    (newDoorList newDragon doorList inventory)
+                    (newHealth newDragon hazardList HP enemyObj inventory) 
+                    (newEnemyL r wallList doorList newDragon newEnemy) 
+                    wallList  
+                    (newDoorList newDragon doorList inventory) 
                     stairList
                     newLevel
                     , 8000 / 60
                 ) |> ignore
 
-        render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairList invlevel
+        render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairList newLevel.LevelNum
 
     //end update function
    

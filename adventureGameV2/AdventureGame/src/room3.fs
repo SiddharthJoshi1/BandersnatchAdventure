@@ -1,10 +1,10 @@
-//ROOM ONE (pillars room)
-module Room1   
+//ROOM three (secret room)
+module Room3   
     let items = [
         Type.itemWriter 9 9 Type.ItemType.HealthUp //changed this from empty
         Type.itemWriter 8 8 Type.ItemType.AttackUp //changed this from empty, is invisible on map?
         Type.itemWriter 1 1 Type.ItemType.Empty
-        Type.itemWriter 11 8 Type.ItemType.Key
+        Type.itemWriter 11 8 Type.ItemType.Key 
     ]
 
     let walls = [
@@ -38,11 +38,7 @@ module Room1
         Type.wallWriter 7 1;
         Type.wallWriter 8 1;
         Type.wallWriter 9 1;
-        
-        //space for door and buffer
-        Type.wallWriter 9 0;
-        Type.wallWriter 11 0;
-       
+        Type.wallWriter 10 1;
         Type.wallWriter 11 1;
         Type.wallWriter 12 1;
         Type.wallWriter 13 1;
@@ -62,7 +58,10 @@ module Room1
         Type.wallWriter 18 7;
         Type.wallWriter 18 8;
         Type.wallWriter 18 9;
-        Type.wallWriter 18 10;
+        
+        Type.wallWriter 19 9;
+        Type.wallWriter 19 11;
+
         Type.wallWriter 18 11;
         Type.wallWriter 18 12;
         Type.wallWriter 18 13;
@@ -92,64 +91,7 @@ module Room1
         Type.wallWriter 17 18;
         Type.wallWriter 18 18;
 
-        //block columns
-        //1
-        Type.wallWriter 2 4;
-        Type.wallWriter 2 5;
-        Type.wallWriter 3 4;
-        Type.wallWriter 3 5;
-
-        Type.wallWriter 7 4;
-        Type.wallWriter 7 5;
-        Type.wallWriter 8 4;
-        Type.wallWriter 8 5;
-
-        Type.wallWriter 11 4;
-        Type.wallWriter 11 5;
-        Type.wallWriter 12 4;
-        Type.wallWriter 12 5;
-
-        Type.wallWriter 16 4;
-        Type.wallWriter 16 5;
-        Type.wallWriter 17 4;
-        Type.wallWriter 17 5;
-
-        //2
-        Type.wallWriter 2 8;
-        Type.wallWriter 2 9;
-        Type.wallWriter 3 8;
-        Type.wallWriter 3 9;
-
-        Type.wallWriter 6 8;
-        Type.wallWriter 6 9;
-        Type.wallWriter 7 8;
-        Type.wallWriter 7 9;
-
-        Type.wallWriter 12 8;
-        Type.wallWriter 12 9;
-        Type.wallWriter 13 8;
-        Type.wallWriter 13 9;
-
-        Type.wallWriter 16 8;
-        Type.wallWriter 16 9;
-        Type.wallWriter 17 8;
-        Type.wallWriter 17 9;
-
-        //3
-        Type.wallWriter 2 12;
-        Type.wallWriter 2 13;
-        Type.wallWriter 3 12;
-        Type.wallWriter 3 13;
-
-        Type.wallWriter 9 12;
-        Type.wallWriter 9 13;
-        Type.wallWriter 10 12;
-        Type.wallWriter 10 13;
-
-        Type.wallWriter 16 12;
-        Type.wallWriter 16 13;
-        Type.wallWriter 17 12;
-        Type.wallWriter 17 13;
+       
     ]
 
     let doors = [
