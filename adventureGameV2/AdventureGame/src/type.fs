@@ -21,6 +21,7 @@ module Type
         Attacked: int
         Recovering: bool
         AttackUp: int
+        DefenseUp: int
     }
 
     type FilledTile = {
@@ -116,4 +117,4 @@ module Type
     }
    
     let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
-        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=0}
+        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=0; DefenseUp=0}

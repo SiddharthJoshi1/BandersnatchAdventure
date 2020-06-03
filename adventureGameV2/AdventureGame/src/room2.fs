@@ -204,4 +204,4 @@ module Room2
         Type.stairWriter 0 9 2;
     ]
 
-    let enemy :Type.Enemy = {X = 140; Y = 140; IsAlive = true; Dir="W"; HP = 3}
+    let enemy :Type.Enemy = {X = 140; Y = 140; IsAlive = true; Dir="W"; HP = 6}
