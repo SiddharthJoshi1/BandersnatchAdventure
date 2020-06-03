@@ -327,8 +327,8 @@ module Main
         let newLevel = if transition newDragon stairList then {level with LevelNum = level.LevelNum + 1} else level
 
 
-        printf "%A" newDragon
-        printf "%A" newEnemy
+        //printf "%A" newDragon
+        //printf "%A" newEnemy
        
         //LEVEL CHECK
         if transition newDragon stairList then
