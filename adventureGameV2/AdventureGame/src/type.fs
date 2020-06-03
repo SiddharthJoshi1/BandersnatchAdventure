@@ -92,4 +92,4 @@ module Type
         {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = false}
    
     let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
-        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false}
+        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=0}

@@ -44,7 +44,7 @@ module Main
     // Enemy stuff starts
     
 
-    let newEnemyL randNum wallList doorList (enemyObj:Type.Enemy) =
+    let newEnemyL randNum wallList doorList (dragon: Type.MovableDragon) (enemyObj:Type.Enemy)  =
         let downCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y + squareSize)  && x.X = enemyObj.X  ) wallList
         let upCheck  = List.exists (fun (x:Type.FilledTile) -> x.Y = (enemyObj.Y - squareSize) && x.X = enemyObj.X  ) wallList
         let rightCheck  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) wallList
@@ -57,12 +57,24 @@ module Main
 
 
         if enemyObj.IsAlive then 
-            match randNum with 
-                | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
-                | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
-                | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
-                | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
-                | _ -> enemyObj
+            if((enemyObj.X + 100 >= dragon.X) || (enemyObj.X - 100 <= dragon.X) || (enemyObj.Y - 100 <= dragon.Y) || (enemyObj.Y + 100 >= dragon.Y) ) then
+                    if enemyObj.Y = dragon.Y then 
+                        if enemyObj.X < dragon.X && enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor then {enemyObj with X = enemyObj.X + squareSize; Dir = "E" } 
+                        elif enemyObj.Y > dragon.X && enemyObj.X > 0  && not leftCheck && not leftDoor then {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                        else enemyObj
+                    elif enemyObj.X = dragon.X then 
+                        if enemyObj.Y > dragon.Y && enemyObj.Y > 0 && not upCheck && not upDoor then {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+                        elif enemyObj.Y < dragon.Y && enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor then {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+                        else enemyObj
+                    else enemyObj
+            else 
+                match randNum with 
+                    | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+                    | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+                    | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                    | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
+                    | _ -> enemyObj
+            
         else enemyObj
          
     //Enemy stuff ends   
@@ -313,6 +325,10 @@ module Main
         let r = System.Random().Next(1, 25)
         
         let newLevel = if transition newDragon stairList then {level with LevelNum = level.LevelNum + 1} else level
+
+
+        printf "%A" newDragon
+        printf "%A" newEnemy
        
         //LEVEL CHECK
         if transition newDragon stairList then
@@ -343,7 +359,7 @@ module Main
                     (newItemList newDragon itemList) 
                     hazardList 
                     (newHealth newDragon hazardList HP enemyObj inventory)  
-                    (newEnemyL r wallList doorList newEnemy) 
+                    (newEnemyL r wallList  doorList  newDragon newEnemy)
                     wallList 
                     (newDoorList newDragon doorList inventory)
                     stairList
