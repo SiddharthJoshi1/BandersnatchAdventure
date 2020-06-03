@@ -91,5 +91,5 @@ module Type
     let hazardWriter (x:int) (y:int) :FilledTile =
         {X = (tile x); Y = (tile y); Status = ItemType.Empty; IsWall = false}
    
-    let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
-        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false}
+    let dragonWriter (x: int) (y:int) (dir:string) (z:int) :MovableDragon =
+        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=z}

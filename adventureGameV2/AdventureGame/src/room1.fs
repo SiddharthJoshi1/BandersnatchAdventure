@@ -1,8 +1,8 @@
 //ROOM ONE (pillars room)
 module Room1   
     let items = [
-        Type.itemWriter 2 2 Type.ItemType.Empty
-        Type.itemWriter 4 4 Type.ItemType.Empty
+        Type.itemWriter 9 9 Type.ItemType.HealthUp //changed this from empty
+        Type.itemWriter 8 8 Type.ItemType.AttackUp //changed this from empty, is invisible on map?
         Type.itemWriter 1 1 Type.ItemType.Empty
         Type.itemWriter 11 8 Type.ItemType.Key
     ]
@@ -163,4 +163,4 @@ module Room1
         Type.wallWriter 10 0;
     ]
 
-    let enemy :Type.Enemy = {X = 180; Y = 80; IsAlive = true; Dir=""; HP = 3}
+    let enemy :Type.Enemy = {X = 180; Y = 80; IsAlive = true; Dir=""; HP = 6}

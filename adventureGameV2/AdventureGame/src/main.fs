@@ -104,8 +104,8 @@ module Main
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
         if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then
             {inventory with Type.HealthUpItem = false}
-        elif ((dragon.AttackUp=0) && (Keyboard.attackButton() = 1)) then
-            {inventory with Type.AttackUpItem = false}
+        elif ((Keyboard.attackButton() = 1)) then //removed condition (dragon.AttackUp=0)
+            {inventory with Type.AttackUpItem = false} //i will fix this, doesn't set to false
         else    
             let newList = List.filter (fun y -> y = (collide dragon y)) doorList
             if newList.IsEmpty then
@@ -237,6 +237,7 @@ module Main
         ctx.fillText(inventoryHealth, float(330), float(40))
         ctx.fillText(inventoryKeys, float(330), float(50))
         ctx.fillText(invLevel, float(330), float(60))
+        ctx.fillText(dragon.AttackUp.ToString(), float (330), float(70))
 
     Keyboard.initKeyboard()
 
@@ -283,22 +284,37 @@ module Main
         let eLeftCheck  = enemyObj.X = (dragon.X - squareSize) && enemyObj.Y = dragon.Y 
 
         let newDragon :Type.MovableDragon =
-            match (Keyboard.arrows()) with 
-            | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
-                {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
-            | (0, -1) when  (dragon.Y + squareSize < squareSizeSquared && not downCheck) && ((dragon.Y + squareSize < squareSizeSquared) && not downDoor) -> 
-                {dragon with Y = dragon.Y + squareSize; Direction = "S"}
-            | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
-                {dragon with X = dragon.X - squareSize; Direction = "W"} 
-            | (1, 0) when  (dragon.X + squareSize < squareSizeSquared && not rightCheck) && ((dragon.X + squareSize < squareSizeSquared) && not rightDoor) -> 
-                {dragon with X = dragon.X + squareSize; Direction = "E"}   
-            | _ -> dragon 
+            match (Keyboard.attackButton()) with //attack up button
+            | 1 when ((dragon.AttackUp = 0)&&(inventory.AttackUpItem = true))-> {dragon with AttackUp = 5} //is pressed and attack up = 0, set attack up to 5
+            | _ -> //isn't pressed
+                match (Keyboard.spaceBar()) with //attacking button
+                    | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)&&(enemyObj.IsAlive=true)) -> {dragon with AttackUp = dragon.AttackUp - 1} //is pressed and enemy is adjacent to player, subtract 1 from attack up
+                    | _ ->
+                        match (Keyboard.arrows()) with //movement buttons
+                        | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
+                            {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
+                        | (0, -1) when  (dragon.Y + squareSize < squareSizeSquared && not downCheck) && ((dragon.Y + squareSize < squareSizeSquared) && not downDoor) -> 
+                            {dragon with Y = dragon.Y + squareSize; Direction = "S"}
+                        | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
+                            {dragon with X = dragon.X - squareSize; Direction = "W"} 
+                        | (1, 0) when  (dragon.X + squareSize < squareSizeSquared && not rightCheck) && ((dragon.X + squareSize < squareSizeSquared) && not rightDoor) -> 
+                            {dragon with X = dragon.X + squareSize; Direction = "E"}   
+                        | _ -> dragon 
 
         let newEnemy :Type.Enemy = 
             match enemyObj.HP with //if enemy hp is =
-            | 0 -> {enemyObj with Dir = "Dead"; IsAlive = false} //0 then enemy is dead
+            | val1 when val1<1 -> {enemyObj with Dir = "Dead"; IsAlive = false} //0 then enemy is dead
             | _ -> //>0 then
-                match (dragon.AttackUp) with //if dragon attack up is = 
+                match (Keyboard.spaceBar()) with
+                | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp=0)) -> 
+                    (printf "Attack!")
+                    {enemyObj with HP = enemyObj.HP - 1;}//0 then, if player presses attack button do 1 damage to enemy
+                | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)) -> 
+                    (printf "Attack!")
+                    {enemyObj with HP = enemyObj.HP - 2;}
+                | _ -> enemyObj
+                
+(*                 match (dragon.AttackUp) with //if dragon attack up is = 
                 | 0 -> //0 then, if player presses attack button do 1 damage to enemy
                     match (Keyboard.spaceBar()) with
                     | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
@@ -306,11 +322,12 @@ module Main
                 | _ -> //>0 then, if player presses attack button do 2 damage to enemy
                     match (Keyboard.spaceBar()) with
                     | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 2; }
-                    | _ -> enemyObj
+                    | _ -> enemyObj *)
+                
 
         let invlevel = level.LevelNum
         
-        let r = System.Random().Next(1, 25)
+        let r = System.Random().Next(1, 500)
         
         let newLevel = if transition newDragon stairList then {level with LevelNum = level.LevelNum + 1} else level
        
