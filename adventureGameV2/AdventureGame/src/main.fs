@@ -213,9 +213,9 @@ module Main
                 match i.Status with
                 |Type.ItemType.DefenseUp -> ("/img/defenseUpPotion.png", "dfPotion")
                 |Type.ItemType.AttackUp -> ("/img/attackUpPotion.png", "atkPotion")
-                |Type.ItemType.HealthUp -> ("/img/HealthPotion.png", "hpPotion")
+                |Type.ItemType.HealthUp -> ("/img/healthPotion.png", "hpPotion")
                 |Type.ItemType.Key -> ("/img/key.png", "key")
-                |_ -> ("/img/whiteTile.png", "atkPotion")
+                |_ -> ("/img/whiteTile.png", "blank")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
 
         // for j in hazardList do
