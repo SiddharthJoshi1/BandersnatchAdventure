@@ -163,4 +163,4 @@ module Room1
         Type.wallWriter 10 0;
     ]
 
-    let enemy :Type.Enemy = {X = 180; Y = 80; IsAlive = true; Dir=""; HP = 3}
+    let enemy :Type.Enemy = {X = 180; Y = 80; IsAlive = true; Dir="N"; HP = 3}
