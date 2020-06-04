@@ -28,16 +28,44 @@ module Main
         let rightDoor  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) doorList
         let leftDoor  =  List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
 
-
+        let spice = 25
         if enemyObj.IsAlive then 
-            if((enemyObj.X + 100 >= dragon.X) || (enemyObj.X - 100 <= dragon.X) || (enemyObj.Y - 100 <= dragon.Y) || (enemyObj.Y + 100 >= dragon.Y) ) then
+            if(enemyObj.X + squareSize*5 >= dragon.X
+                && enemyObj.Y + squareSize*5 >= dragon.Y
+                && enemyObj.X - squareSize*5 <= dragon.X
+                && enemyObj.Y - squareSize*5 <= dragon.Y) then
                     if enemyObj.Y = dragon.Y then 
-                        if enemyObj.X < dragon.X && enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor then {enemyObj with X = enemyObj.X + squareSize; Dir = "E" } 
-                        elif enemyObj.Y > dragon.X && enemyObj.X > 0  && not leftCheck && not leftDoor then {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                        if enemyObj.X < dragon.X 
+                            && enemyObj.X + squareSize < squareSizeSquared 
+                            && not rightCheck 
+                            && not rightDoor then 
+                            match randNum with 
+                            | valu when valu <spice -> {enemyObj with X = enemyObj.X + squareSize; Dir = "E" } 
+                            | _ -> enemyObj
+                        elif enemyObj.Y > dragon.X 
+                            && enemyObj.X > 0  
+                            && not leftCheck 
+                            && not leftDoor then 
+                            match randNum with
+                            | valu when valu <spice -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                            | _ -> enemyObj   
                         else enemyObj
+
                     elif enemyObj.X = dragon.X then 
-                        if enemyObj.Y > dragon.Y && enemyObj.Y > 0 && not upCheck && not upDoor then {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
-                        elif enemyObj.Y < dragon.Y && enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor then {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+                        if enemyObj.Y > dragon.Y 
+                            && enemyObj.Y > 0 
+                            && not upCheck 
+                            && not upDoor then 
+                            match randNum with
+                            | valu when valu <spice -> {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+                            | _ -> enemyObj
+                            
+                        elif enemyObj.Y < dragon.Y 
+                            && enemyObj.Y + squareSize < squareSizeSquared 
+                            && not downCheck && not downDoor then 
+                            match randNum with
+                            | valu when valu <spice -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" } 
+                            | _ -> enemyObj   
                         else enemyObj
                     else enemyObj
             else 
@@ -46,8 +74,7 @@ module Main
                     | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
                     | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
                     | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
-                    | _ -> enemyObj
-            
+                    | _ -> enemyObj 
         else enemyObj
          
     //Enemy stuff ends   
@@ -179,6 +206,7 @@ module Main
             else List.exists (fun (x:Type.FilledTile) -> x.X = (dragon.X - squareSize) && x.Y = dragon.Y ) doorList
             
         //enemy checks
+        let onCheck = enemyObj.X = dragon.X && enemyObj.Y = dragon.Y 
         let eDownCheck  =  enemyObj.Y = (dragon.Y + squareSize)  && enemyObj.X = dragon.X 
         let eUpCheck  =  enemyObj.Y = (dragon.Y - squareSize) && enemyObj.X = dragon.X 
         let eRightCheck  =  enemyObj.X = (dragon.X + squareSize) && enemyObj.Y = dragon.Y  
@@ -213,33 +241,23 @@ module Main
 
         let newEnemy :Type.Enemy = 
             match enemyObj.HP with //if enemy hp is =
-            | val1 when val1<1 -> {enemyObj with Dir = "Dead"; IsAlive = false} //0 then enemy is dead
+            | val1 when val1 < 1 -> {enemyObj with Dir = "Dead"; IsAlive = false} //0 then enemy is dead
             | _ -> //>0 then
                 match (Keyboard.spaceBar()) with
-                | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp=0)) -> 
-                    (printf "Attack!")
-                    {enemyObj with HP = enemyObj.HP - 1;}//0 then, if player presses attack button do 1 damage to enemy
-                | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)) -> 
-                    (printf "Attack!")
-                    {enemyObj with HP = enemyObj.HP - 2;}
+                | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp=0)) -> 
+                    printf "Attack!"
+                    {enemyObj with HP = enemyObj.HP - 1; Dir = enemyObj.Dir.[0].ToString() + "ouch"}//0 then, if player presses attack button do 1 damage to enemy
+                | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)) -> 
+                    printf "Attack!"
+                    {enemyObj with HP = enemyObj.HP - 2; Dir = enemyObj.Dir.[0].ToString() + "ouch"}
                 | _ -> enemyObj
-                
-(*                 match (dragon.AttackUp) with //if dragon attack up is = 
-                | 0 -> //0 then, if player presses attack button do 1 damage to enemy
-                    match (Keyboard.spaceBar()) with
-                    | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 1; }
-                    | _ -> enemyObj
-                | _ -> //>0 then, if player presses attack button do 2 damage to enemy
-                    match (Keyboard.spaceBar()) with
-                    | 1 when (eDownCheck || eUpCheck || eRightCheck || eLeftCheck) ->  {enemyObj with HP = enemyObj.HP - 2; }
-                    | _ -> enemyObj *)
-        
-        let r = System.Random().Next(1, 500)
+
+        let r = Random().Next(1, 30)
         
         let newLevel:Type.Level = transition newDragon stairList level
 
         //GAME OVER CHECK
-        if (HP <= Type.Health.Create(1us)) then Render.clearScreen |> ignore
+        if (HP <= Type.Health.Create(1us)) then Render.clearScreen 
         
         //ROOM CHECK 
         elif newLevel <> level then

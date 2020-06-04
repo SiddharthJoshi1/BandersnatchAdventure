@@ -46,11 +46,11 @@ module Type
     // }
 
     type Enemy = {
-         X: int;
-         Y: int;
-         HP: int;
-         IsAlive: bool;
-         Dir: string;
+        X: int;
+        Y: int;
+        HP: int;
+        IsAlive: bool;
+        Dir: string;
     }
 
     type Health = 

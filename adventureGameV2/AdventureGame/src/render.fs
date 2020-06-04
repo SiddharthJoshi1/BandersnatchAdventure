@@ -138,7 +138,7 @@ module Render
         ctx.fillText(defenseUpP, float (330), float(90))
 
     let clearScreen =
-        ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
-        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"]
+        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
+        //ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
         ctx.fillText("GAME OVER", float(200), float(200));
