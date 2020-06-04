@@ -101,14 +101,14 @@ module Render
                 |_ -> ("/img/whiteTile.png", "blank")
             imgSrc |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
 
-        for j in hazardList do
-            ctx.fillStyle <- !^"#0000FF" //blue
-            ctx.fillRect(float(j.X), float(j.Y),float(20),float(20))
+        // for j in hazardList do
+        //     ctx.fillStyle <- !^"#0000FF" //blue
+        //     ctx.fillRect(float(j.X), float(j.Y),float(20),float(20))
 
-        for k in wallList do
-            ctx.fillStyle <- !^"#080808" //fucked up black
-            ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
-        ctx.stroke() 
+        // for k in wallList do
+        //     ctx.fillStyle <- !^"#080808" //fucked up black
+        //     ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
+        // ctx.stroke() 
 
         for l in doorList do
                 ctx.fillStyle <- !^"#ffff00"
