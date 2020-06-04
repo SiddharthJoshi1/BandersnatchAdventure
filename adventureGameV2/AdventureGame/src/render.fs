@@ -13,13 +13,10 @@ module Render
 
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
-    ctx.scale(2.,2.)
+    
 
-    let w = myCanvas.width
-    let h = myCanvas.height
     let squareSize = Type.squaresize
     let steps = 20
-    let squareSizeSquared = (squareSize*squareSize)
 
     // gridWidth needs a float wo we cast our int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize)
@@ -30,6 +27,7 @@ module Render
     // prepare our canvas operations
     myCanvas.width <- gridWidth
     myCanvas.height <- gridWidth
+    ctx.font <- "15px Comic Sans"
 
     let position (x:float,y:float) (img : HTMLImageElement) =
         img?style?left <- (x-1.).ToString() + "px"
@@ -57,7 +55,7 @@ module Render
                 (stairList: Type.Stairs list)
                 (level:int) =
         //clears the canvas
-        ctx.clearRect(0., 0., float(squareSizeSquared), float(squareSizeSquared))
+        ctx.clearRect(0., 0., float(gridWidth), float(gridWidth))
        
         //also clears the html images 
         let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
@@ -118,7 +116,8 @@ module Render
             ctx.fillRect(float(m.X), float(m.Y),float(squareSize),float(squareSize))
             ctx.fillStyle <- !^"#062829"
 
-        ctx.fillStyle <- !^"#000" //black text inv (contrast is still terrible)
+        ctx.strokeStyle <- !^"#000"
+        ctx.fillStyle <- !^"#fff" //white text inv (contrast is still terrible?)
         let hpString :string =  string HP 
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
         let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
@@ -127,17 +126,30 @@ module Render
         let invLevel :string = "Level: " + string level
         let attackUpP :string = "Attack Up: " + string dragon.AttackUp
         let defenseUpP :string = "Defense Up: " + string dragon.DefenseUp
-        ctx.fillText( hpString , float(330), float(20)); 
-        ctx.fillText(inventoryAttack, float(330), float(30))
-        ctx.fillText(inventoryDefense, float(330), float(40))
-        ctx.fillText(inventoryHealth, float(330), float(50))
-        ctx.fillText(inventoryKeys, float(330), float(60))
-        ctx.fillText(invLevel, float(330), float(70))
-        ctx.fillText(attackUpP, float (330), float(80))
-        ctx.fillText(defenseUpP, float (330), float(90))
+        ctx.fillText(hpString, float(520), float(20))
+        ctx.fillText(inventoryAttack, float(520), float(30))
+        ctx.fillText(inventoryDefense, float(520), float(40))
+        ctx.fillText(inventoryHealth, float(520), float(50))
+        ctx.fillText(inventoryKeys, float(520), float(60))
+        ctx.fillText(invLevel, float(520), float(70))
+        ctx.fillText(attackUpP, float (520), float(80))
+        ctx.fillText(defenseUpP, float (520), float(90))
 
-    let clearScreen =
+        ctx.strokeText(hpString, float(520), float(20))
+        ctx.strokeText(inventoryAttack, float(520), float(30))
+        ctx.strokeText(inventoryDefense, float(520), float(40))
+        ctx.strokeText(inventoryHealth, float(520), float(50))
+        ctx.strokeText(inventoryKeys, float(520), float(60))
+        ctx.strokeText(invLevel, float(520), float(70))
+        ctx.strokeText(attackUpP, float (520), float(80))
+        ctx.strokeText(defenseUpP, float (520), float(90))
+        
+    let clearScreen (x:string) =
+        ctx.font <- "40px Comic Sans"
+        ctx.clearRect(0., 0., float(gridWidth), float(gridWidth))
+        ctx.fillStyle <- !^"#6a0dad"
+        ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.);
         let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
-        ctx.clearRect(0., 0., float(squareSizeSquared), float(squareSizeSquared))
-        ctx.fillText("GAME OVER", float(200), float(200));
+        
+        

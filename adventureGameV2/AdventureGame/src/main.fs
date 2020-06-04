@@ -11,7 +11,7 @@ module Main
     //increased HP to compensate for no delay / invincibility frames
 
     let squareSize = Render.squareSize
-    let squareSizeSquared = Render.squareSizeSquared
+    let gridwidth = (int)Render.gridWidth
 
     let emptyTile :Type.FilledTile = {X = 0; Y = 0; Status= Type.ItemType.Empty;IsWall = false}
     
@@ -30,14 +30,13 @@ module Main
 
         let spice = 25
         if enemyObj.IsAlive then 
-            printfn "%A" (enemyObj.Y, dragon.Y)
             if(enemyObj.X + squareSize*5 >= dragon.X
                 && enemyObj.Y + squareSize*5 >= dragon.Y
                 && enemyObj.X - squareSize*5 <= dragon.X
                 && enemyObj.Y - squareSize*5 <= dragon.Y) then
                     if enemyObj.Y = dragon.Y then 
                         if enemyObj.X < dragon.X 
-                            && enemyObj.X + squareSize < squareSizeSquared 
+                            && enemyObj.X + squareSize < gridwidth 
                             && not rightCheck 
                             && not rightDoor then 
                             match randNum with 
@@ -62,7 +61,7 @@ module Main
                             | _ -> enemyObj
                             
                         elif enemyObj.Y < dragon.Y 
-                            && enemyObj.Y + squareSize < squareSizeSquared 
+                            && enemyObj.Y + squareSize < gridwidth 
                             && not downCheck && not downDoor then 
                             match randNum with
                             | valu when valu <spice -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" } 
@@ -72,9 +71,9 @@ module Main
             else 
                 match randNum with 
                     | 1  when enemyObj.Y > 0 && not upCheck && not upDoor ->  {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
-                    | 2  when  enemyObj.Y + squareSize < squareSizeSquared && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
+                    | 2  when  enemyObj.Y + squareSize < gridwidth && not downCheck && not downDoor -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" }
                     | 3   when  enemyObj.X > 0  && not leftCheck && not leftDoor -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
-                    | 4  when  enemyObj.X + squareSize < squareSizeSquared && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
+                    | 4  when  enemyObj.X + squareSize < gridwidth && not rightCheck && not rightDoor ->  {enemyObj with X = enemyObj.X + squareSize; Dir = "E" }   
                     | _ -> enemyObj 
         else enemyObj
          
@@ -118,9 +117,7 @@ module Main
             let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
             
             if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) && enemyObj.IsAlive 
-                then 
-                printfn "ouch"
-                takeDamage hp dragon 
+                then takeDamage hp dragon 
                 
             elif newL.IsEmpty 
                 then hp 
@@ -229,11 +226,11 @@ module Main
                             match (Keyboard.arrows()) with //movement buttons
                             | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
                                 {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
-                            | (0, -1) when  (dragon.Y + squareSize < squareSizeSquared && not downCheck) && ((dragon.Y + squareSize < squareSizeSquared) && not downDoor) -> 
+                            | (0, -1) when  (dragon.Y + squareSize < gridwidth && not downCheck) && ((dragon.Y + squareSize < gridwidth) && not downDoor) -> 
                                 {dragon with Y = dragon.Y + squareSize; Direction = "S"}
                             | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
                                 {dragon with X = dragon.X - squareSize; Direction = "W"} 
-                            | (1, 0) when  (dragon.X + squareSize < squareSizeSquared && not rightCheck) && ((dragon.X + squareSize < squareSizeSquared) && not rightDoor) -> 
+                            | (1, 0) when  (dragon.X + squareSize < gridwidth && not rightCheck) && ((dragon.X + squareSize < gridwidth) && not rightDoor) -> 
                                 {dragon with X = dragon.X + squareSize; Direction = "E"}   
                             | _ -> 
                                 let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
@@ -256,12 +253,16 @@ module Main
                     {enemyObj with HP = enemyObj.HP - 2; Dir = enemyObj.Dir.[0].ToString() + "ouch"}
                 | _ -> enemyObj
 
-        let r = Random().Next(1, 30)
         
+        Render.render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairList level.LevelNum
+
         let newLevel:Type.Level = transition newDragon stairList level
 
         //GAME OVER CHECK
-        if (HP <= Type.Health.Create(1us)) then Render.clearScreen 
+        if (HP <= Type.Health.Create(1us)) then 
+            Render.clearScreen "GAME OVER"
+
+            
         
         //ROOM CHECK 
         elif newLevel <> level then
@@ -282,6 +283,7 @@ module Main
         
         //VIBE CHECK   
         else
+            let r = Random().Next(1, 30)
             window.setTimeout(
                 Update 
                     newDragon
@@ -296,9 +298,6 @@ module Main
                     newLevel
                     , 8000 / 60
                 ) |> ignore
-
-        Render.render newDragon enemyObj itemList hazardList wallList doorList HP inventory stairList newLevel.LevelNum
-
     //end update function
    
     
