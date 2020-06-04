@@ -285,7 +285,7 @@ module Main
     let Level: Type.Level = {LevelNum = 0} 
 
     Update 
-        (Type.dragonWriter 9 17 "N")
+        Rooms.dragonList.[0].[0]
         inv 
         Rooms.itemList.[0] 
         Rooms.hazardList.[0] 
