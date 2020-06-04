@@ -118,31 +118,38 @@ module Render
 
         ctx.strokeStyle <- !^"#000"
         ctx.fillStyle <- !^"#fff" //white text inv (contrast is still terrible?)
-        let hpString :string =  string HP 
+        // let hpString :string =  string HP 
+        // let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
+        // let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
+        // let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Item: 1" else "Defense Item:"
+        // let inventoryKeys :string = "Keys: " + string (inventory.Keys)
+        // let invLevel :string = "Level: " + string level
+        // let attackUpP :string = "Attack Up: " + string dragon.AttackUp
+        // let defenseUpP :string = "Defense Up: " + string dragon.DefenseUp
+
+        
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
         let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
         let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Item: 1" else "Defense Item:"
-        let inventoryKeys :string = "Keys: " + string (inventory.Keys)
-        let invLevel :string = "Level: " + string level
-        let attackUpP :string = "Attack Up: " + string dragon.AttackUp
-        let defenseUpP :string = "Defense Up: " + string dragon.DefenseUp
-        ctx.fillText(hpString, float(520), float(20))
-        ctx.fillText(inventoryAttack, float(520), float(30))
-        ctx.fillText(inventoryDefense, float(520), float(40))
-        ctx.fillText(inventoryHealth, float(520), float(50))
-        ctx.fillText(inventoryKeys, float(520), float(60))
-        ctx.fillText(invLevel, float(520), float(70))
-        ctx.fillText(attackUpP, float (520), float(80))
-        ctx.fillText(defenseUpP, float (520), float(90))
-
-        ctx.strokeText(hpString, float(520), float(20))
-        ctx.strokeText(inventoryAttack, float(520), float(30))
-        ctx.strokeText(inventoryDefense, float(520), float(40))
-        ctx.strokeText(inventoryHealth, float(520), float(50))
-        ctx.strokeText(inventoryKeys, float(520), float(60))
-        ctx.strokeText(invLevel, float(520), float(70))
-        ctx.strokeText(attackUpP, float (520), float(80))
-        ctx.strokeText(defenseUpP, float (520), float(90))
+        let invList = [
+            string HP; 
+            inventoryAttack; 
+            inventoryHealth; 
+            inventoryDefense; 
+            "Keys: " + string (inventory.Keys); 
+            "Level: " + string level;
+            "Attack Up: " + string dragon.AttackUp;
+            "Defense Up: " + string dragon.DefenseUp]
+        
+        let rec loop (list:string list) acc =
+            match list with
+            | head :: tail -> 
+                ctx.fillText(head, float(480), float(acc))
+                ctx.strokeText(head, float(480), float(acc))
+                loop tail (acc + 20)
+            | [] -> acc
+        loop invList 20      
+     
         
     let clearScreen (x:string) =
         ctx.font <- "40px Comic Sans"
