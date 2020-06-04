@@ -18,8 +18,6 @@ module Type
         X: int
         Y: int
         Direction: string
-        Attacked: int
-        Recovering: bool
         AttackUp: int
         DefenseUp: int
     }
@@ -38,12 +36,6 @@ module Type
         Y: int
         GoesTo: Level
     }
-
-    // type Wall = {
-    //     X: int
-    //     Y: int
-    //     IsWall: bool
-    // }
 
     type Enemy = {
         X: int;
@@ -81,13 +73,13 @@ module Type
     type Range = {Range:uint16}
 
     let rangeCheck num = 
-     match num with
-         | var1 when var1 = 1 -> true 
-         | var2 when var2 = 5 -> true 
-         | _ -> false 
+        match num with
+            | var1 when var1 = 1 -> true 
+            | var2 when var2 = 5 -> true 
+            | _ -> false 
 
     let tile x = 
-            x * 20 
+        x * 20 
    
     let itemWriter (x:int) (y:int) (status:ItemType) :FilledTile = {
         X = (tile x)
@@ -116,5 +108,10 @@ module Type
         GoesTo = {LevelNum = goesTo}
     }
    
-    let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon =
-        {X = (tile x); Y = (tile y); Direction= dir; Attacked=0; Recovering= false; AttackUp=0; DefenseUp=0}
+    let dragonWriter (x: int) (y:int) (dir:string) :MovableDragon ={
+        X = (tile x)
+        Y = (tile y)
+        Direction= dir
+        AttackUp=0
+        DefenseUp=0
+    }

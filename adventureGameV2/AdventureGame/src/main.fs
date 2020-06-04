@@ -261,7 +261,6 @@ module Main
         
         //ROOM CHECK 
         elif newLevel <> level then
-            printfn "%A" newLevel
             window.setTimeout(
                 Update 
                     Rooms.dragonList.[newLevel.LevelNum].[level.LevelNum] 
