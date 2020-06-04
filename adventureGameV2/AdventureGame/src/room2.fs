@@ -187,15 +187,18 @@ module Room2
         Type.wallWriter 13 15;
         
         //middle section
+        Type.wallWriter 7 9;
         Type.wallWriter 8 9;
         Type.wallWriter 9 9;
         Type.wallWriter 10 9;
         Type.wallWriter 11 9;
+        Type.wallWriter 12 9;
+        Type.wallWriter 7 10;
         Type.wallWriter 8 10;
         Type.wallWriter 9 10;
         Type.wallWriter 10 10;
         Type.wallWriter 11 10;
-
+        Type.wallWriter 12 10;
         ] 
 
     let stairs = [

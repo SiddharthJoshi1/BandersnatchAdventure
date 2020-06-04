@@ -1,10 +1,10 @@
 module Rooms
         //LIST OF ROOMS PER LEVEL? 
         let dragonList = [
-            Type.dragonWriter 9 17 "N"
-            Type.dragonWriter 10 18 "N"
-            Type.dragonWriter 5 5 "N"
-            Type.dragonWriter 5 5 "N"
+            [Type.dragonWriter 9 17 "N"; Type.dragonWriter 10 1 "S"]
+            [Type.dragonWriter 10 18 "N"; Type.dragonWriter 1 9 "E"; Type.dragonWriter 10 1 "S";]
+            [Type.dragonWriter 18 9 "W";Type.dragonWriter 9 18 "W"]
+            [Type.dragonWriter 5 5 "N"]
         ] 
         let itemList = [Room1.items; Room2.items;Room3.items; Room4.items]
         let wallList = [Room1.walls; Room2.walls;Room3.walls; Room4.walls]

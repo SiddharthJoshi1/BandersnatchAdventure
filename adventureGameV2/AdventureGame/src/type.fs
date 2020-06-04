@@ -110,7 +110,7 @@ module Type
         IsWall = false
     }
 
-    let stairWriter (x:int) (y:int) (goesTo):Stairs = {
+    let stairWriter (x:int) (y:int) goesTo :Stairs = {
         X = (tile x)
         Y = (tile y)
         GoesTo = {LevelNum = goesTo}
