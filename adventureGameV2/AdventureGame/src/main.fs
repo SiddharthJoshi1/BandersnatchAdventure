@@ -30,6 +30,7 @@ module Main
 
         let spice = 25
         if enemyObj.IsAlive then 
+            printfn "%A" (enemyObj.Y, dragon.Y)
             if(enemyObj.X + squareSize*5 >= dragon.X
                 && enemyObj.Y + squareSize*5 >= dragon.Y
                 && enemyObj.X - squareSize*5 <= dragon.X
@@ -117,10 +118,13 @@ module Main
             let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
             
             if (enemyObj.X = dragon.X) && (enemyObj.Y = dragon.Y) && enemyObj.IsAlive 
-                then takeDamage hp dragon 
+                then 
+                printfn "ouch"
+                takeDamage hp dragon 
+                
             elif newL.IsEmpty 
                 then hp 
-            else takeDamage hp dragon// Sleep for 500ms      
+            else takeDamage hp dragon     
           
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
         if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then

@@ -17,10 +17,9 @@ module Render
 
     let w = myCanvas.width
     let h = myCanvas.height
-    let squareSize = 20
+    let squareSize = Type.squaresize
     let steps = 20
     let squareSizeSquared = (squareSize*squareSize)
-    let stepSizedSquared = (steps*steps)
 
     // gridWidth needs a float wo we cast our int operation to a float using the float keyword
     let gridWidth = float (steps * squareSize)
@@ -33,14 +32,14 @@ module Render
     myCanvas.height <- gridWidth
 
     let position (x:float,y:float) (img : HTMLImageElement) =
-        img?style?left <- x.ToString() + "px"
-        img?style?top <-  y.ToString() + "px"
+        img?style?left <- (x-1.).ToString() + "px"
+        img?style?top <-  (y-1.).ToString() + "px"
         img?style?height <- squareSize.ToString() + "px"
     
     let bgStyle (img : HTMLImageElement) =
         img?style?left <- "9px"
         img?style?top <-  "9px"
-        img?style?height <- squareSizeSquared.ToString() + "px"
+        img?style?height <- gridWidth.ToString() + "px"
 
     let image ((src : string), (id : string)) =
         let image = document.getElementById(id) :?> HTMLImageElement
@@ -58,7 +57,7 @@ module Render
                 (stairList: Type.Stairs list)
                 (level:int) =
         //clears the canvas
-        ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
+        ctx.clearRect(0., 0., float(squareSizeSquared), float(squareSizeSquared))
        
         //also clears the html images 
         let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
@@ -112,11 +111,11 @@ module Render
 
         for l in doorList do
                 ctx.fillStyle <- !^"#ffff00"
-                ctx.fillRect(float(l.X), float(l.Y),float(20),float(20))
+                ctx.fillRect(float(l.X), float(l.Y),float(squareSize),float(squareSize))
         
         for m in stairList do
             ctx.fillStyle <- !^"#03fc03"
-            ctx.fillRect(float(m.X), float(m.Y),float(20),float(20))
+            ctx.fillRect(float(m.X), float(m.Y),float(squareSize),float(squareSize))
             ctx.fillStyle <- !^"#062829"
 
         ctx.fillStyle <- !^"#000" //black text inv (contrast is still terrible)
@@ -140,5 +139,5 @@ module Render
     let clearScreen =
         let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
-        //ctx.clearRect(0., 0., float(stepSizedSquared), float(stepSizedSquared))
+        ctx.clearRect(0., 0., float(squareSizeSquared), float(squareSizeSquared))
         ctx.fillText("GAME OVER", float(200), float(200));

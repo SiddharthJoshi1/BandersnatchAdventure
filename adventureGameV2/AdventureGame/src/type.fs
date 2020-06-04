@@ -78,8 +78,10 @@ module Type
             | var2 when var2 = 5 -> true 
             | _ -> false 
 
+    let squaresize = 30
+
     let tile x = 
-        x * 20 
+        x * squaresize 
    
     let itemWriter (x:int) (y:int) (status:ItemType) :FilledTile = {
         X = (tile x)
@@ -114,4 +116,12 @@ module Type
         Direction= dir
         AttackUp=0
         DefenseUp=0
+    }
+
+    let enemyWriter (x: int) (y:int) (dir:string) :Enemy ={
+        X = (tile x)
+        Y = (tile y)
+        HP = 6;
+        IsAlive = true;
+        Dir= dir
     }
