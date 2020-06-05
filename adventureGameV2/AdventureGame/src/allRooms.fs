@@ -6,11 +6,10 @@ module Rooms
             [Type.dragonWriter 10 18 "N"; dudDragon; Type.dragonWriter 2 9 "E"; Type.dragonWriter 9 2 "S";] //room 2
             [dudDragon; Type.dragonWriter 18 9 "W"] //room 3
             [dudDragon; Type.dragonWriter 9 18 "N"] //room 4
-            [dudDragon; dudDragon; dudDragon; Type.dragonWriter 9 9 "S"] //room 5
         ] 
-        let itemList = [Room1.items; Room2.items;Room3.items; Room4.items; Room5.items]
-        let wallList = [Room1.walls; Room2.walls;Room3.walls; Room4.walls; Room5.walls]
-        let hazardList = [Room1.hazards; Room2.hazards;Room3.hazards; Room4.hazards; Room5.hazards]
-        let doorList = [Room1.doors; Room2.doors;Room3.doors; Room4.doors; Room5.doors]
-        let enemyList = [Room1.enemy; Room2.enemy;Room3.enemy; Room4.enemy; Room5.enemy]
-        let stairList = [Room1.stairs; Room2.stairs;Room3.stairs; Room4.stairs; Room5.stairs]
+        let itemList = [Room1.items; Room2.items;Room3.items; Room4.items]
+        let wallList = [Room1.walls; Room2.walls;Room3.walls; Room4.walls]
+        let hazardList = [Room1.hazards; Room2.hazards;Room3.hazards; Room4.hazards]
+        let doorList = [Room1.doors; Room2.doors;Room3.doors; Room4.doors]
+        let enemyList = [Room1.enemy; Room2.enemy;Room3.enemy; Room4.enemy]
+        let stairList = [Room1.stairs; Room2.stairs;Room3.stairs; Room4.stairs]

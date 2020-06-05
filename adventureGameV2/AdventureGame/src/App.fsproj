@@ -10,7 +10,6 @@
     <Compile Include="room2.fs" />
     <Compile Include="room3.fs" />
     <Compile Include="room4.fs" />
-    <Compile Include="room5.fs" />
     <Compile Include="allRooms.fs" />
     <Compile Include="main.fs" />
   </ItemGroup>
