@@ -58,7 +58,7 @@ module Render
         ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
        
         //also clears the html images 
-        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
+        let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door0";"door1"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
 
         (("/img/room" + level.ToString() + "bg.png"), "bg")
@@ -106,10 +106,16 @@ module Render
         //     ctx.fillStyle <- !^"#080808" //fucked up black
         //     ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
         // ctx.stroke() 
+            
+        let rec loop list (i:int) =
+            match list with
+            | head :: tail -> 
+                ("img/doortile.png", "door" + (string i)) |> image |> position (float(squareSize/2 - 1 + doorList.[i].X), float(squareSize/2 - 1 + doorList.[i].Y))
+                loop tail (i + 1)
+            | [] -> i |> ignore
+        loop doorList 0 
 
-        for i in doorList do
-            ("img/doortile.png", "door") |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
-        
+            
         // for m in stairList do
         //     ctx.fillStyle <- !^"#03fc03"
         //     ctx.fillRect(float(m.X), float(m.Y),float(squareSize),float(squareSize))
@@ -134,8 +140,8 @@ module Render
             | head :: tail -> 
                 ctx.fillText(head, float(620), float(acc))
                 loop tail (acc + 20)
-            | [] -> acc
-        loop invList 20 |> ignore     
+            | [] -> acc |> ignore
+        loop invList 20      
      
         
     let clearScreen (x:string) =
