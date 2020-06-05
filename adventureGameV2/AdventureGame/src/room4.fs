@@ -1,10 +1,10 @@
 //ROOM three (last room)
 module Room4   
     let items = [
-        Type.itemWriter 9 9 Type.ItemType.HealthUp //changed this from empty
-        Type.itemWriter 8 8 Type.ItemType.AttackUp //changed this from empty, is invisible on map?
+        Type.itemWriter 9 9 Type.ItemType.Empty //changed this from empty
+        Type.itemWriter 8 8 Type.ItemType.Empty //changed this from empty, is invisible on map?
         Type.itemWriter 1 1 Type.ItemType.Empty
-        Type.itemWriter 11 8 Type.ItemType.Key
+        Type.itemWriter 11 8 Type.ItemType.Empty
     ]
 
     let walls = [
@@ -58,10 +58,7 @@ module Room4
         Type.wallWriter 18 7;
         Type.wallWriter 18 8;
         Type.wallWriter 18 9;
-        
-        Type.wallWriter 19 9;
-        Type.wallWriter 19 11;
-
+        Type.wallWriter 18 10;
         Type.wallWriter 18 11;
         Type.wallWriter 18 12;
         Type.wallWriter 18 13;
@@ -80,7 +77,9 @@ module Room4
         Type.wallWriter 6 18;
         Type.wallWriter 7 18;
         Type.wallWriter 8 18;
-        Type.wallWriter 9 18;
+        //gap for entrance at 9 18
+        Type.wallWriter 8 19;
+        Type.wallWriter 10 19
         Type.wallWriter 10 18;
         Type.wallWriter 11 18;
         Type.wallWriter 12 18;
@@ -100,7 +99,7 @@ module Room4
     let hazards:Type.FilledTile list = [] 
 
     let stairs = [
-        Type.stairWriter 10 0 1;
+        Type.stairWriter 5 2 4;
     ]
 
-    let enemy :Type.Enemy = {X = 180; Y = 80; IsAlive = true; Dir="N"; HP = 6}
+    let enemy :Type.Enemy = {X = 60; Y = 120; IsAlive = true; Dir="E"; HP = 6}

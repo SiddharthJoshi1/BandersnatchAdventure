@@ -27,7 +27,7 @@ module Render
     // prepare our canvas operations
     myCanvas.width <- gridWidth + 400.
     myCanvas.height <- gridWidth
-    ctx.font <- "15px Comic Sans"
+    ctx.font <- "15px Comic Sans MS"
 
     let position (x:float,y:float) (img : HTMLImageElement) =
         img?style?left <- (x-5.).ToString() + "px"
@@ -116,18 +116,18 @@ module Render
         //     ctx.fillStyle <- !^"#062829"
 
         ctx.fillStyle <- !^"#000" //white text inv (contrast is still terrible?)
-        let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
-        let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
-        let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Item: 1" else "Defense Item:"
+        let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up Powder: 1" else "Attack Up Powder: 0"
+        let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Up Powder: 1" else "Defense Up Powder: 0"
+        let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Up Powder: 1" else "Health Up Powder: 0"
         let invList = [
             string HP; 
             inventoryAttack; 
-            inventoryHealth; 
             inventoryDefense; 
+            inventoryHealth; 
             "Keys: " + string (inventory.Keys); 
-            "Level: " + string level;
-            "Attack Up: " + string dragon.AttackUp;
-            "Defense Up: " + string dragon.DefenseUp]
+            //"Level: " + string level;
+            "Attack Boosts Remaining: " + string dragon.AttackUp;
+            "Defense Boosts Remaining: " + string dragon.DefenseUp]
         
         let rec loop (list:string list) acc =
             match list with
@@ -139,7 +139,7 @@ module Render
      
         
     let clearScreen (x:string) =
-        ctx.font <- "40px Comic Sans"
+        ctx.font <- "40px Comic Sans MS"
         ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
         ctx.fillStyle <- !^"#6a0dad"
         ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.);
