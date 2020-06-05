@@ -151,14 +151,15 @@ module Render
     //Game over Screen
     //Blame Sid for the Comic Sans    
     let clearScreen (x:string) (bg:string) =
+        ctx.fillStyle <- !^"6a0dad" //this is purple but is showing black??
+        ctx.fillRect(0., 0., myCanvas.height, myCanvas.height)
+        ctx.fillStyle <- !^"#fff"
+        ctx.fillText(x, myCanvas.height/2., myCanvas.height/2.)
         ctx.font <- "40px Comic Sans MS"
         ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
         let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"; "door0"; "door1"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
         (bg, "bg") |> image |> bgStyle
-        ctx.fillStyle <- !^"6a0dad" //this is purple but is showing black??
-        ctx.fillRect(0., 0., myCanvas.height, myCanvas.height)
-        ctx.fillStyle <- !^"#fff"
-        ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.)
+        
         
         
