@@ -1,7 +1,7 @@
 //ROOM TWO (SLIP 'n' SLIDE) 
 module Room2   
     let items = [
-        Type.itemWriter 1 1 Type.ItemType.Empty
+        Type.itemWriter 12 7 Type.ItemType.Key
     ]
 
     let walls = [
