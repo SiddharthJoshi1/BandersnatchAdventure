@@ -54,29 +54,10 @@ module Type
             HP(h)
         static member (+) (HP a, HP b) = Health.Create (a+b)
         static member (-) (HP a, HP b) = Health.Create (a-b)
-   
-
-    let healthCheck num =
-         match num with
-             | var1 when var1 <= 1 -> false
-             | var2 when var2 >= 20 -> false
-             | _ -> true
- 
-    type AttackPower = {AttackPower:uint16}
-
-    let attackPowerCheck num =
-         match num with
-             | var1 when var1 = 1 -> true 
-             | var2 when var2 = 3 -> true 
-             | _ -> false 
- 
-    type Range = {Range:uint16}
-
-    let rangeCheck num = 
-        match num with
-            | var1 when var1 = 1 -> true 
-            | var2 when var2 = 5 -> true 
-            | _ -> false 
+    
+    let healthHeal = 20us
+    
+    let maxHealth = 60us
 
     let squaresize = 30
 

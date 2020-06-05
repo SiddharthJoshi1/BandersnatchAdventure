@@ -25,13 +25,13 @@ module Render
     // the arrow <- indicates we're mutating a value. It's a special operator in F#.
     
     // prepare our canvas operations
-    myCanvas.width <- gridWidth
+    myCanvas.width <- gridWidth + 400.
     myCanvas.height <- gridWidth
     ctx.font <- "15px Comic Sans"
 
     let position (x:float,y:float) (img : HTMLImageElement) =
-        img?style?left <- (x-1.).ToString() + "px"
-        img?style?top <-  (y-1.).ToString() + "px"
+        img?style?left <- (x-5.).ToString() + "px"
+        img?style?top <-  (y-5.).ToString() + "px"
         img?style?height <- squareSize.ToString() + "px"
     
     let bgStyle (img : HTMLImageElement) =
@@ -55,7 +55,7 @@ module Render
                 (stairList: Type.Stairs list)
                 (level:int) =
         //clears the canvas
-        ctx.clearRect(0., 0., float(gridWidth), float(gridWidth))
+        ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
        
         //also clears the html images 
         let lst = ["dfPotion"; "atkPotion"; "hpPotion"; "key"; "door"]
@@ -107,27 +107,15 @@ module Render
         //     ctx.fillRect(float(k.X), float(k.Y),float(20),float(20))
         // ctx.stroke() 
 
-        for l in doorList do
-                ctx.fillStyle <- !^"#ffff00"
-                ctx.fillRect(float(l.X), float(l.Y),float(squareSize),float(squareSize))
+        for i in doorList do
+            ("img/doortile.png", "door") |> image |> position (float(squareSize/2 - 1 + i.X), float(squareSize/2 - 1 + i.Y))
         
-        for m in stairList do
-            ctx.fillStyle <- !^"#03fc03"
-            ctx.fillRect(float(m.X), float(m.Y),float(squareSize),float(squareSize))
-            ctx.fillStyle <- !^"#062829"
+        // for m in stairList do
+        //     ctx.fillStyle <- !^"#03fc03"
+        //     ctx.fillRect(float(m.X), float(m.Y),float(squareSize),float(squareSize))
+        //     ctx.fillStyle <- !^"#062829"
 
-        ctx.strokeStyle <- !^"#000"
-        ctx.fillStyle <- !^"#fff" //white text inv (contrast is still terrible?)
-        // let hpString :string =  string HP 
-        // let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
-        // let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
-        // let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Item: 1" else "Defense Item:"
-        // let inventoryKeys :string = "Keys: " + string (inventory.Keys)
-        // let invLevel :string = "Level: " + string level
-        // let attackUpP :string = "Attack Up: " + string dragon.AttackUp
-        // let defenseUpP :string = "Defense Up: " + string dragon.DefenseUp
-
-        
+        ctx.fillStyle <- !^"#000" //white text inv (contrast is still terrible?)
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Item: 1" else "Attack Item:"
         let inventoryHealth :string =  if (inventory.HealthUpItem) then "Health Item: 1" else "Health Item:"
         let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Item: 1" else "Defense Item:"
@@ -144,16 +132,15 @@ module Render
         let rec loop (list:string list) acc =
             match list with
             | head :: tail -> 
-                ctx.fillText(head, float(480), float(acc))
-                ctx.strokeText(head, float(480), float(acc))
+                ctx.fillText(head, float(620), float(acc))
                 loop tail (acc + 20)
             | [] -> acc
-        loop invList 20      
+        loop invList 20 |> ignore     
      
         
     let clearScreen (x:string) =
         ctx.font <- "40px Comic Sans"
-        ctx.clearRect(0., 0., float(gridWidth), float(gridWidth))
+        ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
         ctx.fillStyle <- !^"#6a0dad"
         ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.);
         let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"]

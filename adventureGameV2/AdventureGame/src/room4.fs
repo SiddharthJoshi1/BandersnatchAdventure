@@ -94,9 +94,7 @@ module Room4
        
     ]
 
-    let doors = [
-        Type.wallWriter 10 1;
-    ]
+    let doors = []
 
     //no hazards in room 1
     let hazards:Type.FilledTile list = [] 

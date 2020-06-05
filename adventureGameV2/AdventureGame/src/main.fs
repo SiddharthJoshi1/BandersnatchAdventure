@@ -7,7 +7,7 @@ module Main
     open Keyboard
     
 
-    let HP = Type.Health.Create(60us)
+   
     //increased HP to compensate for no delay / invincibility frames
 
     let squareSize = Render.squareSize
@@ -104,14 +104,14 @@ module Main
                     Type.Health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
 
     let restoreHealth (HP: Type.Health ) =
-          if ((HP.ToUInt16() + 20us) > 60us) then
-            Type.Health.Create(60us)
+          if ((HP.ToUInt16() + Type.healthHeal) > Type.maxHealth) then
+            Type.Health.Create(Type.maxHealth)
           else 
-            Type.Health.Create(HP.ToUInt16()+20us)
+            Type.Health.Create(HP.ToUInt16()+Type.healthHeal)
 
     //iterate through list of hazards. if not collided return current hp. if collided take damage.
     let newHealth (dragon: Type.MovableDragon) (hazardList:Type.FilledTile list) (hp:Type.Health) (enemyObj:Type.Enemy) (inventory: Type.Inventory) : Type.Health = //takes movabledragon (x,y,dir), hazardList (filled tiles) and returns HP (int)
-        if ((hp.ToUInt16() < 60us) && (inventory.HealthUpItem = true) && (Keyboard.healthButton() = 1)) then
+        if ((hp.ToUInt16() < Type.maxHealth) && (inventory.HealthUpItem = true) && (Keyboard.healthButton() = 1)) then
             restoreHealth(hp)
         else 
             let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
@@ -124,7 +124,7 @@ module Main
             else takeDamage hp dragon     
           
     let newInventory (dragon:Type.MovableDragon) (hp:Type.Health) itemList inventory doorList =
-        if ((hp.ToUInt16() < 60us) && (Keyboard.healthButton() = 1)) then
+        if ((hp.ToUInt16() < Type.maxHealth) && (Keyboard.healthButton() = 1)) then
             {inventory with Type.HealthUpItem = false}
         elif ((Keyboard.attackButton() = 1)) then //removed condition (dragon.AttackUp=0)
             {inventory with Type.AttackUpItem = false}
@@ -303,6 +303,7 @@ module Main
     
     let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = false; Type.HealthUpItem = false; Type.Keys = 0}
     let Level: Type.Level = {LevelNum = 0} 
+    let HP = Type.Health.Create(Type.maxHealth)
 
     Update 
         Rooms.dragonList.[0].[0]
