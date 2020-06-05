@@ -27,7 +27,6 @@ module Render
     // prepare our canvas operations
     myCanvas.width <- gridWidth + 400.
     myCanvas.height <- gridWidth
-    ctx.font <- "15px Comic Sans MS"
 
     //sets the position and size of each html image
     let position (x:float,y:float) (img : HTMLImageElement) =
@@ -127,6 +126,7 @@ module Render
             
         
         //Writes the inventory on the side of the game
+        ctx.font <- "15px Comic Sans MS"
         ctx.fillStyle <- !^"#000" //black
         let inventoryAttack :string =  if (inventory.AttackUpItem) then "Attack Up Powder: 1" else "Attack Up Powder: 0"
         let inventoryDefense :string =  if (inventory.DefenseUpItem) then "Defense Up Powder: 1" else "Defense Up Powder: 0"
@@ -150,12 +150,15 @@ module Render
      
     //Game over Screen
     //Blame Sid for the Comic Sans    
-    let clearScreen (x:string) =
+    let clearScreen (x:string) (bg:string) =
         ctx.font <- "40px Comic Sans MS"
         ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
-        ctx.fillStyle <- !^"#6a0dad"
-        ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.);
-        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"]
+        let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"; "door0"; "door1"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
+        (bg, "bg") |> image |> bgStyle
+        ctx.fillStyle <- !^"6a0dad" //this is purple but is showing black??
+        ctx.fillRect(0., 0., myCanvas.height, myCanvas.height)
+        ctx.fillStyle <- !^"#fff"
+        ctx.fillText(x, gridWidth/2.-60., gridWidth/2.-20.)
         
         

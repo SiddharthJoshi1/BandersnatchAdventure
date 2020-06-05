@@ -260,11 +260,13 @@ module Main
 
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
-            Render.clearScreen "GAME OVER"
+            Render.clearScreen "GAME OVER" "img/whiteTile.png"
 
-            
-        
-        //ROOM CHECK 
+        //WIN CHECK 
+        elif newLevel.LevelNum = 4 then
+            Render.clearScreen "" "img/room4bg.png"
+
+        //ROOM CHECK
         elif newLevel <> level then
             window.setTimeout(
                 Update 

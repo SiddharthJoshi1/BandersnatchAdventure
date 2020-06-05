@@ -92,4 +92,6 @@ module Room5
         Type.stairWriter 1 1 1;
     ]
 
-    let enemy = Type.enemyWriter 1 1 "S"
+    let enemy = Type.enemyWriter 1 1 "Dead"
+
+
