@@ -28,7 +28,7 @@ module Main
         let rightDoor  = List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X + squareSize) && x.Y = enemyObj.Y  ) doorList
         let leftDoor  =  List.exists (fun (x:Type.FilledTile) -> x.X = (enemyObj.X - squareSize) && x.Y = enemyObj.Y ) doorList
 
-        let spice = 25
+        let rand = 25
         if enemyObj.IsAlive then 
             if(enemyObj.X + squareSize*5 >= dragon.X
                 && enemyObj.Y + squareSize*5 >= dragon.Y
@@ -40,14 +40,14 @@ module Main
                             && not rightCheck 
                             && not rightDoor then 
                             match randNum with 
-                            | valu when valu <spice -> {enemyObj with X = enemyObj.X + squareSize; Dir = "E" } 
+                            | valu when valu <rand -> {enemyObj with X = enemyObj.X + squareSize; Dir = "E" } 
                             | _ -> enemyObj
                         elif enemyObj.Y > dragon.X 
                             && enemyObj.X > 0  
                             && not leftCheck 
                             && not leftDoor then 
                             match randNum with
-                            | valu when valu <spice -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
+                            | valu when valu <rand -> {enemyObj with X = enemyObj.X - squareSize; Dir = "W"} 
                             | _ -> enemyObj   
                         else enemyObj
 
@@ -57,14 +57,14 @@ module Main
                             && not upCheck 
                             && not upDoor then 
                             match randNum with
-                            | valu when valu <spice -> {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
+                            | valu when valu <rand -> {enemyObj with Y = enemyObj.Y - squareSize; Dir = "N"} 
                             | _ -> enemyObj
                             
                         elif enemyObj.Y < dragon.Y 
                             && enemyObj.Y + squareSize < gridwidth 
                             && not downCheck && not downDoor then 
                             match randNum with
-                            | valu when valu <spice -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" } 
+                            | valu when valu <rand -> {enemyObj with Y = enemyObj.Y + squareSize; Dir = "S" } 
                             | _ -> enemyObj   
                         else enemyObj
                     else enemyObj
