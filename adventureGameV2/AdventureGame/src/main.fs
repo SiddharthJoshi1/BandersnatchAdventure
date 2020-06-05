@@ -258,6 +258,9 @@ module Main
 
         let newLevel:Type.Level = transition newDragon stairList level
 
+        let newD (x:Type.MovableDragon) : Type.MovableDragon =
+            {x with AttackUp = dragon.AttackUp; DefenseUp = dragon.DefenseUp;}
+
         //GAME OVER CHECK
         if (HP <= Type.Health.Create(1us)) then 
             Render.clearScreen "GAME OVER" "img/whiteTile.png"
@@ -268,9 +271,10 @@ module Main
 
         //ROOM CHECK
         elif newLevel <> level then
+            let drG = Rooms.dragonList.[newLevel.LevelNum].[level.LevelNum]
             window.setTimeout(
                 Update 
-                    Rooms.dragonList.[newLevel.LevelNum].[level.LevelNum] 
+                    (newD drG)
                     (newInventory newDragon HP itemList inventory doorList)  
                     Rooms.itemList.[newLevel.LevelNum] 
                     Rooms.hazardList.[newLevel.LevelNum] 
@@ -283,7 +287,7 @@ module Main
                     , 8000 / 60
                 ) |> ignore
         
-        //VIBE CHECK   
+        //NON-ROOM CHECK   
         else
             let r = Random().Next(1, 30)
             window.setTimeout(
