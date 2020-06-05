@@ -1,10 +1,8 @@
 //ROOM three (secret room)
 module Room3   
     let items = [
-        Type.itemWriter 9 9 Type.ItemType.Empty //changed this from empty
-        Type.itemWriter 8 8 Type.ItemType.Empty //changed this from empty, is invisible on map?
-        Type.itemWriter 1 1 Type.ItemType.Empty
-        Type.itemWriter 13 9 Type.ItemType.Key 
+        Type.itemWriter 13 6 Type.ItemType.HealthUp
+        Type.itemWriter 13 13 Type.ItemType.Key 
     ]
 
     let walls = [
@@ -27,7 +25,6 @@ module Room3
         Type.wallWriter 1 16;
         Type.wallWriter 1 17;
         Type.wallWriter 1 18;
-
         //top horizontal wall
         Type.wallWriter 1 1;
         Type.wallWriter 2 1;
@@ -47,7 +44,6 @@ module Room3
         Type.wallWriter 16 1;
         Type.wallWriter 17 1;
         Type.wallWriter 18 1;
-
         //right vertical wall
         Type.wallWriter 18 1;
         Type.wallWriter 18 2;
@@ -57,10 +53,8 @@ module Room3
         Type.wallWriter 18 6;
         Type.wallWriter 18 7;
         Type.wallWriter 18 8;
-        
         Type.wallWriter 19 8;
         Type.wallWriter 19 10;
-
         Type.wallWriter 18 10;
         Type.wallWriter 18 11;
         Type.wallWriter 18 12;
@@ -70,7 +64,6 @@ module Room3
         Type.wallWriter 18 16;
         Type.wallWriter 18 17;
         Type.wallWriter 18 18;
-
         //bottom horizontal wall
         Type.wallWriter 1 18;
         Type.wallWriter 2 18;
@@ -90,7 +83,6 @@ module Room3
         Type.wallWriter 16 18;
         Type.wallWriter 17 18;
         Type.wallWriter 18 18;
-
         //c curve top
         Type.wallWriter 4 4;
         Type.wallWriter 5 4;
@@ -116,7 +108,6 @@ module Room3
         Type.wallWriter 13 5;
         Type.wallWriter 14 5;
         Type.wallWriter 15 5;
-
         //c curve bottom
         Type.wallWriter 4 14;
         Type.wallWriter 5 14;
@@ -142,7 +133,6 @@ module Room3
         Type.wallWriter 13 15;
         Type.wallWriter 14 15;
         Type.wallWriter 15 15;
-
         //c curve stick
         Type.wallWriter 15 6;
         Type.wallWriter 15 7;
@@ -152,7 +142,6 @@ module Room3
         Type.wallWriter 15 11;
         Type.wallWriter 15 12;
         Type.wallWriter 15 13;
-        
         Type.wallWriter 14 6;
         Type.wallWriter 14 7;
         Type.wallWriter 14 8;
@@ -172,7 +161,6 @@ module Room3
         Type.wallWriter 7 6;
         Type.wallWriter 6 7;
         Type.wallWriter 6 6;
-
         Type.wallWriter 7 12;
         Type.wallWriter 7 13;
         Type.wallWriter 6 12;

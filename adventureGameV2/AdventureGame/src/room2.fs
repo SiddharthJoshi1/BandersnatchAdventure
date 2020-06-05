@@ -1,10 +1,7 @@
 //ROOM TWO (SLIP 'n' SLIDE) 
 module Room2   
     let items = [
-        Type.itemWriter 2 2 Type.ItemType.Empty
-        Type.itemWriter 4 4 Type.ItemType.Empty
         Type.itemWriter 1 1 Type.ItemType.Empty
-        Type.itemWriter 12 7 Type.ItemType.Key
     ]
 
     let walls = [
@@ -17,11 +14,9 @@ module Room2
         Type.wallWriter 1 6;
         Type.wallWriter 1 7;
         Type.wallWriter 1 8;
-        
         //space and buffer
         Type.wallWriter 0 8;
         Type.wallWriter 0 10;
-
         Type.wallWriter 1 10;
         Type.wallWriter 1 11;
         Type.wallWriter 1 12;
@@ -31,7 +26,6 @@ module Room2
         Type.wallWriter 1 16;
         Type.wallWriter 1 17;
         Type.wallWriter 1 18;
-
         //top horizontal wall
         Type.wallWriter 1 1;
         Type.wallWriter 2 1;
@@ -41,11 +35,9 @@ module Room2
         Type.wallWriter 6 1;
         Type.wallWriter 7 1;
         Type.wallWriter 8 1;
-        
         //space for door and buffer
         Type.wallWriter 8 0;
         Type.wallWriter 10 0;
-
         Type.wallWriter 10 1;
         Type.wallWriter 11 1;
         Type.wallWriter 12 1;
@@ -55,7 +47,6 @@ module Room2
         Type.wallWriter 16 1;
         Type.wallWriter 17 1;
         Type.wallWriter 18 1;
-
         //right vertical wall
         Type.wallWriter 18 1;
         Type.wallWriter 18 2;
@@ -75,7 +66,6 @@ module Room2
         Type.wallWriter 18 16;
         Type.wallWriter 18 17;
         Type.wallWriter 18 18;
-
         //bottom horizontal wall
         Type.wallWriter 9 19;
         Type.wallWriter 11 19;
@@ -144,7 +134,6 @@ module Room2
         Type.wallWriter 7 15;
         Type.wallWriter 8 14;
         Type.wallWriter 8 15;
-
         //right middle 
         Type.wallWriter 14 4;
         Type.wallWriter 14 5;
@@ -170,7 +159,6 @@ module Room2
         Type.wallWriter 15 13;
         Type.wallWriter 15 14;
         Type.wallWriter 15 15;
-        
         //right top branches
         Type.wallWriter 11 4;
         Type.wallWriter 11 5;
@@ -185,7 +173,6 @@ module Room2
         Type.wallWriter 12 15;
         Type.wallWriter 13 14;
         Type.wallWriter 13 15;
-        
         //middle section
         Type.wallWriter 7 9;
         Type.wallWriter 8 9;
