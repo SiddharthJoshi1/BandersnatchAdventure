@@ -20,6 +20,14 @@ __To run:__
 1. run command __dotnet run__ from src folder
 1. __npm start__ from project folder    
 
+__Controls:__
+1. Arrow keys to move up, down, left, and right.
+1. Space bar to attack when adjacent to enemies.
+1. Move over items (keys, attack powder, defense powder, health powder) to add them to your inventory. You can only hold one of each at a time (except keys).
+1. Z to use attack powder. This doubles your attack power for your next five attacks.
+1. X to use defense powder. This halves damage from the next five attacks from enemies.
+1. C to use health powder. This restores 20 HP.
+
 ## Sources
 1. Charizard - Available At: https://www.spriters-resource.com/fullview/26794/ 
 1. Team Plasma Grunt - Available At: https://www.deviantart.com/purplezaffre/art/Team-Plasma-Female-Grunt-700980923
