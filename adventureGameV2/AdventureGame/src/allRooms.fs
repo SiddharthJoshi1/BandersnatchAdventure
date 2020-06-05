@@ -6,7 +6,7 @@ module Rooms
             [Type.dragonWriter 10 18 "N"; dudDragon; Type.dragonWriter 2 9 "E"; Type.dragonWriter 9 2 "S";] //room 2
             [dudDragon; Type.dragonWriter 18 9 "W"] //room 3
             [dudDragon; Type.dragonWriter 9 18 "N"] //room 4
-            [dudDragon; Type.dragonWriter 9 9 "S"] //room 5
+            [dudDragon; dudDragon; Type.dragonWriter 9 9 "S"] //room 5
         ] 
         let itemList = [Room1.items; Room2.items;Room3.items; Room4.items; Room5.items]
         let wallList = [Room1.walls; Room2.walls;Room3.walls; Room4.walls; Room5.walls]
