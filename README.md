@@ -1,6 +1,6 @@
 # Untitled Dragon Game
 <p align="center">
-    <img alt="untitled dragon game by team sans (with logo)" src="./untitled dragon game.png">
+    <img alt="untitled dragon game by team sans (with logo)" src="adventureGameV2\AdventureGame\untitled dragon game.png">
 </p>
 ## -BCU CMP5344 Discrete Mathematics and Declarative Programming: Adventure Game Project-
 
@@ -9,7 +9,7 @@ __Developed by Siddharth Joshi, Adam Cordner and Natasja Hopkin (Team SANs)__
 A short demo game with temporary graphics, based on _Adventure (Atari 2600)_
 
 <p align="center">
-    <img alt="demo capture gif" src="./example.gif">
+    <img alt="demo capture gif" src="adventureGameV2\AdventureGame\example.gif">
 </p>
 
 __To run:__
