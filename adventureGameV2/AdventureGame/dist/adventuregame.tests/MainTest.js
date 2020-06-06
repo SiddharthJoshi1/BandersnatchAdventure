@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.test = test;
 exports.newEnemyL = newEnemyL;
 exports.collide = collide;
 exports.takeDamage = takeDamage;
@@ -32,10 +31,6 @@ const gridwidth = 1000;
 exports.gridwidth = gridwidth;
 const emptyTile = new _TypeTest.FilledTile(0, 0, new _TypeTest.ItemType(4, "Empty"), false);
 exports.emptyTile = emptyTile;
-
-function test(drgn) {
-  return new _TypeTest.MovableDragon(drgn.X + squareSize, drgn.Y, drgn.Direction, drgn.AttackUp, drgn.DefenseUp);
-}
 
 function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
   const downCheck = (0, _List.exists)(function (x) {
@@ -105,19 +100,19 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
         return enemyObj;
       }
     } else {
-      var $target$$7;
+      var $target$$6;
 
       if (randNum === 1) {
         if ((enemyObj.Y > 0 ? !upCheck : false) ? !upDoor : false) {
-          $target$$7 = 0;
+          $target$$6 = 0;
         } else {
-          $target$$7 = 1;
+          $target$$6 = 1;
         }
       } else {
-        $target$$7 = 1;
+        $target$$6 = 1;
       }
 
-      switch ($target$$7) {
+      switch ($target$$6) {
         case 0:
           {
             const Y$$2 = enemyObj.Y - squareSize | 0;
@@ -126,19 +121,19 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
 
         case 1:
           {
-            var $target$$8;
+            var $target$$7;
 
             if (randNum === 2) {
               if ((enemyObj.Y + squareSize < gridwidth ? !downCheck : false) ? !downDoor : false) {
-                $target$$8 = 0;
+                $target$$7 = 0;
               } else {
-                $target$$8 = 1;
+                $target$$7 = 1;
               }
             } else {
-              $target$$8 = 1;
+              $target$$7 = 1;
             }
 
-            switch ($target$$8) {
+            switch ($target$$7) {
               case 0:
                 {
                   const Y$$3 = enemyObj.Y + squareSize | 0;
@@ -147,19 +142,19 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
 
               case 1:
                 {
-                  var $target$$9;
+                  var $target$$8;
 
                   if (randNum === 3) {
                     if ((enemyObj.X > 0 ? !leftCheck : false) ? !leftDoor : false) {
-                      $target$$9 = 0;
+                      $target$$8 = 0;
                     } else {
-                      $target$$9 = 1;
+                      $target$$8 = 1;
                     }
                   } else {
-                    $target$$9 = 1;
+                    $target$$8 = 1;
                   }
 
-                  switch ($target$$9) {
+                  switch ($target$$8) {
                     case 0:
                       {
                         const X$$2 = enemyObj.X - squareSize | 0;
@@ -168,19 +163,19 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
 
                     case 1:
                       {
-                        var $target$$10;
+                        var $target$$9;
 
                         if (randNum === 4) {
                           if ((enemyObj.X + squareSize < gridwidth ? !rightCheck : false) ? !rightDoor : false) {
-                            $target$$10 = 0;
+                            $target$$9 = 0;
                           } else {
-                            $target$$10 = 1;
+                            $target$$9 = 1;
                           }
                         } else {
-                          $target$$10 = 1;
+                          $target$$9 = 1;
                         }
 
-                        switch ($target$$10) {
+                        switch ($target$$9) {
                           case 0:
                             {
                               const X$$3 = enemyObj.X + squareSize | 0;
@@ -384,19 +379,19 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
   const eLeftCheck = enemyObj$$2.X === dragon$$8.X - squareSize ? enemyObj$$2.Y === dragon$$8.Y : false;
   let newDragon;
   const matchValue$$3 = (0, _KeyboardTest.defenseButton)() | 0;
-  var $target$$45;
+  var $target$$44;
 
   if (matchValue$$3 === 1) {
     if (dragon$$8.DefenseUp === 0 ? inventory$$3.DefenseUpItem === true : false) {
-      $target$$45 = 0;
+      $target$$44 = 0;
     } else {
-      $target$$45 = 1;
+      $target$$44 = 1;
     }
   } else {
-    $target$$45 = 1;
+    $target$$44 = 1;
   }
 
-  switch ($target$$45) {
+  switch ($target$$44) {
     case 0:
       {
         newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, 5);
@@ -406,19 +401,19 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
     case 1:
       {
         const matchValue$$4 = (0, _KeyboardTest.attackButton)() | 0;
-        var $target$$46;
+        var $target$$45;
 
         if (matchValue$$4 === 1) {
           if (dragon$$8.AttackUp === 0 ? inventory$$3.AttackUpItem === true : false) {
-            $target$$46 = 0;
+            $target$$45 = 0;
           } else {
-            $target$$46 = 1;
+            $target$$45 = 1;
           }
         } else {
-          $target$$46 = 1;
+          $target$$45 = 1;
         }
 
-        switch ($target$$46) {
+        switch ($target$$45) {
           case 0:
             {
               newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, 5, dragon$$8.DefenseUp);
@@ -428,19 +423,19 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
           case 1:
             {
               const matchValue$$5 = (0, _KeyboardTest.spaceBar)() | 0;
-              var $target$$47;
+              var $target$$46;
 
               if (matchValue$$5 === 1) {
                 if (((((eDownCheck ? true : eUpCheck) ? true : eRightCheck) ? true : eLeftCheck) ? dragon$$8.AttackUp > 0 : false) ? enemyObj$$2.IsAlive === true : false) {
-                  $target$$47 = 0;
+                  $target$$46 = 0;
                 } else {
-                  $target$$47 = 1;
+                  $target$$46 = 1;
                 }
               } else {
-                $target$$47 = 1;
+                $target$$46 = 1;
               }
 
-              switch ($target$$47) {
+              switch ($target$$46) {
                 case 0:
                   {
                     const AttackUp$$1 = dragon$$8.AttackUp - 1 | 0;
@@ -451,23 +446,23 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                 case 1:
                   {
                     const matchValue$$6 = (0, _KeyboardTest.arrows)();
-                    var $target$$48;
+                    var $target$$47;
 
                     if (matchValue$$6[0] === 0) {
                       if (matchValue$$6[1] === 1) {
                         if ((dragon$$8.Y > 0 ? !upCheck$$1 : false) ? dragon$$8.Y > 0 ? !upDoor$$1 : false : false) {
-                          $target$$48 = 0;
+                          $target$$47 = 0;
                         } else {
-                          $target$$48 = 1;
+                          $target$$47 = 1;
                         }
                       } else {
-                        $target$$48 = 1;
+                        $target$$47 = 1;
                       }
                     } else {
-                      $target$$48 = 1;
+                      $target$$47 = 1;
                     }
 
-                    switch ($target$$48) {
+                    switch ($target$$47) {
                       case 0:
                         {
                           const Y$$4 = dragon$$8.Y - squareSize | 0;
@@ -477,23 +472,23 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
                       case 1:
                         {
-                          var $target$$49;
+                          var $target$$48;
 
                           if (matchValue$$6[0] === 0) {
                             if (matchValue$$6[1] === -1) {
                               if ((dragon$$8.Y + squareSize < gridwidth ? !downCheck$$1 : false) ? dragon$$8.Y + squareSize < gridwidth ? !downDoor$$1 : false : false) {
-                                $target$$49 = 0;
+                                $target$$48 = 0;
                               } else {
-                                $target$$49 = 1;
+                                $target$$48 = 1;
                               }
                             } else {
-                              $target$$49 = 1;
+                              $target$$48 = 1;
                             }
                           } else {
-                            $target$$49 = 1;
+                            $target$$48 = 1;
                           }
 
-                          switch ($target$$49) {
+                          switch ($target$$48) {
                             case 0:
                               {
                                 const Y$$5 = dragon$$8.Y + squareSize | 0;
@@ -503,23 +498,23 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
                             case 1:
                               {
-                                var $target$$50;
+                                var $target$$49;
 
                                 if (matchValue$$6[0] === -1) {
                                   if (matchValue$$6[1] === 0) {
                                     if ((dragon$$8.X > 0 ? !leftCheck$$1 : false) ? dragon$$8.X > 0 ? !leftDoor$$1 : false : false) {
-                                      $target$$50 = 0;
+                                      $target$$49 = 0;
                                     } else {
-                                      $target$$50 = 1;
+                                      $target$$49 = 1;
                                     }
                                   } else {
-                                    $target$$50 = 1;
+                                    $target$$49 = 1;
                                   }
                                 } else {
-                                  $target$$50 = 1;
+                                  $target$$49 = 1;
                                 }
 
-                                switch ($target$$50) {
+                                switch ($target$$49) {
                                   case 0:
                                     {
                                       const X$$4 = dragon$$8.X - squareSize | 0;
@@ -529,23 +524,23 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
                                   case 1:
                                     {
-                                      var $target$$51;
+                                      var $target$$50;
 
                                       if (matchValue$$6[0] === 1) {
                                         if (matchValue$$6[1] === 0) {
                                           if ((dragon$$8.X + squareSize < gridwidth ? !rightCheck$$1 : false) ? dragon$$8.X + squareSize < gridwidth ? !rightDoor$$1 : false : false) {
-                                            $target$$51 = 0;
+                                            $target$$50 = 0;
                                           } else {
-                                            $target$$51 = 1;
+                                            $target$$50 = 1;
                                           }
                                         } else {
-                                          $target$$51 = 1;
+                                          $target$$50 = 1;
                                         }
                                       } else {
-                                        $target$$51 = 1;
+                                        $target$$50 = 1;
                                       }
 
-                                      switch ($target$$51) {
+                                      switch ($target$$50) {
                                         case 0:
                                           {
                                             const X$$5 = dragon$$8.X + squareSize | 0;
@@ -600,19 +595,19 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
     newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, enemyObj$$2.HP, false, "Dead");
   } else {
     const matchValue$$8 = (0, _KeyboardTest.spaceBar)() | 0;
-    var $target$$52;
+    var $target$$51;
 
     if (matchValue$$8 === 1) {
       if (((((onCheck ? true : eDownCheck) ? true : eUpCheck) ? true : eRightCheck) ? true : eLeftCheck) ? dragon$$8.AttackUp === 0 : false) {
-        $target$$52 = 0;
+        $target$$51 = 0;
       } else {
-        $target$$52 = 1;
+        $target$$51 = 1;
       }
     } else {
-      $target$$52 = 1;
+      $target$$51 = 1;
     }
 
-    switch ($target$$52) {
+    switch ($target$$51) {
       case 0:
         {
           (0, _String.toConsole)((0, _String.printf)("Attack!"));
@@ -624,19 +619,19 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
       case 1:
         {
-          var $target$$53;
+          var $target$$52;
 
           if (matchValue$$8 === 1) {
             if (((((onCheck ? true : eDownCheck) ? true : eUpCheck) ? true : eRightCheck) ? true : eLeftCheck) ? dragon$$8.AttackUp > 0 : false) {
-              $target$$53 = 0;
+              $target$$52 = 0;
             } else {
-              $target$$53 = 1;
+              $target$$52 = 1;
             }
           } else {
-            $target$$53 = 1;
+            $target$$52 = 1;
           }
 
-          switch ($target$$53) {
+          switch ($target$$52) {
             case 0:
               {
                 (0, _String.toConsole)((0, _String.printf)("Attack!"));

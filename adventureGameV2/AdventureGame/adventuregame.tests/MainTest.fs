@@ -93,13 +93,11 @@ module Main
               match HP.ToUInt16() with 
               | 1us -> HP //if HP = 1, return HP
               | _ -> 
-                printf "Attacked!"
                 Type.Health.Create(HP.ToUInt16()-2us) //if HP = n return n-2
           else
               match HP.ToUInt16() with 
                   | 1us -> HP //if HP = 1, return HP
                   | _ -> 
-                    printf "Damage reduced!"
                     Type.Health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
 
     let restoreHealth (HP: Type.Health ) =
@@ -245,10 +243,10 @@ module Main
             | _ -> //>0 then
                 match (Keyboard.spaceBar()) with
                 | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp=0)) -> 
-                    printf "Attack!"
+                    
                     {enemyObj with HP = enemyObj.HP - 1; Dir = enemyObj.Dir.[0].ToString() + "ouch"}//0 then, if player presses attack button do 1 damage to enemy
                 | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)) -> 
-                    printf "Attack!"
+          
                     {enemyObj with HP = enemyObj.HP - 2; Dir = enemyObj.Dir.[0].ToString() + "ouch"}
                 | _ -> enemyObj
 
