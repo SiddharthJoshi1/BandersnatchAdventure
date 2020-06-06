@@ -59,18 +59,26 @@ const functionTests = (0, _Mocha.Test$$$testList)("Function tests", (0, _List.of
     (0, _Mocha.Expect$$$areEqual)(newHP, (0, _TypeTest.Health$$$Create$$Z6EF82811)(58));
   });
 })(), (() => {
+  return (0, _Mocha.Test$$$testCase)("player takes damage from enemy", function () {
+    const hazardList$$1 = new _Types.List();
+    const inv$$1 = new _TypeTest.Inventory(false, true, false, 0);
+    const enemy$$3 = (0, _TypeTest.enemyWriter)(1, 1, "N");
+    const newHP$$1 = (0, _MainTest.newHealth)(drgn, hazardList$$1, HP, enemy$$3, inv$$1);
+    (0, _Mocha.Expect$$$areEqual)(newHP$$1, (0, _TypeTest.Health$$$Create$$Z6EF82811)(59));
+  });
+})(), (() => {
   return (0, _Mocha.Test$$$testCase)("player takes damage from hazard", function () {
-    const hazardList$$1 = new _Types.List((0, _TypeTest.hazardWriter)(1, 1), new _Types.List());
-    const enemy$$3 = (0, _TypeTest.enemyWriter)(10, 10, "N");
-    const newHP$$1 = (0, _MainTest.newHealth)(drgn, hazardList$$1, HP, enemy$$3, inv);
-    (0, _Mocha.Expect$$$areEqual)(newHP$$1, (0, _TypeTest.Health$$$Create$$Z6EF82811)(58));
+    const hazardList$$2 = new _Types.List((0, _TypeTest.hazardWriter)(1, 1), new _Types.List());
+    const enemy$$4 = (0, _TypeTest.enemyWriter)(10, 10, "N");
+    const newHP$$2 = (0, _MainTest.newHealth)(drgn, hazardList$$2, HP, enemy$$4, inv);
+    (0, _Mocha.Expect$$$areEqual)(newHP$$2, (0, _TypeTest.Health$$$Create$$Z6EF82811)(58));
   });
 })(), (() => {
   return (0, _Mocha.Test$$$testCase)("player takes no damage", function () {
-    const hazardList$$2 = new _Types.List();
-    const enemy$$4 = (0, _TypeTest.enemyWriter)(10, 10, "N");
-    const newHP$$2 = (0, _MainTest.newHealth)(drgn, hazardList$$2, HP, enemy$$4, inv);
-    (0, _Mocha.Expect$$$areEqual)(newHP$$2, HP);
+    const hazardList$$3 = new _Types.List();
+    const enemy$$5 = (0, _TypeTest.enemyWriter)(10, 10, "N");
+    const newHP$$3 = (0, _MainTest.newHealth)(drgn, hazardList$$3, HP, enemy$$5, inv);
+    (0, _Mocha.Expect$$$areEqual)(newHP$$3, HP);
   });
 })(), (() => {
   return (0, _Mocha.Test$$$testCase)("picking up item", function () {

@@ -41,7 +41,13 @@ let functionTests =
             let newHP = Main.newHealth drgn hazardList HP enemy inv 
             Expect.areEqual(newHP) (Type.Health.Create(58us))
         
-        //player takes reduced damage
+        //this one fails
+        testCase "player takes reduced damage from enemy" <| fun () ->
+            let hazardList :Type.FilledTile list = []
+            let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = true; Type.HealthUpItem = false; Type.Keys = 0}
+            let enemy = Type.enemyWriter 1 1 "N"
+            let newHP = Main.newHealth drgn hazardList HP enemy inv 
+            Expect.areEqual(newHP) (Type.Health.Create(59us))
         
         testCase "player takes damage from hazard" <| fun () ->
             let hazardList :Type.FilledTile list = [Type.hazardWriter 1 1]
@@ -65,7 +71,6 @@ let functionTests =
             let level2: Type.Level= {LevelNum = 2}
             let stairsList = [Type.stairWriter 1 1 2]
             Expect.areEqual(Main.transition drgn stairsList level) level2
-
     ]
 
 let allTests = [
