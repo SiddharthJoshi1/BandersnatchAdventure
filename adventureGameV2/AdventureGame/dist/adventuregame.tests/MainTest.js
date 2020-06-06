@@ -16,27 +16,25 @@ exports.transition = transition;
 exports.Update = Update;
 exports.HP = exports.Level = exports.inv = exports.emptyTile = exports.gridwidth = exports.squareSize = void 0;
 
-var _type = require("./type");
+var _TypeTest = require("./TypeTest");
 
-var _List = require("../fable-library.2.4.15/List");
+var _List = require("./fable-library.2.4.15/List");
 
-var _String = require("../fable-library.2.4.15/String");
+var _String = require("./fable-library.2.4.15/String");
 
-var _keyboard = require("./keyboard");
+var _KeyboardTest = require("./KeyboardTest");
 
-var _Util = require("../fable-library.2.4.15/Util");
+var _Util = require("./fable-library.2.4.15/Util");
 
-var _allRooms = require("./allRooms");
-
-const squareSize = _type.squaresize;
+const squareSize = _TypeTest.squaresize;
 exports.squareSize = squareSize;
 const gridwidth = 1000;
 exports.gridwidth = gridwidth;
-const emptyTile = new _type.FilledTile(0, 0, new _type.ItemType(4, "Empty"), false);
+const emptyTile = new _TypeTest.FilledTile(0, 0, new _TypeTest.ItemType(4, "Empty"), false);
 exports.emptyTile = emptyTile;
 
 function test(drgn) {
-  return new _type.MovableDragon(drgn.X + squareSize, drgn.Y, drgn.Direction, drgn.AttackUp, drgn.DefenseUp);
+  return new _TypeTest.MovableDragon(drgn.X + squareSize, drgn.Y, drgn.Direction, drgn.AttackUp, drgn.DefenseUp);
 }
 
 function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
@@ -71,14 +69,14 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
         if (((enemyObj.X < dragon.X ? enemyObj.X + squareSize < gridwidth : false) ? !rightCheck : false) ? !rightDoor : false) {
           if (randNum < 25) {
             const X = enemyObj.X + squareSize | 0;
-            return new _type.Enemy(X, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "E");
+            return new _TypeTest.Enemy(X, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "E");
           } else {
             return enemyObj;
           }
         } else if (((enemyObj.Y > dragon.X ? enemyObj.X > 0 : false) ? !leftCheck : false) ? !leftDoor : false) {
           if (randNum < 25) {
             const X$$1 = enemyObj.X - squareSize | 0;
-            return new _type.Enemy(X$$1, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "W");
+            return new _TypeTest.Enemy(X$$1, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "W");
           } else {
             return enemyObj;
           }
@@ -89,14 +87,14 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
         if (((enemyObj.Y > dragon.Y ? enemyObj.Y > 0 : false) ? !upCheck : false) ? !upDoor : false) {
           if (randNum < 25) {
             const Y = enemyObj.Y - squareSize | 0;
-            return new _type.Enemy(enemyObj.X, Y, enemyObj.HP, enemyObj.IsAlive, "N");
+            return new _TypeTest.Enemy(enemyObj.X, Y, enemyObj.HP, enemyObj.IsAlive, "N");
           } else {
             return enemyObj;
           }
         } else if (((enemyObj.Y < dragon.Y ? enemyObj.Y + squareSize < gridwidth : false) ? !downCheck : false) ? !downDoor : false) {
           if (randNum < 25) {
             const Y$$1 = enemyObj.Y + squareSize | 0;
-            return new _type.Enemy(enemyObj.X, Y$$1, enemyObj.HP, enemyObj.IsAlive, "S");
+            return new _TypeTest.Enemy(enemyObj.X, Y$$1, enemyObj.HP, enemyObj.IsAlive, "S");
           } else {
             return enemyObj;
           }
@@ -123,7 +121,7 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
         case 0:
           {
             const Y$$2 = enemyObj.Y - squareSize | 0;
-            return new _type.Enemy(enemyObj.X, Y$$2, enemyObj.HP, enemyObj.IsAlive, "N");
+            return new _TypeTest.Enemy(enemyObj.X, Y$$2, enemyObj.HP, enemyObj.IsAlive, "N");
           }
 
         case 1:
@@ -144,7 +142,7 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
               case 0:
                 {
                   const Y$$3 = enemyObj.Y + squareSize | 0;
-                  return new _type.Enemy(enemyObj.X, Y$$3, enemyObj.HP, enemyObj.IsAlive, "S");
+                  return new _TypeTest.Enemy(enemyObj.X, Y$$3, enemyObj.HP, enemyObj.IsAlive, "S");
                 }
 
               case 1:
@@ -165,7 +163,7 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
                     case 0:
                       {
                         const X$$2 = enemyObj.X - squareSize | 0;
-                        return new _type.Enemy(X$$2, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "W");
+                        return new _TypeTest.Enemy(X$$2, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "W");
                       }
 
                     case 1:
@@ -186,7 +184,7 @@ function newEnemyL(randNum, wallList, doorList, dragon, enemyObj) {
                           case 0:
                             {
                               const X$$3 = enemyObj.X + squareSize | 0;
-                              return new _type.Enemy(X$$3, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "E");
+                              return new _TypeTest.Enemy(X$$3, enemyObj.Y, enemyObj.HP, enemyObj.IsAlive, "E");
                             }
 
                           case 1:
@@ -216,36 +214,36 @@ function collide(dragon$$1, item) {
 
 function takeDamage(HP$$1, dragon$$2) {
   if (dragon$$2.DefenseUp === 0) {
-    const matchValue = (0, _type.Health$$ToUInt16)(HP$$1);
+    const matchValue = (0, _TypeTest.Health$$ToUInt16)(HP$$1);
 
     if (matchValue === 1) {
       return HP$$1;
     } else {
       (0, _String.toConsole)((0, _String.printf)("Attacked!"));
-      return (0, _type.Health$$$Create$$Z6EF82811)((0, _type.Health$$ToUInt16)(HP$$1) - 2);
+      return (0, _TypeTest.Health$$$Create$$Z6EF82811)((0, _TypeTest.Health$$ToUInt16)(HP$$1) - 2);
     }
   } else {
-    const matchValue$$1 = (0, _type.Health$$ToUInt16)(HP$$1);
+    const matchValue$$1 = (0, _TypeTest.Health$$ToUInt16)(HP$$1);
 
     if (matchValue$$1 === 1) {
       return HP$$1;
     } else {
       (0, _String.toConsole)((0, _String.printf)("Damage reduced!"));
-      return (0, _type.Health$$$Create$$Z6EF82811)((0, _type.Health$$ToUInt16)(HP$$1) - 1);
+      return (0, _TypeTest.Health$$$Create$$Z6EF82811)((0, _TypeTest.Health$$ToUInt16)(HP$$1) - 1);
     }
   }
 }
 
 function restoreHealth(HP$$3) {
-  if ((0, _type.Health$$ToUInt16)(HP$$3) + _type.healthHeal > _type.maxHealth) {
-    return (0, _type.Health$$$Create$$Z6EF82811)(_type.maxHealth);
+  if ((0, _TypeTest.Health$$ToUInt16)(HP$$3) + _TypeTest.healthHeal > _TypeTest.maxHealth) {
+    return (0, _TypeTest.Health$$$Create$$Z6EF82811)(_TypeTest.maxHealth);
   } else {
-    return (0, _type.Health$$$Create$$Z6EF82811)((0, _type.Health$$ToUInt16)(HP$$3) + _type.healthHeal);
+    return (0, _TypeTest.Health$$$Create$$Z6EF82811)((0, _TypeTest.Health$$ToUInt16)(HP$$3) + _TypeTest.healthHeal);
   }
 }
 
 function newHealth(dragon$$3, hazardList, hp, enemyObj$$1, inventory) {
-  if (((0, _type.Health$$ToUInt16)(hp) < _type.maxHealth ? inventory.HealthUpItem === true : false) ? (0, _keyboard.healthButton)() === 1 : false) {
+  if (((0, _TypeTest.Health$$ToUInt16)(hp) < _TypeTest.maxHealth ? inventory.HealthUpItem === true : false) ? (0, _KeyboardTest.healthButton)() === 1 : false) {
     return restoreHealth(hp);
   } else {
     const newL = (0, _List.filter)(function (j) {
@@ -263,12 +261,12 @@ function newHealth(dragon$$3, hazardList, hp, enemyObj$$1, inventory) {
 }
 
 function newInventory(dragon$$4, hp$$1, itemList, inventory$$1, doorList$$1) {
-  if ((0, _type.Health$$ToUInt16)(hp$$1) < _type.maxHealth ? (0, _keyboard.healthButton)() === 1 : false) {
-    return new _type.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, false, inventory$$1.Keys);
-  } else if ((0, _keyboard.attackButton)() === 1) {
-    return new _type.Inventory(false, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, inventory$$1.Keys);
-  } else if ((0, _keyboard.defenseButton)() === 1) {
-    return new _type.Inventory(inventory$$1.AttackUpItem, false, inventory$$1.HealthUpItem, inventory$$1.Keys);
+  if ((0, _TypeTest.Health$$ToUInt16)(hp$$1) < _TypeTest.maxHealth ? (0, _KeyboardTest.healthButton)() === 1 : false) {
+    return new _TypeTest.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, false, inventory$$1.Keys);
+  } else if ((0, _KeyboardTest.attackButton)() === 1) {
+    return new _TypeTest.Inventory(false, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, inventory$$1.Keys);
+  } else if ((0, _KeyboardTest.defenseButton)() === 1) {
+    return new _TypeTest.Inventory(inventory$$1.AttackUpItem, false, inventory$$1.HealthUpItem, inventory$$1.Keys);
   } else {
     const newList = (0, _List.filter)(function (y) {
       return (0, _Util.equals)(y, collide(dragon$$4, y));
@@ -287,23 +285,23 @@ function newInventory(dragon$$4, hp$$1, itemList, inventory$$1, doorList$$1) {
         switch (matchValue$$2.tag) {
           case 0:
             {
-              return new _type.Inventory(true, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, inventory$$1.Keys);
+              return new _TypeTest.Inventory(true, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, inventory$$1.Keys);
             }
 
           case 1:
             {
-              return new _type.Inventory(inventory$$1.AttackUpItem, true, inventory$$1.HealthUpItem, inventory$$1.Keys);
+              return new _TypeTest.Inventory(inventory$$1.AttackUpItem, true, inventory$$1.HealthUpItem, inventory$$1.Keys);
             }
 
           case 3:
             {
               const Keys = inventory$$1.Keys + 1 | 0;
-              return new _type.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, Keys);
+              return new _TypeTest.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, Keys);
             }
 
           case 2:
             {
-              return new _type.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, true, inventory$$1.Keys);
+              return new _TypeTest.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, true, inventory$$1.Keys);
             }
 
           default:
@@ -314,7 +312,7 @@ function newInventory(dragon$$4, hp$$1, itemList, inventory$$1, doorList$$1) {
       }
     } else {
       const Keys$$1 = inventory$$1.Keys - 1 | 0;
-      return new _type.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, Keys$$1);
+      return new _TypeTest.Inventory(inventory$$1.AttackUpItem, inventory$$1.DefenseUpItem, inventory$$1.HealthUpItem, Keys$$1);
     }
   }
 }
@@ -351,10 +349,10 @@ function transition(dragon$$7, stairList, level) {
   }
 }
 
-(0, _keyboard.initKeyboard)();
+(0, _KeyboardTest.initKeyboard)();
 
 function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enemyObj$$2, wallList$$1, doorList$$3, stairList$$1, level$$1, unitVar10) {
-  var copyOfStruct, copyOfStruct$$1, dragon$$9, inventory$$4, itemList$$3, hazardList$$2, enemyObj$$3, wallList$$2, doorList$$4, stairList$$2, inventory$$5, itemList$$4, HP$$9, enemyObj$$4, doorList$$5;
+  var copyOfStruct, copyOfStruct$$1, inventory$$4, itemList$$3, HP$$9, enemyObj$$3, doorList$$4;
   const downCheck$$1 = (0, _List.exists)(function (x$$11) {
     return x$$11.Y === dragon$$8.Y + squareSize ? x$$11.X === dragon$$8.X : false;
   }, wallList$$1);
@@ -385,7 +383,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
   const eRightCheck = enemyObj$$2.X === dragon$$8.X + squareSize ? enemyObj$$2.Y === dragon$$8.Y : false;
   const eLeftCheck = enemyObj$$2.X === dragon$$8.X - squareSize ? enemyObj$$2.Y === dragon$$8.Y : false;
   let newDragon;
-  const matchValue$$3 = (0, _keyboard.defenseButton)() | 0;
+  const matchValue$$3 = (0, _KeyboardTest.defenseButton)() | 0;
   var $target$$45;
 
   if (matchValue$$3 === 1) {
@@ -401,13 +399,13 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
   switch ($target$$45) {
     case 0:
       {
-        newDragon = new _type.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, 5);
+        newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, 5);
         break;
       }
 
     case 1:
       {
-        const matchValue$$4 = (0, _keyboard.attackButton)() | 0;
+        const matchValue$$4 = (0, _KeyboardTest.attackButton)() | 0;
         var $target$$46;
 
         if (matchValue$$4 === 1) {
@@ -423,13 +421,13 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
         switch ($target$$46) {
           case 0:
             {
-              newDragon = new _type.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, 5, dragon$$8.DefenseUp);
+              newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, 5, dragon$$8.DefenseUp);
               break;
             }
 
           case 1:
             {
-              const matchValue$$5 = (0, _keyboard.spaceBar)() | 0;
+              const matchValue$$5 = (0, _KeyboardTest.spaceBar)() | 0;
               var $target$$47;
 
               if (matchValue$$5 === 1) {
@@ -446,13 +444,13 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                 case 0:
                   {
                     const AttackUp$$1 = dragon$$8.AttackUp - 1 | 0;
-                    newDragon = new _type.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, AttackUp$$1, dragon$$8.DefenseUp);
+                    newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, AttackUp$$1, dragon$$8.DefenseUp);
                     break;
                   }
 
                 case 1:
                   {
-                    const matchValue$$6 = (0, _keyboard.arrows)();
+                    const matchValue$$6 = (0, _KeyboardTest.arrows)();
                     var $target$$48;
 
                     if (matchValue$$6[0] === 0) {
@@ -473,7 +471,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                       case 0:
                         {
                           const Y$$4 = dragon$$8.Y - squareSize | 0;
-                          newDragon = new _type.MovableDragon(dragon$$8.X, Y$$4, "N", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                          newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$4, "N", dragon$$8.AttackUp, dragon$$8.DefenseUp);
                           break;
                         }
 
@@ -499,7 +497,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                             case 0:
                               {
                                 const Y$$5 = dragon$$8.Y + squareSize | 0;
-                                newDragon = new _type.MovableDragon(dragon$$8.X, Y$$5, "S", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$5, "S", dragon$$8.AttackUp, dragon$$8.DefenseUp);
                                 break;
                               }
 
@@ -525,7 +523,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                                   case 0:
                                     {
                                       const X$$4 = dragon$$8.X - squareSize | 0;
-                                      newDragon = new _type.MovableDragon(X$$4, dragon$$8.Y, "W", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                      newDragon = new _TypeTest.MovableDragon(X$$4, dragon$$8.Y, "W", dragon$$8.AttackUp, dragon$$8.DefenseUp);
                                       break;
                                     }
 
@@ -551,7 +549,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                                         case 0:
                                           {
                                             const X$$5 = dragon$$8.X + squareSize | 0;
-                                            newDragon = new _type.MovableDragon(X$$5, dragon$$8.Y, "E", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                            newDragon = new _TypeTest.MovableDragon(X$$5, dragon$$8.Y, "E", dragon$$8.AttackUp, dragon$$8.DefenseUp);
                                             break;
                                           }
 
@@ -563,7 +561,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
                                             if (((dragon$$8.DefenseUp > 0 ? enemyObj$$2.X === dragon$$8.X : false) ? enemyObj$$2.Y === dragon$$8.Y : false) ? enemyObj$$2.IsAlive : false) {
                                               const DefenseUp$$1 = dragon$$8.DefenseUp - 1 | 0;
-                                              newDragon = new _type.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, DefenseUp$$1);
+                                              newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, DefenseUp$$1);
                                             } else {
                                               newDragon = dragon$$8;
                                             }
@@ -599,9 +597,9 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
   let newEnemy;
 
   if (enemyObj$$2.HP < 1) {
-    newEnemy = new _type.Enemy(enemyObj$$2.X, enemyObj$$2.Y, enemyObj$$2.HP, false, "Dead");
+    newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, enemyObj$$2.HP, false, "Dead");
   } else {
-    const matchValue$$8 = (0, _keyboard.spaceBar)() | 0;
+    const matchValue$$8 = (0, _KeyboardTest.spaceBar)() | 0;
     var $target$$52;
 
     if (matchValue$$8 === 1) {
@@ -620,7 +618,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
           (0, _String.toConsole)((0, _String.printf)("Attack!"));
           const HP$$7 = enemyObj$$2.HP - 1 | 0;
           const Dir$$9 = (copyOfStruct = enemyObj$$2.Dir[0], copyOfStruct) + "ouch";
-          newEnemy = new _type.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$7, enemyObj$$2.IsAlive, Dir$$9);
+          newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$7, enemyObj$$2.IsAlive, Dir$$9);
           break;
         }
 
@@ -644,7 +642,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
                 (0, _String.toConsole)((0, _String.printf)("Attack!"));
                 const HP$$8 = enemyObj$$2.HP - 2 | 0;
                 const Dir$$10 = (copyOfStruct$$1 = enemyObj$$2.Dir[0], copyOfStruct$$1) + "ouch";
-                newEnemy = new _type.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$8, enemyObj$$2.IsAlive, Dir$$10);
+                newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$8, enemyObj$$2.IsAlive, Dir$$10);
                 break;
               }
 
@@ -661,26 +659,16 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
   }
 
   const newLevel = transition(newDragon, stairList$$1, level$$1);
-
-  if (!(0, _Util.equals)(newLevel, level$$1)) {
-    const drG = (0, _List.item)(level$$1.LevelNum, (0, _List.item)(newLevel.LevelNum, _allRooms.dragonList));
-    const value = window.setTimeout((dragon$$9 = (new _type.MovableDragon(drG.X, drG.Y, drG.Direction, dragon$$8.AttackUp, dragon$$8.DefenseUp)), (inventory$$4 = newInventory(newDragon, HP$$5, itemList$$2, inventory$$3, doorList$$3), (itemList$$3 = (0, _List.item)(newLevel.LevelNum, _allRooms.itemList), (hazardList$$2 = (0, _List.item)(newLevel.LevelNum, _allRooms.hazardList), (enemyObj$$3 = (0, _List.item)(newLevel.LevelNum, _allRooms.enemyList), (wallList$$2 = (0, _List.item)(newLevel.LevelNum, _allRooms.wallList), (doorList$$4 = (0, _List.item)(newLevel.LevelNum, _allRooms.doorList), (stairList$$2 = (0, _List.item)(newLevel.LevelNum, _allRooms.stairList), function () {
-      Update(dragon$$9, inventory$$4, itemList$$3, hazardList$$2, HP$$5, enemyObj$$3, wallList$$2, doorList$$4, stairList$$2, newLevel, null);
-    })))))))), ~~(8000 / 60));
-    void value;
-  } else {
-    const r = (0, _Util.randomNext)(1, 30) | 0;
-    const value$$1 = window.setTimeout((inventory$$5 = newInventory(newDragon, HP$$5, itemList$$2, inventory$$3, doorList$$3), (itemList$$4 = newItemList(newDragon, itemList$$2), (HP$$9 = newHealth(newDragon, hazardList$$1, HP$$5, enemyObj$$2, inventory$$3), (enemyObj$$4 = newEnemyL(r, wallList$$1, doorList$$3, newDragon, newEnemy), (doorList$$5 = newDoorList(newDragon, doorList$$3, inventory$$3), function () {
-      Update(newDragon, inventory$$5, itemList$$4, hazardList$$1, HP$$9, enemyObj$$4, wallList$$1, doorList$$5, stairList$$1, newLevel, null);
-    }))))), ~~(8000 / 60));
-    void value$$1;
-  }
+  const r = (0, _Util.randomNext)(1, 30) | 0;
+  const value = window.setTimeout((inventory$$4 = newInventory(newDragon, HP$$5, itemList$$2, inventory$$3, doorList$$3), (itemList$$3 = newItemList(newDragon, itemList$$2), (HP$$9 = newHealth(newDragon, hazardList$$1, HP$$5, enemyObj$$2, inventory$$3), (enemyObj$$3 = newEnemyL(r, wallList$$1, doorList$$3, newDragon, newEnemy), (doorList$$4 = newDoorList(newDragon, doorList$$3, inventory$$3), function () {
+    Update(newDragon, inventory$$4, itemList$$3, hazardList$$1, HP$$9, enemyObj$$3, wallList$$1, doorList$$4, stairList$$1, newLevel, null);
+  }))))), ~~(8000 / 60));
+  void value;
 }
 
-const inv = new _type.Inventory(false, false, false, 0);
+const inv = new _TypeTest.Inventory(false, false, false, 0);
 exports.inv = inv;
-const Level = new _type.Level(0);
+const Level = new _TypeTest.Level(0);
 exports.Level = Level;
-const HP = (0, _type.Health$$$Create$$Z6EF82811)(_type.maxHealth);
+const HP = (0, _TypeTest.Health$$$Create$$Z6EF82811)(_TypeTest.maxHealth);
 exports.HP = HP;
-Update((0, _List.item)(0, (0, _List.item)(0, _allRooms.dragonList)), inv, (0, _List.item)(0, _allRooms.itemList), (0, _List.item)(0, _allRooms.hazardList), HP, (0, _List.item)(0, _allRooms.enemyList), (0, _List.item)(0, _allRooms.wallList), (0, _List.item)(0, _allRooms.doorList), (0, _List.item)(0, _allRooms.stairList), Level, null);
