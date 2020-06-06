@@ -72,6 +72,19 @@ const functionTests = (0, _Mocha.Test$$$testList)("Function tests", (0, _List.of
     const newHP$$2 = (0, _MainTest.newHealth)(drgn, hazardList$$2, HP, enemy$$4, inv);
     (0, _Mocha.Expect$$$areEqual)(newHP$$2, HP);
   });
+})(), (() => {
+  return (0, _Mocha.Test$$$testCase)("picking up item", function () {
+    const itemList = new _Types.List((0, _TypeTest.itemWriter)(1, 1, new _TypeTest.ItemType(0, "AttackUp")), new _Types.List());
+    const newInv = (0, _MainTest.newInventory)(drgn, HP, itemList, inv, doorList);
+    (0, _Mocha.Expect$$$areEqual)(newInv.AttackUpItem, true);
+  });
+})(), (() => {
+  return (0, _Mocha.Test$$$testCase)("level/screen transition", function () {
+    const level = new _TypeTest.Level(0);
+    const level2 = new _TypeTest.Level(2);
+    const stairsList = new _Types.List((0, _TypeTest.stairWriter)(1, 1, 2), new _Types.List());
+    (0, _Mocha.Expect$$$areEqual)((0, _MainTest.transition)(drgn, stairsList, level), level2);
+  });
 })()]));
 exports.functionTests = functionTests;
 const allTests = (0, _List.ofArray)([arithmeticTests, functionTests]);

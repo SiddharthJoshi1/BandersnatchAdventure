@@ -54,8 +54,17 @@ let functionTests =
             let enemy = Type.enemyWriter 10 10 "N"
             let newHP = Main.newHealth drgn hazardList HP enemy inv 
             Expect.areEqual(newHP) HP
-
         
+        testCase "picking up item" <| fun () ->
+            let itemList = [Type.itemWriter 1 1 Type.ItemType.AttackUp]
+            let newInv = Main.newInventory drgn HP itemList inv doorList
+            Expect.areEqual(newInv.AttackUpItem) true
+
+        testCase "level/screen transition" <| fun () ->
+            let level: Type.Level= {LevelNum = 0}
+            let level2: Type.Level= {LevelNum = 2}
+            let stairsList = [Type.stairWriter 1 1 2]
+            Expect.areEqual(Main.transition drgn stairsList level) level2
 
     ]
 
