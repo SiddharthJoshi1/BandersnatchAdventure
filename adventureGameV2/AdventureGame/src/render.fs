@@ -3,13 +3,12 @@ module Render
     open Browser.Types
     open Browser
 
-
     // Get our canvas context 
     // As we'll see later, myCanvas is mutable hence the use of the mutable keyword
     // the unbox keyword allows to make an unsafe cast. Here we assume that getElementById will return an HTMLCanvasElement 
     let window = Browser.Dom.window
-    let mutable myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  // myCanvas is defined in public/index.html
-
+    // myCanvas is defined in public/index.html
+    let mutable myCanvas : Browser.Types.HTMLCanvasElement = unbox window.document.getElementById "myCanvas"  
     // Get the contexts
     let ctx = myCanvas.getContext_2d()
     
@@ -118,7 +117,9 @@ module Render
         let rec loop list (i:int) =
             match list with
             | head :: tail -> 
-                ("img/doortile.png", "door" + (string i)) |> image |> position (float(squareSize/2 - 1 + doorList.[i].X), float(squareSize/2 - 1 + doorList.[i].Y))
+                ("img/doortile.png", "door" + (string i)) 
+                |> image 
+                |> position (float(squareSize/2 - 1 + doorList.[i].X), float(squareSize/2 - 1 + doorList.[i].Y))
                 loop tail (i + 1)
             | [] -> i |> ignore
         loop doorList 0 
@@ -147,17 +148,17 @@ module Render
                 loop tail (acc + 20)
             | [] -> acc |> ignore
         loop invList 20      
-     
+    
+    //Blame Sid for the Comic Sans   
     //Game over Screen
-    //Blame Sid for the Comic Sans    
     let clearScreen (x:string) (bg:string) =
         ctx.clearRect(0., 0., float(myCanvas.width), float(myCanvas.height))
-        ctx.fillStyle <- !^"#6a0dad" //this is purple but is showing black??
-        ctx.fillRect(0., 0., myCanvas.height, myCanvas.height)
+        if bg = "img/whiteTile.png" then
+            ctx.fillStyle <- !^"#6a0dad" //purple
+            ctx.fillRect(0., 0., myCanvas.height, myCanvas.height)
         ctx.fillStyle <- !^"#fff"
         ctx.font <- "40px Comic Sans MS"
         ctx.fillText(x, myCanvas.height/3., myCanvas.height/2.)
-        
         
         let lst = ["player";"dfPotion"; "atkPotion"; "hpPotion"; "enemy"; "key"; "bg"; "door0"; "door1"]
         for i in lst do ("/img/whiteTile.png", i) |> image |> position (0.,0.)
