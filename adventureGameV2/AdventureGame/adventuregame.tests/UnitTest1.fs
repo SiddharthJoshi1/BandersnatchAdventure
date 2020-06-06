@@ -2,20 +2,32 @@ module Tests
 
 
 open Fable.Mocha
+open Fable.Core.JsInterop
+open Browser.Types
+open Browser.Dom
+
 
 
 let arithmeticTests =
     testList "Arithmetic tests" [
 
-        testCase "plus works" <| fun () ->
-            Expect.areEqual (1 + 1) 2 
+        testCase "collisons" <| fun () ->
+            let drgn = Type.dragonWriter 1 1 "N"
+            let item = Type.itemWriter 1 1 Type.ItemType.AttackUp
+            Expect.areEqual(Main.collide drgn item) item
+            
 
-        testCase "Test for falsehood" <| fun () ->
-             Expect.isFalse (1 = 2) 
+       
+             
 
         
     ]
 
-[<EntryPoint>]
-let main args =
-    Mocha.runTests arithmeticTests
+let allTests = [
+     arithmeticTests;
+   
+]
+
+    
+
+Mocha.runTests allTests
