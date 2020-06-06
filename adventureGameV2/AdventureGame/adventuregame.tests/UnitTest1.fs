@@ -1,24 +1,21 @@
-module adventuregame.tests
-    open System
-    open NUnit.Framework
-    open Main
+module Tests
 
-        [<SetUp>]
-        let Setup () =
-            ()
 
-        [<Test>]
-            let Test1 () =
-                let drgn = Type.dragonWriter 9 17 "N"
-                let item = Type.itemWriter 9 17 Type.ItemType.HealthUp 
-                let item2 = collide drgn item
+open Fable.Mocha
 
-                Assert.AreEqual(item2, item)
 
-            // let Test2 () =
-            //     let drgn = Type.dragonWriter 9 17 "N"
-            //     let item = Type.itemWriter 18 5 Type.ItemType.HealthUp 
+let arithmeticTests =
+    testList "Arithmetic tests" [
 
-            //     Assert.AreEqual(Main.collide drgn item, Main.emptyTile)
+        testCase "plus works" <| fun () ->
+            Expect.areEqual (1 + 1) 2 
+
+        testCase "Test for falsehood" <| fun () ->
+             Expect.isFalse (1 = 2) 
+
         
-         
+    ]
+
+[<EntryPoint>]
+let main args =
+    Mocha.runTests arithmeticTests

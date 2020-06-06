@@ -1,7 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "pretest": "fable-splitter adventuregame.tests -o dist/adventuregame.tests --commonjs",
+    "test": "mocha dist/adventuregame.tests"
   },
   "dependencies": {
     "@babel/core": "^7.8.4",
@@ -13,5 +15,9 @@
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
+  },
+  "devDependencies": {
+    "fable-splitter": "^2.1.14",
+    "mocha": "^7.2.0"
   }
 }
