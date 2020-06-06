@@ -93,11 +93,13 @@ module Main
               match HP.ToUInt16() with 
               | 1us -> HP //if HP = 1, return HP
               | _ -> 
+                printf "Attacked!"
                 Type.Health.Create(HP.ToUInt16()-2us) //if HP = n return n-2
           else
               match HP.ToUInt16() with 
                   | 1us -> HP //if HP = 1, return HP
                   | _ -> 
+                    printf "Damage reduced!"
                     Type.Health.Create(HP.ToUInt16()-1us) //if HP = n return n-1
 
     let restoreHealth (HP: Type.Health ) =
@@ -220,22 +222,21 @@ module Main
                     match (Keyboard.spaceBar()) with //attacking button
                         | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)&&(enemyObj.IsAlive=true)) -> {dragon with AttackUp = dragon.AttackUp - 1} //is pressed and enemy is adjacent to player, subtract 1 from attack up
                         | _ ->
-                            let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
-                            if ((dragon.DefenseUp>0)&&(enemyObj.X = dragon.X)&&(enemyObj.Y = dragon.Y)&&(enemyObj.IsAlive)) then
-                                {dragon with DefenseUp = dragon.DefenseUp - 1}
-                            else 
-                                match (Keyboard.arrows()) with //movement buttons
-                                | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
-                                    {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
-                                | (0, -1) when  (dragon.Y + squareSize < gridwidth && not downCheck) && ((dragon.Y + squareSize < gridwidth) && not downDoor) -> 
-                                    {dragon with Y = dragon.Y + squareSize; Direction = "S"}
-                                | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
-                                    {dragon with X = dragon.X - squareSize; Direction = "W"} 
-                                | (1, 0) when  (dragon.X + squareSize < gridwidth && not rightCheck) && ((dragon.X + squareSize < gridwidth) && not rightDoor) -> 
-                                    {dragon with X = dragon.X + squareSize; Direction = "E"}   
-                                | _ -> 
+                            match (Keyboard.arrows()) with //movement buttons
+                            | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
+                                {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
+                            | (0, -1) when  (dragon.Y + squareSize < gridwidth && not downCheck) && ((dragon.Y + squareSize < gridwidth) && not downDoor) -> 
+                                {dragon with Y = dragon.Y + squareSize; Direction = "S"}
+                            | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
+                                {dragon with X = dragon.X - squareSize; Direction = "W"} 
+                            | (1, 0) when  (dragon.X + squareSize < gridwidth && not rightCheck) && ((dragon.X + squareSize < gridwidth) && not rightDoor) -> 
+                                {dragon with X = dragon.X + squareSize; Direction = "E"}   
+                            | _ -> 
+                                let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
+                                if ((dragon.DefenseUp>0)&&(enemyObj.X = dragon.X)&&(enemyObj.Y = dragon.Y)&&(enemyObj.IsAlive)) then
+                                    {dragon with DefenseUp = dragon.DefenseUp - 1}
+                                else 
                                     dragon
-                                
              
 
         let newEnemy :Type.Enemy = 
@@ -244,10 +245,10 @@ module Main
             | _ -> //>0 then
                 match (Keyboard.spaceBar()) with
                 | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp=0)) -> 
-                    
+                    printf "Attack!"
                     {enemyObj with HP = enemyObj.HP - 1; Dir = enemyObj.Dir.[0].ToString() + "ouch"}//0 then, if player presses attack button do 1 damage to enemy
                 | 1 when ((onCheck || eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)) -> 
-          
+                    printf "Attack!"
                     {enemyObj with HP = enemyObj.HP - 2; Dir = enemyObj.Dir.[0].ToString() + "ouch"}
                 | _ -> enemyObj
 
