@@ -223,20 +223,20 @@ module Main
                     match (Keyboard.spaceBar()) with //attacking button
                         | 1 when ((eDownCheck || eUpCheck || eRightCheck || eLeftCheck)&&(dragon.AttackUp>0)&&(enemyObj.IsAlive=true)) -> {dragon with AttackUp = dragon.AttackUp - 1} //is pressed and enemy is adjacent to player, subtract 1 from attack up
                         | _ ->
-                            match (Keyboard.arrows()) with //movement buttons
-                            | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
-                                {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
-                            | (0, -1) when  (dragon.Y + squareSize < gridwidth && not downCheck) && ((dragon.Y + squareSize < gridwidth) && not downDoor) -> 
-                                {dragon with Y = dragon.Y + squareSize; Direction = "S"}
-                            | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
-                                {dragon with X = dragon.X - squareSize; Direction = "W"} 
-                            | (1, 0) when  (dragon.X + squareSize < gridwidth && not rightCheck) && ((dragon.X + squareSize < gridwidth) && not rightDoor) -> 
-                                {dragon with X = dragon.X + squareSize; Direction = "E"}   
-                            | _ -> 
-                                let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
-                                if ((dragon.DefenseUp>0)&&(enemyObj.X = dragon.X)&&(enemyObj.Y = dragon.Y)&&(enemyObj.IsAlive)) then
-                                    {dragon with DefenseUp = dragon.DefenseUp - 1}
-                                else 
+                            let newL = List.filter (fun j -> j = (collide dragon j)) hazardList
+                            if ((dragon.DefenseUp>0)&&(enemyObj.X = dragon.X)&&(enemyObj.Y = dragon.Y)&&(enemyObj.IsAlive)) then
+                                {dragon with DefenseUp = dragon.DefenseUp - 1}
+                            else 
+                                match (Keyboard.arrows()) with //movement buttons
+                                | (0,1) when ((dragon.Y > 0) && not upCheck) && ((dragon.Y > 0) && not upDoor)  ->  
+                                    {dragon with Y = dragon.Y - squareSize; Direction = "N"} 
+                                | (0, -1) when  (dragon.Y + squareSize < gridwidth && not downCheck) && ((dragon.Y + squareSize < gridwidth) && not downDoor) -> 
+                                    {dragon with Y = dragon.Y + squareSize; Direction = "S"}
+                                | (-1, 0) when  (dragon.X > 0 && not leftCheck) && ((dragon.X > 0) && not leftDoor) -> 
+                                    {dragon with X = dragon.X - squareSize; Direction = "W"} 
+                                | (1, 0) when  (dragon.X + squareSize < gridwidth && not rightCheck) && ((dragon.X + squareSize < gridwidth) && not rightDoor) -> 
+                                    {dragon with X = dragon.X + squareSize; Direction = "E"}   
+                                | _ -> 
                                     dragon
              
 
