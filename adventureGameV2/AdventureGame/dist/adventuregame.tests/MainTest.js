@@ -19,6 +19,8 @@ var _TypeTest = require("./TypeTest");
 
 var _List = require("./fable-library.2.4.15/List");
 
+var _String = require("./fable-library.2.4.15/String");
+
 var _KeyboardTest = require("./KeyboardTest");
 
 var _Util = require("./fable-library.2.4.15/Util");
@@ -212,6 +214,7 @@ function takeDamage(HP$$1, dragon$$2) {
     if (matchValue === 1) {
       return HP$$1;
     } else {
+      (0, _String.toConsole)((0, _String.printf)("Attacked!"));
       return (0, _TypeTest.Health$$$Create$$Z6EF82811)((0, _TypeTest.Health$$ToUInt16)(HP$$1) - 2);
     }
   } else {
@@ -220,6 +223,7 @@ function takeDamage(HP$$1, dragon$$2) {
     if (matchValue$$1 === 1) {
       return HP$$1;
     } else {
+      (0, _String.toConsole)((0, _String.printf)("Damage reduced!"));
       return (0, _TypeTest.Health$$$Create$$Z6EF82811)((0, _TypeTest.Health$$ToUInt16)(HP$$1) - 1);
     }
   }
@@ -441,135 +445,136 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
 
                 case 1:
                   {
-                    const newL$$1 = (0, _List.filter)(function (j$$2) {
-                      return (0, _Util.equals)(j$$2, collide(dragon$$8, j$$2));
-                    }, hazardList$$1);
+                    const matchValue$$6 = (0, _KeyboardTest.arrows)();
+                    var $target$$47;
 
-                    if (((dragon$$8.DefenseUp > 0 ? enemyObj$$2.X === dragon$$8.X : false) ? enemyObj$$2.Y === dragon$$8.Y : false) ? enemyObj$$2.IsAlive : false) {
-                      const DefenseUp$$1 = dragon$$8.DefenseUp - 1 | 0;
-                      newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, DefenseUp$$1);
-                    } else {
-                      const matchValue$$6 = (0, _KeyboardTest.arrows)();
-                      var $target$$47;
-
-                      if (matchValue$$6[0] === 0) {
-                        if (matchValue$$6[1] === 1) {
-                          if ((dragon$$8.Y > 0 ? !upCheck$$1 : false) ? dragon$$8.Y > 0 ? !upDoor$$1 : false : false) {
-                            $target$$47 = 0;
-                          } else {
-                            $target$$47 = 1;
-                          }
+                    if (matchValue$$6[0] === 0) {
+                      if (matchValue$$6[1] === 1) {
+                        if ((dragon$$8.Y > 0 ? !upCheck$$1 : false) ? dragon$$8.Y > 0 ? !upDoor$$1 : false : false) {
+                          $target$$47 = 0;
                         } else {
                           $target$$47 = 1;
                         }
                       } else {
                         $target$$47 = 1;
                       }
+                    } else {
+                      $target$$47 = 1;
+                    }
 
-                      switch ($target$$47) {
-                        case 0:
-                          {
-                            const Y$$4 = dragon$$8.Y - squareSize | 0;
-                            newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$4, "N", dragon$$8.AttackUp, dragon$$8.DefenseUp);
-                            break;
-                          }
+                    switch ($target$$47) {
+                      case 0:
+                        {
+                          const Y$$4 = dragon$$8.Y - squareSize | 0;
+                          newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$4, "N", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                          break;
+                        }
 
-                        case 1:
-                          {
-                            var $target$$48;
+                      case 1:
+                        {
+                          var $target$$48;
 
-                            if (matchValue$$6[0] === 0) {
-                              if (matchValue$$6[1] === -1) {
-                                if ((dragon$$8.Y + squareSize < gridwidth ? !downCheck$$1 : false) ? dragon$$8.Y + squareSize < gridwidth ? !downDoor$$1 : false : false) {
-                                  $target$$48 = 0;
-                                } else {
-                                  $target$$48 = 1;
-                                }
+                          if (matchValue$$6[0] === 0) {
+                            if (matchValue$$6[1] === -1) {
+                              if ((dragon$$8.Y + squareSize < gridwidth ? !downCheck$$1 : false) ? dragon$$8.Y + squareSize < gridwidth ? !downDoor$$1 : false : false) {
+                                $target$$48 = 0;
                               } else {
                                 $target$$48 = 1;
                               }
                             } else {
                               $target$$48 = 1;
                             }
+                          } else {
+                            $target$$48 = 1;
+                          }
 
-                            switch ($target$$48) {
-                              case 0:
-                                {
-                                  const Y$$5 = dragon$$8.Y + squareSize | 0;
-                                  newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$5, "S", dragon$$8.AttackUp, dragon$$8.DefenseUp);
-                                  break;
-                                }
+                          switch ($target$$48) {
+                            case 0:
+                              {
+                                const Y$$5 = dragon$$8.Y + squareSize | 0;
+                                newDragon = new _TypeTest.MovableDragon(dragon$$8.X, Y$$5, "S", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                break;
+                              }
 
-                              case 1:
-                                {
-                                  var $target$$49;
+                            case 1:
+                              {
+                                var $target$$49;
 
-                                  if (matchValue$$6[0] === -1) {
-                                    if (matchValue$$6[1] === 0) {
-                                      if ((dragon$$8.X > 0 ? !leftCheck$$1 : false) ? dragon$$8.X > 0 ? !leftDoor$$1 : false : false) {
-                                        $target$$49 = 0;
-                                      } else {
-                                        $target$$49 = 1;
-                                      }
+                                if (matchValue$$6[0] === -1) {
+                                  if (matchValue$$6[1] === 0) {
+                                    if ((dragon$$8.X > 0 ? !leftCheck$$1 : false) ? dragon$$8.X > 0 ? !leftDoor$$1 : false : false) {
+                                      $target$$49 = 0;
                                     } else {
                                       $target$$49 = 1;
                                     }
                                   } else {
                                     $target$$49 = 1;
                                   }
+                                } else {
+                                  $target$$49 = 1;
+                                }
 
-                                  switch ($target$$49) {
-                                    case 0:
-                                      {
-                                        const X$$4 = dragon$$8.X - squareSize | 0;
-                                        newDragon = new _TypeTest.MovableDragon(X$$4, dragon$$8.Y, "W", dragon$$8.AttackUp, dragon$$8.DefenseUp);
-                                        break;
-                                      }
+                                switch ($target$$49) {
+                                  case 0:
+                                    {
+                                      const X$$4 = dragon$$8.X - squareSize | 0;
+                                      newDragon = new _TypeTest.MovableDragon(X$$4, dragon$$8.Y, "W", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                      break;
+                                    }
 
-                                    case 1:
-                                      {
-                                        var $target$$50;
+                                  case 1:
+                                    {
+                                      var $target$$50;
 
-                                        if (matchValue$$6[0] === 1) {
-                                          if (matchValue$$6[1] === 0) {
-                                            if ((dragon$$8.X + squareSize < gridwidth ? !rightCheck$$1 : false) ? dragon$$8.X + squareSize < gridwidth ? !rightDoor$$1 : false : false) {
-                                              $target$$50 = 0;
-                                            } else {
-                                              $target$$50 = 1;
-                                            }
+                                      if (matchValue$$6[0] === 1) {
+                                        if (matchValue$$6[1] === 0) {
+                                          if ((dragon$$8.X + squareSize < gridwidth ? !rightCheck$$1 : false) ? dragon$$8.X + squareSize < gridwidth ? !rightDoor$$1 : false : false) {
+                                            $target$$50 = 0;
                                           } else {
                                             $target$$50 = 1;
                                           }
                                         } else {
                                           $target$$50 = 1;
                                         }
-
-                                        switch ($target$$50) {
-                                          case 0:
-                                            {
-                                              const X$$5 = dragon$$8.X + squareSize | 0;
-                                              newDragon = new _TypeTest.MovableDragon(X$$5, dragon$$8.Y, "E", dragon$$8.AttackUp, dragon$$8.DefenseUp);
-                                              break;
-                                            }
-
-                                          case 1:
-                                            {
-                                              newDragon = dragon$$8;
-                                              break;
-                                            }
-                                        }
-
-                                        break;
+                                      } else {
+                                        $target$$50 = 1;
                                       }
-                                  }
 
-                                  break;
+                                      switch ($target$$50) {
+                                        case 0:
+                                          {
+                                            const X$$5 = dragon$$8.X + squareSize | 0;
+                                            newDragon = new _TypeTest.MovableDragon(X$$5, dragon$$8.Y, "E", dragon$$8.AttackUp, dragon$$8.DefenseUp);
+                                            break;
+                                          }
+
+                                        case 1:
+                                          {
+                                            const newL$$1 = (0, _List.filter)(function (j$$2) {
+                                              return (0, _Util.equals)(j$$2, collide(dragon$$8, j$$2));
+                                            }, hazardList$$1);
+
+                                            if (((dragon$$8.DefenseUp > 0 ? enemyObj$$2.X === dragon$$8.X : false) ? enemyObj$$2.Y === dragon$$8.Y : false) ? enemyObj$$2.IsAlive : false) {
+                                              const DefenseUp$$1 = dragon$$8.DefenseUp - 1 | 0;
+                                              newDragon = new _TypeTest.MovableDragon(dragon$$8.X, dragon$$8.Y, dragon$$8.Direction, dragon$$8.AttackUp, DefenseUp$$1);
+                                            } else {
+                                              newDragon = dragon$$8;
+                                            }
+
+                                            break;
+                                          }
+                                      }
+
+                                      break;
+                                    }
                                 }
-                            }
 
-                            break;
+                                break;
+                              }
                           }
-                      }
+
+                          break;
+                        }
                     }
 
                     break;
@@ -605,6 +610,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
     switch ($target$$51) {
       case 0:
         {
+          (0, _String.toConsole)((0, _String.printf)("Attack!"));
           const HP$$7 = enemyObj$$2.HP - 1 | 0;
           const Dir$$9 = (copyOfStruct = enemyObj$$2.Dir[0], copyOfStruct) + "ouch";
           newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$7, enemyObj$$2.IsAlive, Dir$$9);
@@ -628,6 +634,7 @@ function Update(dragon$$8, inventory$$3, itemList$$2, hazardList$$1, HP$$5, enem
           switch ($target$$52) {
             case 0:
               {
+                (0, _String.toConsole)((0, _String.printf)("Attack!"));
                 const HP$$8 = enemyObj$$2.HP - 2 | 0;
                 const Dir$$10 = (copyOfStruct$$1 = enemyObj$$2.Dir[0], copyOfStruct$$1) + "ouch";
                 newEnemy = new _TypeTest.Enemy(enemyObj$$2.X, enemyObj$$2.Y, HP$$8, enemyObj$$2.IsAlive, Dir$$10);

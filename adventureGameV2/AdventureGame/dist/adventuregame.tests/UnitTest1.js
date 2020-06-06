@@ -59,11 +59,11 @@ const functionTests = (0, _Mocha.Test$$$testList)("Function tests", (0, _List.of
     (0, _Mocha.Expect$$$areEqual)(newHP, (0, _TypeTest.Health$$$Create$$Z6EF82811)(58));
   });
 })(), (() => {
-  return (0, _Mocha.Test$$$testCase)("player takes damage from enemy", function () {
+  return (0, _Mocha.Test$$$testCase)("player takes reduced damage from enemy", function () {
     const hazardList$$1 = new _Types.List();
-    const inv$$1 = new _TypeTest.Inventory(false, true, false, 0);
+    const newdrgn = new _TypeTest.MovableDragon(drgn.X, drgn.Y, drgn.Direction, drgn.AttackUp, 5);
     const enemy$$3 = (0, _TypeTest.enemyWriter)(1, 1, "N");
-    const newHP$$1 = (0, _MainTest.newHealth)(drgn, hazardList$$1, HP, enemy$$3, inv$$1);
+    const newHP$$1 = (0, _MainTest.newHealth)(newdrgn, hazardList$$1, HP, enemy$$3, inv);
     (0, _Mocha.Expect$$$areEqual)(newHP$$1, (0, _TypeTest.Health$$$Create$$Z6EF82811)(59));
   });
 })(), (() => {

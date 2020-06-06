@@ -1,6 +1,5 @@
 module Tests
 
-
 open Fable.Mocha
 open Fable.Core.JsInterop
 open Browser.Types
@@ -41,12 +40,11 @@ let functionTests =
             let newHP = Main.newHealth drgn hazardList HP enemy inv 
             Expect.areEqual(newHP) (Type.Health.Create(58us))
         
-        //this one fails
         testCase "player takes reduced damage from enemy" <| fun () ->
             let hazardList :Type.FilledTile list = []
-            let inv = { Type.AttackUpItem = false; Type.DefenseUpItem = true; Type.HealthUpItem = false; Type.Keys = 0}
+            let newdrgn = {drgn with DefenseUp = 5}
             let enemy = Type.enemyWriter 1 1 "N"
-            let newHP = Main.newHealth drgn hazardList HP enemy inv 
+            let newHP = Main.newHealth newdrgn hazardList HP enemy inv 
             Expect.areEqual(newHP) (Type.Health.Create(59us))
         
         testCase "player takes damage from hazard" <| fun () ->
