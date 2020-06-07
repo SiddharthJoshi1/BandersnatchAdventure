@@ -6,8 +6,6 @@ module Main
     open System
     open Keyboard
     
-
-   
     //increased HP to compensate for no delay / invincibility frames
 
     let squareSize = Render.squareSize
@@ -131,10 +129,14 @@ module Main
         elif ((Keyboard.defenseButton() = 1)) then
             {inventory with Type.DefenseUpItem = false}
         else    
+            //door check 
             let newList = List.filter (fun y -> y = (collide dragon y)) doorList
             if newList.IsEmpty then
+                // checking if dragon collides with item
                 let newList = List.filter (fun x -> x = (collide dragon x)) itemList
+                // checks if collide happens with item
                 if newList.IsEmpty then inventory
+                // if the item has been collided with 
                 else 
                     match newList.Head.Status with
                     | Type.ItemType.AttackUp -> {inventory with Type.AttackUpItem = true;}
@@ -143,6 +145,7 @@ module Main
                     | Type.ItemType.HealthUp -> {inventory with Type.HealthUpItem = true;}
                     | _-> inventory;            
             else
+            // no door then remove a key
                 {inventory with Keys = inventory.Keys-1} //removes key from inventory if you use it  
 
     let newItemList (dragon: Type.MovableDragon) itemList = 
@@ -168,6 +171,7 @@ module Main
         if lst.IsEmpty then level
         else (lst.Head).GoesTo
 
+    //initializing the keyboard
     Keyboard.initKeyboard()
 
     let rec Update 
